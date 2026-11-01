@@ -1,0 +1,2580 @@
+<!DOCTYPE html>
+<html lang="fr">
+<head>
+<meta charset="utf-8">
+<meta name="viewport" content="width=device-width, initial-scale=1">
+<title>Corrigé du TD 1</title>
+<meta name="color-scheme" content="light">
+<link rel="preconnect" href="https://fonts.googleapis.com">
+<link rel="preconnect" href="https://fonts.gstatic.com" crossorigin>
+<link href="https://fonts.googleapis.com/css2?family=Bricolage+Grotesque:opsz,wght@12..96,500;12..96,700;12..96,800&family=Atkinson+Hyperlegible:ital,wght@0,400;0,700;1,400&family=JetBrains+Mono:wght@400;600&display=swap" rel="stylesheet">
+<style>
+/* Page de cours claire : fond bleuté très doux, cartes blanches, bleu pour les actions, jaune surligneur pour la ligne en cours. */
+:root {
+  --paper: #f6f8fd;
+  --panel: #ffffff;
+  --ink: #16213f;
+  --muted: #5d6a8a;
+  --line: #e1e7f3;
+  --grid: rgba(70, 110, 200, .09);
+  --accent: #2f55d4;
+  --accent-2: #14a3a8;
+  --accent-soft: #e9efff;
+  --margin: #d4503f;
+  --hl: #fff0a8;
+  --ok: #1d8a52;
+  --ok-soft: #e1f4ea;
+  --err: #c2372d;
+  --err-soft: #fbe7e5;
+  --z1: #e7f0ff; --z2: #fff1d6; --z3: #ffe1dc;
+  --f1: #5d86e6; --f2: #e6a52d; --f3: #db5b48;
+  --code-bg: #f3f6fc;
+  --shadow-s: 0 1px 2px rgba(22,33,63,.05), 0 2px 8px rgba(22,33,63,.04);
+  --shadow-m: 0 2px 4px rgba(22,33,63,.05), 0 12px 32px rgba(22,33,63,.08);
+  --font-d: "Bricolage Grotesque", "Atkinson Hyperlegible", "Segoe UI", system-ui, sans-serif;
+  --font-b: "Atkinson Hyperlegible", "Segoe UI", system-ui, sans-serif;
+  --font-m: "JetBrains Mono", ui-monospace, "Cascadia Mono", Consolas, monospace;
+  color-scheme: light;
+}
+* { box-sizing: border-box; }
+html { -webkit-text-size-adjust: 100%; }
+body {
+  margin: 0; background: var(--paper); color: var(--ink);
+  font: 17px/1.55 var(--font-b);
+}
+.wrap { max-width: 1180px; margin: 0 auto; padding: 0 20px 64px; }
+h1, h2, h3 { font-family: var(--font-d); text-wrap: balance; line-height: 1.15; margin: 0; }
+h1 { font-size: clamp(26px, 4vw, 36px); font-weight: 700; }
+h2 { font-size: 24px; font-weight: 700; }
+h3 { font-size: 19px; font-weight: 700; margin: 28px 0 10px; }
+p { margin: 0 0 10px; }
+code, .mono { font-family: var(--font-m); font-size: .88em; background: var(--accent-soft); padding: 1px 5px; border-radius: 4px; }
+a { color: var(--accent); }
+:focus-visible { outline: 3px solid var(--accent); outline-offset: 2px; border-radius: 4px; }
+button { font: inherit; color: inherit; }
+
+/* en-tête */
+.top { padding: 28px 0 12px; }
+.top p { color: var(--muted); margin: 6px 0 0; }
+/* onglets */
+.tabs { position: sticky; top: 0; z-index: 5; display: flex; gap: 2px; overflow-x: auto; padding: 8px 0; background: var(--paper); border-bottom: 1px solid var(--line); scrollbar-width: thin; }
+.tabs a { flex: 0 0 auto; text-decoration: none; color: var(--ink); padding: 8px 14px; border-radius: 8px; font-size: 15px; border: 1px solid transparent; }
+.tabs a:hover { background: var(--accent-soft); }
+.tabs a[aria-current="page"] { background: var(--accent); color: #fff; }
+.tabs a[aria-current="page"] b { color: rgba(255,255,255,.75); }
+
+/* exercice */
+.ex { padding-top: 22px; }
+.ex > h2 { margin-bottom: 6px; }
+.statement { margin: 0 0 6px; max-width: 75ch; }
+.idea { margin: 0 0 16px; max-width: 75ch; color: var(--muted); }
+.idea b { color: var(--ink); }
+.ex-head { display: grid; gap: 8px; margin-bottom: 18px; }
+.ex-num { font-family: var(--font-d); font-weight: 600; color: var(--margin); margin: 0; letter-spacing: .04em; text-transform: uppercase; font-size: 14px; }
+.chips { display: flex; flex-wrap: wrap; gap: 6px; list-style: none; margin: 0; padding: 0; }
+.chips li { font-size: 13px; border: 1px solid var(--line); background: var(--panel); border-radius: 99px; padding: 3px 10px; color: var(--muted); }
+.statement { color: var(--muted); max-width: 80ch; font-size: 16px; }
+.cols { display: grid; grid-template-columns: minmax(0, 1.25fr) minmax(0, 1fr); gap: 18px; align-items: start; }
+@media (max-width: 860px) { .cols { grid-template-columns: 1fr; } }
+.card { background: var(--panel); border: 1px solid var(--line); border-radius: 12px; padding: 18px 20px; }
+.card h3 { margin-top: 0; }
+.concept ul { margin: 0; padding-left: 20px; display: grid; gap: 8px; }
+.concept li { max-width: 68ch; }
+.keybox { margin-top: 14px; border-left: 4px solid var(--accent); background: var(--accent-soft); padding: 10px 14px; border-radius: 0 8px 8px 0; font-size: 16px; }
+table { border-collapse: collapse; }
+.ets { width: 100%; font-size: 15px; }
+.ets th { text-align: left; font-family: var(--font-d); font-weight: 600; color: var(--accent); padding: 8px 10px 8px 0; vertical-align: top; width: 110px; }
+.ets td { padding: 8px 0; border-top: 1px solid var(--line); vertical-align: top; }
+.ets tr:first-child td { border-top: 0; }
+
+/* laboratoire */
+.lab { display: grid; gap: 12px; }
+.lab-k { display: block; font-size: 12px; text-transform: uppercase; letter-spacing: .06em; color: var(--muted); margin: 0 0 6px; font-weight: 700; }
+.lab-top { display: grid; gap: 8px; }
+.scen { display: flex; flex-wrap: wrap; gap: 6px; align-items: center; }
+.scen .lab-k { margin: 0 6px 0 0; }
+.chip-btn { border: 1px solid var(--line); background: var(--paper); border-radius: 99px; padding: 5px 12px; font-size: 14px; cursor: pointer; }
+.chip-btn:hover { border-color: var(--accent); }
+.chip-btn[aria-pressed="true"] { background: var(--accent-soft); border-color: var(--accent); color: var(--accent); font-weight: 700; }
+.custom summary { cursor: pointer; font-size: 14px; color: var(--accent); width: max-content; }
+.custom-form { display: flex; flex-wrap: wrap; gap: 10px; align-items: end; padding: 10px 0 2px; }
+.fld { display: grid; gap: 3px; font-size: 13px; color: var(--muted); }
+.fld input, .fld select { font: 15px var(--font-m); padding: 6px 8px; border: 1px solid var(--line); border-radius: 6px; background: var(--paper); color: var(--ink); width: 130px; }
+.fld-w input { width: min(320px, 80vw); }
+.fld-b { display: flex; align-items: center; gap: 6px; font-size: 14px; color: var(--ink); }
+.fld-b input { width: 18px; height: 18px; }
+.btn { border: 0; background: var(--accent); color: #fff; border-radius: 8px; padding: 8px 14px; cursor: pointer; font-weight: 700; font-size: 14px; }
+.btn:disabled { opacity: .45; cursor: default; }
+.btn-ghost { background: transparent; color: var(--accent); border: 1px solid var(--accent); }
+
+.controls { display: flex; flex-wrap: wrap; gap: 6px; align-items: center; }
+.ctl { border: 1px solid var(--line); background: var(--panel); border-radius: 7px; min-width: 38px; height: 36px; cursor: pointer; font-size: 14px; padding: 0 10px; }
+.ctl:hover { border-color: var(--accent); }
+.ctl-play { background: var(--accent); color: #fff; border-color: var(--accent); font-weight: 700; min-width: 44px; }
+.scrub { flex: 1 1 140px; accent-color: var(--accent); }
+.stepno { font: 13px var(--font-m); color: var(--muted); margin-left: 4px; font-variant-numeric: tabular-nums; }
+.speed { font-size: 13px; color: var(--muted); display: flex; align-items: center; gap: 6px; }
+.speed input { width: 80px; accent-color: var(--accent); }
+
+.lab-grid { display: grid; grid-template-columns: minmax(0, 1.35fr) minmax(0, 1fr); gap: 12px; }
+@media (max-width: 900px) { .lab-grid { grid-template-columns: 1fr; } }
+.codebox { border: 1px solid var(--line); border-radius: 10px; overflow: hidden; display: flex; flex-direction: column; min-width: 0; background: var(--code-bg); }
+.code-tabs { display: flex; flex-wrap: wrap; gap: 8px; align-items: center; padding: 6px; border-bottom: 1px solid var(--line); background: var(--panel); }
+.seg { display: inline-flex; border: 1px solid var(--line); border-radius: 8px; overflow: hidden; }
+.seg button { border: 0; background: transparent; padding: 5px 11px; cursor: pointer; font-size: 14px; }
+.seg button + button { border-left: 1px solid var(--line); }
+.seg button[aria-selected="true"] { background: var(--accent-soft); color: var(--accent); font-weight: 700; }
+.copy { margin-left: auto; border: 1px solid var(--line); background: var(--paper); border-radius: 7px; padding: 4px 10px; font-size: 13px; cursor: pointer; }
+.code { margin: 0; font: 13.5px/1.6 var(--font-m); overflow: auto; max-height: 520px; padding: 8px 0; position: relative; }
+.ln { display: flex; white-space: pre; padding-right: 14px; border-left: 4px solid transparent; transition: background-color .25s; }
+.ln .no { flex: 0 0 38px; text-align: right; padding-right: 12px; color: var(--muted); opacity: .55; user-select: none; }
+.ln.seen { border-left-color: var(--line); }
+.ln.cur { background: var(--hl); border-left-color: var(--margin); }
+.ln.cur .no { opacity: 1; color: var(--ink); font-weight: 600; }
+.t-kw { color: var(--accent); font-weight: 600; }
+.t-ty { color: #8a4bd0; }
+.t-io { color: #0f8a8a; }
+.t-str { color: #b4532a; }
+.t-num { color: #a3315c; }
+.t-com { color: var(--muted); font-style: italic; }
+.t-op { color: var(--margin); font-weight: 600; }
+.t-pre { color: #8a4bd0; }
+
+.side { display: grid; gap: 10px; align-content: start; min-width: 0; }
+.note { border-left: 4px solid var(--hl); background: var(--code-bg); border-radius: 0 8px 8px 0; padding: 10px 12px; min-height: 52px; }
+.note p { font: 600 16px var(--font-m); }
+.note p { margin: 0; font-size: 16px; }
+.note.flash { animation: noteIn .35s ease-out; }
+@keyframes noteIn { from { transform: translateY(4px); opacity: .4; } to { transform: none; opacity: 1; } }
+.vars { display: grid; grid-template-columns: repeat(auto-fill, minmax(118px, 1fr)); gap: 6px; }
+.var { border: 1.5px solid var(--ink); border-radius: 6px; background: var(--panel); display: grid; grid-template-rows: auto auto auto; text-align: center; overflow: hidden; }
+.var .vn { font: 600 12px var(--font-m); padding: 3px 4px; background: var(--code-bg); border-bottom: 1px solid var(--line); overflow-wrap: anywhere; }
+.var .vv { font: 600 18px var(--font-m); padding: 4px 4px 0; min-height: 30px; font-variant-numeric: tabular-nums; overflow-wrap: anywhere; }
+.var .vt { font-size: 11px; color: var(--muted); padding-bottom: 3px; }
+.var.empty { border-style: dashed; border-color: var(--muted); }
+.var.empty .vv { color: var(--muted); }
+.var.pop { border-color: var(--margin); }
+.var.pop .vv { animation: pop .6s ease-out; }
+@keyframes pop { 0% { transform: translateY(-14px) scale(1.15); opacity: 0; background: var(--hl); } 60% { transform: none; opacity: 1; background: var(--hl); } 100% { background: transparent; } }
+.console { background: #111a2e; color: #e5ecff; border-radius: 10px; padding: 10px 12px; }
+.console .lab-k { color: #9fb0d6; }
+.con-body { font: 13px/1.55 var(--font-m); max-height: 190px; min-height: 64px; overflow: auto; }
+.cl { white-space: pre-wrap; }
+.cl.new { animation: lineIn .35s ease-out; }
+@keyframes lineIn { from { opacity: 0; transform: translateX(-6px); } to { opacity: 1; transform: none; } }
+.cl .inp { color: #ffd76a; font-weight: 600; }
+.cl.err { color: #ff9e95; }
+.cl.ok { color: #7fe0a6; }
+.cl.dim { color: #8f9cbd; }
+
+.viz { padding-top: 4px; min-height: 100px; }
+.viz-cap { font-size: 14px; color: var(--muted); margin: 0 0 8px; }
+.viz-two { display: grid; grid-template-columns: minmax(0, 1fr) minmax(0, 1fr); gap: 18px; align-items: center; }
+@media (max-width: 760px) { .viz-two { grid-template-columns: 1fr; } }
+.ghost { opacity: .4; }
+.c-ok { color: var(--ok); }
+
+/* ex1 ticket + jauge */
+.ticket { font: 14px/1.6 var(--font-m); background: var(--paper); border: 1px solid var(--line); border-radius: 4px; padding: 12px 14px; max-width: 380px; box-shadow: 0 2px 0 var(--line); }
+.tk-head { text-align: center; font-weight: 600; letter-spacing: .1em; margin-bottom: 6px; color: var(--muted); }
+.tk-row { display: grid; grid-template-columns: 1fr auto 90px; gap: 8px; font-variant-numeric: tabular-nums; transition: opacity .3s; }
+.tk-q { color: var(--muted); }
+.tk-v { text-align: right; }
+.tk-sep { border-top: 1px dashed var(--muted); margin: 6px 0; }
+.tk-total { font-weight: 600; font-size: 15px; }
+.tk-err { color: var(--err); font-weight: 600; margin-top: 4px; }
+.tk-empty { color: var(--muted); }
+.gauge { position: relative; height: 26px; background: var(--code-bg); border: 1px solid var(--line); border-radius: 6px; margin: 26px 0 8px; }
+.gauge-fill { position: absolute; inset: 0 auto 0 0; background: var(--muted); opacity: .55; border-radius: 5px; transition: width .8s cubic-bezier(.2,.8,.2,1); }
+.gauge-fill.is-ok { background: var(--ok); opacity: .85; }
+.gauge-mark { position: absolute; top: -8px; bottom: -8px; border-left: 2px dashed var(--margin); }
+.gauge-mark span { position: absolute; bottom: 100%; left: -40px; width: 80px; text-align: center; font-size: 12px; color: var(--margin); }
+.gauge-txt { font-size: 15px; margin: 0; }
+
+/* ex2 circuit */
+.circuit { width: 100%; max-width: 540px; height: auto; }
+.circuit text { font: 11px var(--font-m); fill: var(--ink); text-anchor: middle; }
+.circuit .pv { font-weight: 600; font-size: 12px; }
+.w line { stroke-width: 4; stroke-linecap: round; transition: stroke .4s; }
+.w-u line { stroke: var(--line); stroke-dasharray: 5 6; }
+.w-f line { stroke: var(--muted); opacity: .6; }
+.w-t line { stroke: var(--ok); }
+.pill rect { fill: var(--paper); stroke: var(--line); stroke-width: 1.5; transition: fill .4s, stroke .4s; }
+.p-t rect { fill: var(--ok-soft); stroke: var(--ok); }
+.p-f rect { fill: var(--err-soft); stroke: var(--err); }
+.gate path, .gate circle { fill: var(--panel); stroke: var(--ink); stroke-width: 2; }
+.gate text { font-weight: 600; font-family: var(--font-d); font-size: 13px; }
+.lamp circle { fill: var(--code-bg); stroke: var(--ink); stroke-width: 2; transition: fill .4s; }
+.l-t circle { fill: var(--ok); }
+.l-f circle { fill: var(--err-soft); }
+.l-t .pv { fill: #fff; }
+.tt { font: 13px var(--font-m); width: 100%; max-width: 360px; }
+.tt th { font: 600 11px var(--font-b); color: var(--muted); padding: 4px; border-bottom: 1px solid var(--line); }
+.tt td { text-align: center; padding: 3px 4px; border-bottom: 1px solid var(--line); }
+.tt td.tv { color: var(--ok); font-weight: 600; }
+.tt td.fv { color: var(--muted); }
+.tt td:last-child { border-left: 1px solid var(--line); }
+.tt tr.cur td { background: var(--hl); color: var(--ink); }
+
+/* ex3 tranches */
+.tranches { position: relative; height: 74px; margin: 30px 0 34px; }
+.tr-zone { position: absolute; top: 0; height: 100%; border: 1px solid var(--line); }
+.tr-zone span { position: absolute; top: -22px; left: 6px; font-size: 12px; color: var(--muted); white-space: nowrap; }
+.z1 { background: var(--z1); border-radius: 6px 0 0 6px; } .z2 { background: var(--z2); } .z3 { background: var(--z3); border-radius: 0 6px 6px 0; }
+.tr-fill { position: absolute; top: 18px; height: 38px; transition: width .6s cubic-bezier(.2,.8,.2,1); }
+.f1 { background: var(--f1); } .f2 { background: var(--f2); } .f3 { background: var(--f3); }
+.tr-tick { position: absolute; top: 0; bottom: -6px; border-left: 1px solid var(--muted); }
+.tr-tick span { position: absolute; top: 100%; left: -14px; width: 28px; text-align: center; font: 12px var(--font-m); color: var(--muted); }
+.tr-tick.is-test { border-left: 3px solid var(--margin); }
+.tr-tick.is-test span { color: var(--margin); font-weight: 600; }
+.tr-cons { position: absolute; top: -6px; bottom: -6px; border-left: 2px solid var(--ink); transition: left .6s; }
+.tr-cons span { position: absolute; bottom: -30px; left: -40px; width: 80px; text-align: center; font: 600 12px var(--font-m); background: var(--ink); color: var(--paper); border-radius: 4px; padding: 1px 0; }
+.tranches.is-err { opacity: .35; }
+.tr-legend { display: grid; gap: 4px; font-size: 14px; max-width: 560px; }
+.tr-li { display: flex; align-items: center; gap: 8px; transition: opacity .3s; }
+.tr-li b { margin-left: auto; font-family: var(--font-m); font-variant-numeric: tabular-nums; }
+.tr-sum { border-top: 1px solid var(--line); padding-top: 4px; font-weight: 700; }
+.sw { width: 12px; height: 12px; border-radius: 3px; display: inline-block; }
+.sw1 { background: var(--f1); } .sw2 { background: var(--f2); } .sw3 { background: var(--f3); }
+.tchart { width: 100%; height: auto; max-width: 640px; }
+.tchart .grid line { stroke: var(--line); }
+.tchart .grid text { font: 11px var(--font-m); fill: var(--muted); text-anchor: end; }
+.tchart .gx text { text-anchor: middle; }
+.ln-p { fill: none; stroke: var(--accent); stroke-width: 3; }
+.ln-u { stroke: var(--margin); stroke-width: 3; }
+.jump { stroke: var(--margin); stroke-width: 1.5; stroke-dasharray: 3 4; }
+.cursor { stroke: var(--ink); stroke-width: 1; stroke-dasharray: 2 3; }
+.dot-p { fill: var(--accent); } .dot-u { fill: var(--margin); }
+.tc-head { display: flex; flex-wrap: wrap; gap: 12px; align-items: center; margin-bottom: 6px; }
+.tc-head input { flex: 1 1 200px; max-width: 360px; accent-color: var(--accent); }
+.tc-legend { display: flex; flex-wrap: wrap; gap: 6px 18px; font-size: 14px; }
+.tc-legend i { display: inline-block; width: 14px; height: 4px; vertical-align: middle; margin-right: 6px; }
+.k-p { background: var(--accent); } .k-u { background: var(--margin); }
+.tc-legend b { font-family: var(--font-m); font-variant-numeric: tabular-nums; }
+
+/* ex4 trace */
+.scroll-x { overflow-x: auto; }
+.trace { font: 13.5px var(--font-m); min-width: 520px; width: 100%; }
+.trace th { font: 600 12px var(--font-b); text-align: left; color: var(--muted); padding: 5px 8px; border-bottom: 2px solid var(--line); }
+.trace td { padding: 5px 8px; border-bottom: 1px solid var(--line); font-variant-numeric: tabular-nums; }
+.trace tr.cur td { background: var(--hl); }
+.trace tr.exit td { color: var(--margin); font-weight: 600; }
+
+/* ex5 barres */
+.bars { display: grid; grid-template-columns: 26px 1fr; gap: 6px; max-width: 720px; }
+.axis { display: flex; flex-direction: column; justify-content: space-between; font: 11px var(--font-m); color: var(--muted); height: 180px; margin-top: 22px; text-align: right; }
+.plot { position: relative; display: flex; gap: 8px; align-items: flex-end; }
+.pass-line { position: absolute; left: 0; right: 0; top: calc(22px + 90px); border-top: 2px dashed var(--margin); z-index: 1; pointer-events: none; }
+.pass-line span { position: absolute; right: 0; top: -18px; font-size: 11px; color: var(--margin); }
+.slot { flex: 1 1 0; min-width: 22px; max-width: 80px; display: grid; grid-template-rows: 22px 180px auto; }
+.rej { font: 11px var(--font-m); color: var(--err); text-align: center; overflow: hidden; white-space: nowrap; }
+.col { position: relative; background: var(--code-bg); border-radius: 4px 4px 0 0; border-bottom: 2px solid var(--ink); }
+.bar { position: absolute; left: 10%; right: 10%; bottom: 0; border-radius: 4px 4px 0 0; transition: height .6s cubic-bezier(.2,.8,.2,1); }
+.bar span { position: absolute; top: -18px; left: 0; right: 0; text-align: center; font: 600 12px var(--font-m); }
+.bar.pass { background: var(--ok); } .bar.fail { background: var(--muted); opacity: .7; }
+.bar.best { outline: 3px solid var(--margin); outline-offset: 1px; }
+.slot.cur .col { box-shadow: inset 0 0 0 2px var(--accent); }
+.sl-lab { font-size: 12px; text-align: center; color: var(--muted); padding-top: 3px; }
+.sl-lab b { color: var(--margin); }
+
+/* ex6 organigramme */
+.flow { width: 100%; max-width: 460px; height: auto; }
+.flow .node rect, .flow .node path { fill: var(--panel); stroke: var(--ink); stroke-width: 1.5; transition: fill .3s, stroke .3s; }
+.flow .node text { font: 13px var(--font-m); fill: var(--ink); text-anchor: middle; }
+.flow .node .sub { font-size: 10px; fill: var(--muted); }
+.flow .node.cur rect, .flow .node.cur path { fill: var(--hl); stroke: var(--margin); stroke-width: 3; }
+.flow .edge path { fill: none; stroke: var(--muted); stroke-width: 1.5; }
+.flow .edge text { font: 11px var(--font-b); fill: var(--muted); }
+.flow marker path { fill: var(--muted); }
+.counters { display: grid; gap: 8px; align-content: start; }
+.ctr { display: flex; align-items: baseline; gap: 10px; border: 1px solid var(--line); border-radius: 8px; padding: 8px 12px; }
+.ctr b { font: 800 30px var(--font-d); color: var(--accent); font-variant-numeric: tabular-nums; min-width: 28px; }
+.cmp { width: 100%; font-size: 15px; }
+.cmp th, .cmp td { text-align: left; padding: 8px 10px; border-bottom: 1px solid var(--line); vertical-align: top; }
+.cmp th { font-family: var(--font-d); font-weight: 600; }
+.cmp td:first-child { color: var(--muted); width: 28%; }
+
+/* ex7 */
+.guess-top { display: flex; flex-wrap: wrap; justify-content: space-between; gap: 10px; align-items: center; }
+.dots { display: flex; gap: 6px; align-items: center; }
+.dots i { width: 16px; height: 16px; border-radius: 50%; border: 2px solid var(--accent); transition: background .3s; }
+.dots i.used { background: var(--accent); }
+.dots span { font: 13px var(--font-m); color: var(--muted); margin-left: 4px; }
+.secret { font: 15px var(--font-m); border: 1.5px dashed var(--muted); border-radius: 8px; padding: 4px 12px; }
+.secret b { font-size: 18px; }
+.secret.shown { border-style: solid; border-color: var(--margin); color: var(--margin); }
+.nline { width: 100%; max-width: 720px; height: auto; }
+.nline .axis { stroke: var(--ink); stroke-width: 2; }
+.nline .zone { fill: var(--ok-soft); stroke: var(--ok); transition: x .5s, width .5s; }
+.nline .tk line { stroke: var(--ink); }
+.nline .tk text { font: 11px var(--font-m); fill: var(--muted); text-anchor: middle; }
+.nline .sec line { stroke: var(--margin); stroke-width: 3; }
+.pm line { stroke: var(--muted); stroke-dasharray: 2 3; }
+.pm circle { fill: var(--panel); stroke-width: 2; }
+.pm text { font: 600 11px var(--font-m); text-anchor: middle; fill: var(--ink); }
+.pm .pv { font-size: 11px; }
+.pm-lt circle { stroke: var(--f1); } .pm-gt circle { stroke: var(--f2); } .pm-eq circle { stroke: var(--ok); fill: var(--ok-soft); }
+.gg-row { display: flex; flex-wrap: wrap; gap: 12px; align-items: end; margin-bottom: 10px; }
+.gg-log { font: 14px/1.6 var(--font-m); background: var(--code-bg); border: 1px solid var(--line); border-radius: 8px; padding: 10px 12px; min-height: 60px; max-height: 220px; overflow: auto; }
+.gg-log p { margin: 0; }
+.gg-log .ok { color: var(--ok); font-weight: 600; } .gg-log .err { color: var(--err); font-weight: 600; } .gg-log .dim { color: var(--muted); }
+
+/* réponses */
+.answers { list-style: none; margin: 0; padding: 0; display: grid; gap: 10px; counter-reset: q; }
+.answers > li { padding: 4px 0 4px 44px; position: relative; }
+.answers > li::before { counter-increment: q; content: "Q" counter(q); position: absolute; left: 0; top: 4px; font-weight: 700; color: var(--accent); }
+.answers p:last-child { margin-bottom: 0; }
+.calc { font: 14px/1.7 var(--font-m); background: var(--code-bg); border-radius: 6px; padding: 8px 12px; margin: 6px 0; overflow-x: auto; white-space: pre; }
+.tests { width: 100%; font-size: 15px; }
+.tests th { text-align: left; font: 600 13px var(--font-b); color: var(--muted); padding: 6px 8px; border-bottom: 2px solid var(--line); }
+.tests td { padding: 6px 8px; border-bottom: 1px solid var(--line); vertical-align: top; }
+.tests td.r { font-family: var(--font-m); font-size: 14px; }
+.pill-ok, .pill-err { display: inline-block; font-size: 12px; font-weight: 700; padding: 1px 8px; border-radius: 99px; }
+.pill-ok { background: var(--ok-soft); color: var(--ok); } .pill-err { background: var(--err-soft); color: var(--err); }
+.pitfall { margin-top: 16px; border: 1px solid var(--margin); border-left-width: 5px; border-radius: 8px; padding: 12px 16px; background: var(--panel); }
+.pitfall b.t { color: var(--margin); font-family: var(--font-d); display: block; margin-bottom: 4px; }
+.teacher { margin-top: 16px; border: 1px dashed var(--muted); border-radius: 8px; padding: 12px 16px; font-size: 15px; color: var(--muted); }
+.teacher b.t { color: var(--ink); display: block; margin-bottom: 4px; font-family: var(--font-d); }
+.foot { margin-top: 40px; font-size: 14px; color: var(--muted); border-top: 1px solid var(--line); padding-top: 14px; }
+
+/* ---------- Notions ---------- */
+.ngroup { font-size: 20px; margin: 30px 0 4px; color: var(--accent); }
+.ncard { display: grid; grid-template-columns: minmax(0, .7fr) minmax(0, 1.3fr); gap: 24px; padding: 20px 0; border-top: 1px solid var(--line); scroll-margin-top: 60px; }
+@media (max-width: 900px) { .ncard { grid-template-columns: 1fr; gap: 12px; } }
+.ntext h3 { margin: 0 0 6px; font-size: 20px; }
+.ntext p { margin: 0 0 10px; }
+.syn { display: grid; gap: 6px; }
+.syn pre { margin: 0; font: 13px/1.5 var(--font-m); background: var(--code-bg); border-radius: 6px; padding: 8px 10px; overflow-x: auto; }
+.syn pre + pre { color: var(--accent); }
+.nplay { display: grid; gap: 8px; align-content: start; min-width: 0; }
+.stage { border: 1px solid var(--line); border-radius: 10px; padding: 12px; min-height: 220px; background: var(--paper); overflow: hidden; display: grid; gap: 10px; align-content: start; }
+.pbar { display: flex; gap: 10px; align-items: center; justify-content: space-between; flex-wrap: wrap; }
+.cap { font-size: 17px; font-weight: 700; min-height: 26px; flex: 1 1 260px; }
+.cap.flash { animation: noteIn .3s ease-out; }
+.pctl { display: flex; gap: 4px; align-items: center; }
+.pnum { font: 12px var(--font-m); color: var(--muted); margin-left: 4px; min-width: 34px; }
+.small { font-size: 12px; color: var(--muted); }
+
+/* boîte mémoire */
+.mbox { display: inline-grid; min-width: 104px; border: 2px solid var(--ink); border-radius: 7px; background: var(--panel); text-align: center; overflow: hidden; }
+.mbox .mn { font: 600 12px var(--font-m); padding: 3px 6px; background: var(--code-bg); border-bottom: 1px solid var(--line); }
+.mbox .mv { font: 700 20px var(--font-m); padding: 4px 6px 0; min-height: 32px; }
+.mbox .mt { font-size: 11px; color: var(--muted); padding-bottom: 3px; }
+.mbox.empty { border-style: dashed; border-color: var(--muted); }
+.mbox.empty .mv { color: var(--muted); }
+.mbox.pop { border-color: var(--margin); }
+.mbox.pop .mv { animation: pop .7s ease-out; }
+.mbox.glow { box-shadow: 0 0 0 4px var(--hl); }
+.mbox.reading { box-shadow: 0 0 0 4px var(--accent-soft); border-color: var(--accent); }
+.pop:not(.mbox):not(.var) { animation: popIn .5s ease-out; }
+@keyframes popIn { from { transform: scale(.6); opacity: 0; } to { transform: none; opacity: 1; } }
+.shake { animation: shake .5s; }
+@keyframes shake { 20%, 60% { transform: translateX(-6px); } 40%, 80% { transform: translateX(6px); } }
+.cstrip { display: flex; flex-wrap: wrap; gap: 8px; }
+.cstrip code { font-size: 14px; white-space: pre-wrap; padding: 3px 8px; }
+.cstrip code + code { color: var(--accent); background: var(--code-bg); }
+.bool { display: inline-block; font: 700 14px var(--font-m); padding: 2px 10px; border-radius: 99px; }
+.bool.is-t { background: var(--ok-soft); color: var(--ok); }
+.bool.is-f { background: var(--err-soft); color: var(--err); }
+
+/* variable */
+.armoire { display: grid; grid-template-columns: repeat(5, minmax(0, 1fr)); gap: 8px; }
+@media (max-width: 520px) { .armoire { grid-template-columns: repeat(3, minmax(0, 1fr)); } }
+.cell { position: relative; min-height: 76px; border: 1px solid var(--line); border-radius: 8px; background: var(--code-bg); display: grid; place-items: center; }
+.cell .addr { font: 11px var(--font-m); color: var(--muted); opacity: .7; }
+.cell.named { background: transparent; border-color: transparent; }
+.cell .mbox { min-width: 0; width: 100%; }
+.oldv { position: absolute; top: -6px; right: 4px; font: 600 13px var(--font-m); color: var(--err); animation: fadeOut 1.6s forwards; }
+@keyframes fadeOut { 0% { opacity: 1; transform: none; } 100% { opacity: .35; transform: translateY(-4px); } }
+
+/* types */
+.tray { display: flex; flex-wrap: wrap; gap: 8px; align-items: center; min-height: 40px; }
+.tray .lab-k { margin: 0 6px 0 0; }
+.tok { font: 600 15px var(--font-m); border: 1.5px solid var(--ink); border-radius: 6px; padding: 3px 10px; background: var(--panel); transition: opacity .4s, transform .4s; }
+.tok.gone { opacity: 0; transform: translateY(20px) scale(.6); }
+.tok.next { border-color: var(--margin); box-shadow: 0 0 0 3px var(--hl); }
+.tbins { display: grid; grid-template-columns: repeat(5, minmax(0, 1fr)); gap: 8px; }
+@media (max-width: 620px) { .tbins { grid-template-columns: repeat(2, minmax(0, 1fr)); } }
+.tbin { border: 2px solid var(--line); border-radius: 10px; padding: 8px; text-align: center; display: grid; gap: 2px; background: var(--panel); }
+.tbin b { font-family: var(--font-d); }
+.tbin code { justify-self: center; }
+.tbin .tv { font: 700 16px var(--font-m); min-height: 26px; color: var(--accent); }
+.tbin small { color: var(--muted); font-size: 12px; }
+.tbin.pop { border-color: var(--margin); }
+.tbin.warn { border-color: var(--err); background: var(--err-soft); }
+.tbin.warn .tv { color: var(--err); }
+
+/* constante */
+.const-row { display: flex; flex-wrap: wrap; gap: 18px; align-items: center; padding: 18px 0; }
+.cbox { position: relative; padding-top: 14px; }
+.lock { position: absolute; top: -6px; right: -10px; width: 26px; height: 22px; background: var(--margin); border-radius: 4px; z-index: 1; }
+.lock i { position: absolute; left: 6px; top: -9px; width: 14px; height: 12px; border: 3px solid var(--margin); border-bottom: 0; border-radius: 8px 8px 0 0; }
+.cbox .mbox { border-color: var(--margin); min-width: 150px; }
+.cbox.reading .mbox { box-shadow: 0 0 0 4px var(--ok-soft); }
+.bubble { font-size: 15px; padding: 8px 12px; border-radius: 10px; animation: popIn .4s ease-out; }
+.bubble.ok { background: var(--ok-soft); color: var(--ok); }
+.bubble.err { background: var(--err-soft); color: var(--err); font-weight: 700; }
+
+/* affectation */
+.aff { display: grid; grid-template-columns: auto auto 1fr; gap: 14px; align-items: center; padding: 6px 0; }
+@media (max-width: 520px) { .aff { grid-template-columns: 1fr; } .aff-arrow { transform: rotate(90deg); justify-self: center; } }
+.aff-mem { display: grid; gap: 10px; min-width: 110px; }
+.aff-mem .cell { min-height: 0; }
+.aff-arrow { font: 800 40px var(--font-d); color: var(--margin); }
+.aff-eval { border: 1.5px dashed var(--accent); border-radius: 10px; padding: 10px 12px; }
+.ev-expr { font: 600 18px var(--font-m); }
+.ev-res { font: 800 24px var(--font-m); color: var(--accent); }
+.ev-res.fly { animation: flyLeft .8s ease-in forwards; }
+@keyframes flyLeft { 0% { transform: none; opacity: 1; } 100% { transform: translateX(-120px); opacity: 0; } }
+
+/* lire / écrire */
+.io { display: grid; grid-template-columns: 1fr auto auto auto 1.3fr; gap: 8px; align-items: center; }
+@media (max-width: 620px) { .io { grid-template-columns: 1fr; } .io-ar { transform: rotate(90deg); justify-self: center; } }
+.io-z { display: grid; gap: 4px; justify-items: start; }
+.keys { display: grid; grid-template-columns: repeat(4, 30px); gap: 4px; }
+.key { font: 600 13px var(--font-m); border: 1px solid var(--line); border-bottom-width: 3px; border-radius: 5px; text-align: center; padding: 3px 0; background: var(--panel); transition: background .2s, transform .2s; }
+.key.down { background: var(--hl); transform: translateY(2px); border-bottom-width: 1px; }
+.io-ar { font: 800 28px var(--font-d); color: var(--line); display: grid; justify-items: center; line-height: 1; transition: color .3s; }
+.io-ar small { font: 600 10px var(--font-b); }
+.io-ar.on { color: var(--margin); animation: nudge 1s ease-in-out infinite; }
+@keyframes nudge { 50% { transform: translateX(5px); } }
+.screen { background: #111a2e; color: #e5ecff; font: 13px/1.5 var(--font-m); padding: 8px 10px; border-radius: 8px; min-height: 64px; width: 100%; }
+.screen.wait div:last-child { animation: blink 1s steps(2) infinite; }
+@keyframes blink { 50% { opacity: .5; } }
+
+/* expressions */
+.expr { font: 600 19px var(--font-m); padding: 8px 0; overflow-x: auto; white-space: nowrap; }
+.expr mark { background: var(--hl); color: var(--ink); border-radius: 4px; padding: 0 4px; animation: popIn .4s ease-out; }
+.expr mark.res { background: var(--accent); color: #fff; }
+.expr .arw { color: var(--margin); margin: 0 6px; }
+.dots7 { display: flex; gap: 6px; padding: 4px 0; }
+.dots7 i { width: 22px; height: 22px; border-radius: 50%; background: var(--muted); opacity: .5; transition: all .4s; }
+.dots7 i.g { opacity: .9; }
+.dots7 i.g0 { background: var(--f1); } .dots7 i.g1 { background: var(--f2); } .dots7 i.g2 { background: var(--f3); }
+.dots7 i.g1 { margin-left: 0; }
+.dots7 i:nth-child(3), .dots7 i:nth-child(5), .dots7 i:nth-child(7) { margin-left: 10px; }
+.dots7 i.rest.hl { background: var(--margin); opacity: 1; box-shadow: 0 0 0 4px var(--hl); }
+.optab { font-size: 14px; border-collapse: collapse; width: 100%; max-width: 460px; }
+.optab th { text-align: left; font: 600 12px var(--font-b); color: var(--muted); padding: 4px 8px; border-bottom: 2px solid var(--line); }
+.optab td { padding: 4px 8px; border-bottom: 1px solid var(--line); }
+.optab td + td { font-family: var(--font-m); }
+.optab tr.cur td { background: var(--hl); }
+.cmp-top { display: flex; flex-wrap: wrap; gap: 16px; align-items: center; }
+
+/* logique */
+.logic { display: grid; grid-template-columns: repeat(2, minmax(0, 1fr)); gap: 12px; }
+.logic .lc:last-child { grid-column: 1 / -1; }
+.lc .small { margin: 0; }
+@media (max-width: 620px) { .logic { grid-template-columns: 1fr; } }
+.lc .lab-k { margin-bottom: 0; }
+.circ { width: 100%; height: auto; }
+.circ .wire { fill: none; stroke: var(--muted); stroke-width: 3; transition: stroke .3s; }
+.circ.on .wire { stroke: var(--ok); }
+.circ .batt { fill: var(--ink); }
+.circ .lamp { fill: var(--code-bg); stroke: var(--ink); stroke-width: 2; transition: fill .3s; }
+.circ.on .lamp { fill: #ffd84d; filter: drop-shadow(0 0 8px #ffd84d); }
+.circ .lt { font: 700 12px var(--font-d); text-anchor: middle; fill: var(--ink); }
+.circ.on .lt { fill: #10182c; }
+.sw { cursor: pointer; }
+.sw circle { fill: var(--panel); stroke: var(--ink); stroke-width: 2; }
+.sw .lever { stroke: var(--margin); stroke-width: 4; stroke-linecap: round; transform: rotate(-32deg); transition: transform .35s; }
+.sw.closed .lever { transform: rotate(0deg); stroke: var(--ok); }
+.sw text { font: 700 13px var(--font-m); text-anchor: middle; fill: var(--ink); }
+.sw:focus-visible { outline: none; }
+.sw:focus-visible circle { stroke: var(--accent); stroke-width: 3; }
+.lres { font-size: 14px; }
+.tt2 { font: 13px var(--font-m); border-collapse: collapse; width: 100%; max-width: 420px; }
+.tt2 th { font: 600 12px var(--font-b); color: var(--muted); padding: 3px 6px; border-bottom: 1px solid var(--line); }
+.tt2 td { text-align: center; padding: 3px 6px; border-bottom: 1px solid var(--line); }
+.tt2 td.tv { color: var(--ok); font-weight: 700; } .tt2 td.fv { color: var(--muted); }
+.tt2 tr.cur td { background: var(--hl); color: var(--ink); }
+
+/* organigramme SI */
+.flowwrap { display: grid; gap: 10px; }
+.cflow { max-width: 460px; justify-self: center; }
+.cflow { width: 100%; height: auto; }
+.cflow .nd rect, .cflow .nd path { fill: var(--panel); stroke: var(--ink); stroke-width: 1.5; transition: fill .3s, stroke .3s, opacity .3s; }
+.cflow .nd text { font: 12px var(--font-m); fill: var(--ink); text-anchor: middle; }
+.cflow .nd .sm { font-size: 10.5px; fill: var(--muted); }
+.cflow .nd.cur rect, .cflow .nd.cur path { fill: var(--hl); stroke: var(--margin); stroke-width: 3; }
+.cflow .nd.skip { opacity: .3; }
+.cflow .edge path { fill: none; stroke: var(--muted); stroke-width: 1.5; }
+.cflow .edge text { font: 600 11px var(--font-b); fill: var(--muted); }
+.cflow marker path { fill: var(--muted); }
+.token { transition: transform .7s cubic-bezier(.4,.1,.2,1); }
+.token circle { fill: var(--margin); stroke: var(--panel); stroke-width: 3; }
+.flowside { display: grid; grid-template-columns: repeat(2, minmax(0, 1fr)); gap: 8px; align-items: start; }
+@media (max-width: 620px) { .flowside { grid-template-columns: 1fr; } }
+pre.mini { margin: 0; font: 12px/1.5 var(--font-m); background: var(--code-bg); border: 1px solid var(--line); border-radius: 8px; padding: 8px; }
+
+/* cascade */
+.cascade { display: grid; gap: 6px; }
+.crow { display: grid; grid-template-columns: minmax(0, 1.3fr) minmax(0, 1fr) minmax(0, 1.1fr); gap: 8px; align-items: center; border: 1px solid var(--line); border-radius: 8px; padding: 6px 10px; font-size: 14px; transition: all .3s; }
+@media (max-width: 520px) { .crow { grid-template-columns: 1fr; } }
+.crow code { background: none; padding: 0; }
+.crow .cact { font: 12px var(--font-m); color: var(--muted); }
+.crow .cres { font-weight: 700; font-size: 13px; }
+.crow.f { border-color: var(--err); } .crow.f .cres { color: var(--err); }
+.crow.t { border-color: var(--ok); background: var(--ok-soft); } .crow.t .cres { color: var(--ok); }
+.crow.cur { box-shadow: 0 0 0 3px var(--hl); }
+.crow.skip { opacity: .35; }
+
+/* mini-traceur */
+.mt-grid { display: grid; grid-template-columns: minmax(0, 1.2fr) minmax(0, 1fr); gap: 10px; }
+@media (max-width: 620px) { .mt-grid { grid-template-columns: 1fr; } }
+.mcode { margin: 0; font: 13px/1.65 var(--font-m); background: var(--code-bg); border: 1px solid var(--line); border-radius: 8px; padding: 6px 0; overflow-x: auto; }
+.ml { padding: 0 10px; white-space: pre; border-left: 4px solid transparent; transition: background .25s; }
+.ml.cur { background: var(--hl); border-left-color: var(--margin); }
+.mside { display: grid; gap: 8px; align-content: start; }
+.mrow { display: flex; flex-wrap: wrap; gap: 6px; }
+.mrow .mbox { min-width: 84px; }
+.mcond { display: flex; justify-content: space-between; gap: 8px; align-items: center; border: 1.5px solid var(--line); border-radius: 8px; padding: 5px 10px; font: 13px var(--font-m); transition: all .3s; }
+.mcond b { font-size: 13px; }
+.mcond.is-t { border-color: var(--ok); background: var(--ok-soft); color: var(--ok); }
+.mcond.is-f { border-color: var(--err); background: var(--err-soft); color: var(--err); }
+.mout { background: #111a2e; color: #e5ecff; font: 12.5px/1.5 var(--font-m); border-radius: 8px; padding: 6px 10px; min-height: 48px; max-height: 120px; overflow: auto; }
+.mout .new { animation: lineIn .35s ease-out; color: #ffd76a; }
+.mout .dim { color: #8f9cbd; }
+.loopbar { display: flex; gap: 10px; align-items: center; flex-wrap: wrap; }
+.loopbar .lab-k { margin: 0; }
+.loopbar b { font: 800 26px var(--font-d); color: var(--accent); }
+.upbadge, .tagb { font-size: 13px; font-weight: 700; padding: 2px 10px; border-radius: 99px; background: var(--hl); color: var(--ink); animation: popIn .4s ease-out; }
+.tagb { background: var(--accent-soft); color: var(--accent); animation: none; }
+.rail { display: flex; gap: 6px; align-items: center; flex-wrap: wrap; }
+.rail span { font: 700 15px var(--font-m); width: 40px; height: 34px; display: grid; place-items: center; border: 1.5px solid var(--line); border-radius: 8px; transition: all .3s; }
+.rail span.done { background: var(--accent-soft); color: var(--accent); border-color: var(--accent); }
+.rail span.cur { background: var(--accent); color: #fff; border-color: var(--accent); transform: translateY(-4px); }
+.rail .stop { width: auto; padding: 0 10px; font-size: 13px; color: var(--muted); border-style: dashed; }
+.rail .stop.cur { background: var(--err-soft); color: var(--err); border-color: var(--err); }
+.cnt-viz { display: grid; grid-template-columns: 1.4fr 1fr; gap: 14px; }
+.jar { display: flex; height: 30px; border: 2px solid var(--ink); border-radius: 6px; overflow: hidden; background: var(--code-bg); max-width: 100%; }
+.jar span { flex: none; transition: width .5s; display: grid; place-items: center; font: 700 12px var(--font-m); color: #fff; border-right: 2px solid var(--panel); }
+.jar span:nth-child(4n+1) { background: var(--f1); } .jar span:nth-child(4n+2) { background: var(--f2); } .jar span:nth-child(4n+3) { background: var(--f3); } .jar span:nth-child(4n) { background: var(--ok); }
+.tally { display: flex; gap: 6px; align-items: center; min-height: 30px; }
+.tally i { width: 6px; height: 28px; background: var(--margin); border-radius: 3px; }
+
+/* maximum */
+.maxrow { display: flex; gap: 8px; flex-wrap: wrap; }
+.mcard { width: 74px; border: 2px solid var(--line); border-radius: 10px; padding: 8px 4px; text-align: center; display: grid; transition: all .4s; background: var(--panel); }
+.mcard b { font: 800 24px var(--font-m); }
+.mcard span { font-size: 11px; color: var(--muted); }
+.mcard.cur { border-color: var(--accent); transform: translateY(-6px); box-shadow: 0 6px 0 var(--accent-soft); }
+.mcard.champ { border-color: var(--margin); background: var(--hl); }
+.mcard.champ span { color: var(--margin); font-weight: 700; }
+.mcard.later { opacity: .45; }
+
+/* validation */
+.gate { position: relative; height: 64px; margin: 6px 0 16px; border-bottom: 2px solid var(--ink); }
+.gz { position: absolute; bottom: 0; height: 34px; background: var(--ok-soft); border: 1.5px solid var(--ok); border-bottom: 0; border-radius: 6px 6px 0 0; }
+.gz span { position: absolute; top: 6px; left: 0; right: 0; text-align: center; font-size: 12px; color: var(--ok); font-weight: 700; }
+.gm { position: absolute; bottom: 0; width: 0; height: 60px; border-left: 3px solid var(--ink); transition: left .6s cubic-bezier(.2,.8,.2,1); }
+.gm span { position: absolute; top: -4px; left: -20px; width: 40px; text-align: center; font: 700 13px var(--font-m); background: var(--ink); color: var(--paper); border-radius: 4px; }
+.gm.bad { border-color: var(--err); } .gm.bad span { background: var(--err); color: #fff; animation: shake .5s; }
+.gm.good { border-color: var(--ok); } .gm.good span { background: var(--ok); color: #fff; }
+.gt { position: absolute; bottom: -20px; transform: translateX(-50%); font: 11px var(--font-m); color: var(--muted); }
+
+/* trace */
+.trtab { font: 13px var(--font-m); border-collapse: collapse; width: 100%; align-self: start; }
+.trtab th { font: 600 12px var(--font-b); color: var(--muted); text-align: left; padding: 4px 8px; border-bottom: 2px solid var(--line); }
+.trtab td { padding: 4px 8px; border-bottom: 1px solid var(--line); }
+.trtab tr.cur td { background: var(--hl); }
+.trtab td.chg { color: var(--margin); font-weight: 800; animation: popIn .4s ease-out; }
+.trtab code { background: none; padding: 0; }
+
+/* pseudo -> C++ */
+.stage:has(.pairs) { max-height: 380px; overflow: auto; }
+.pairs { display: grid; gap: 6px; }
+.pair { display: grid; grid-template-columns: minmax(0, 1fr) minmax(0, 1fr); gap: 4px 10px; align-items: center; border: 1px solid var(--line); border-radius: 8px; padding: 6px 10px; transition: all .3s; }
+.pair .pk { grid-column: 1 / -1; font: 600 12px var(--font-b); color: var(--muted); text-transform: uppercase; letter-spacing: .05em; }
+.pair pre { margin: 0; font: 12.5px/1.45 var(--font-m); white-space: pre; overflow-x: auto; }
+.pair .pa { color: var(--margin); font-weight: 800; }
+.pair.cur { border-color: var(--margin); background: var(--hl); box-shadow: 0 0 0 2px var(--margin); }
+.pair.cur .pk { color: var(--ink); }
+.pair.dimmed { opacity: .45; }
+.flowside pre.mini { grid-column: 1 / -1; }
+
+/* SELON : quand l'utiliser */
+.wrow { display: grid; grid-template-columns: minmax(0, 1.6fr) auto; gap: 2px 10px; align-items: center; border: 1px solid var(--line); border-radius: 8px; padding: 6px 10px; font-size: 14px; transition: all .3s; }
+.wrow b { font-size: 13px; justify-self: end; }
+.wrow small { grid-column: 1 / -1; color: var(--muted); font-size: 12.5px; min-height: 1em; }
+.wrow.wait { opacity: .45; }
+.wrow.yes { border-color: var(--ok); background: var(--ok-soft); } .wrow.yes b { color: var(--ok); }
+.wrow.no { border-color: var(--err); background: var(--err-soft); } .wrow.no b { color: var(--err); }
+.wrow.cur { box-shadow: 0 0 0 3px var(--hl); }
+
+/* en-tête d'algorithme et titre du code */
+.t-hd { color: var(--margin); font-weight: 600; }
+.t-hv { color: var(--muted); }
+.code-title { font-weight: 700; font-size: 14px; padding: 0 6px; }
+
+/* animation de notion au-dessus de chaque exercice */
+.intro { display: grid; gap: 12px; margin: 10px 0 18px; }
+.icard { display: grid; grid-template-columns: minmax(0, .55fr) minmax(0, 1.45fr); gap: 20px; background: var(--code-bg); border-radius: 12px; padding: 16px; }
+@media (max-width: 900px) { .icard { grid-template-columns: 1fr; gap: 10px; } }
+.icard h3 { margin: 0 0 6px; font-size: 18px; color: var(--accent); }
+.icard .stage { min-height: 180px; }
+.c3 .swl { font: 600 11px var(--font-m); text-anchor: middle; fill: var(--ink); }
+.c3 .swv { font: 11px var(--font-m); text-anchor: middle; fill: var(--muted); }
+.c3 .lt { font-size: 10px; }
+
+
+/* ================= Refonte visuelle ================= */
+body { background: linear-gradient(180deg, #eef3ff 0, var(--paper) 340px) no-repeat, var(--paper); background-color: var(--paper); }
+h1, h2, h3 { letter-spacing: -.015em; }
+h2 { font-size: 28px; font-weight: 800; }
+h3 { font-size: 20px; }
+.wrap { max-width: 1200px; }
+
+.top { padding: 32px 0 18px; }
+.brand { display: flex; align-items: center; gap: 14px; padding-bottom: 16px; margin-bottom: 26px; border-bottom: 1px solid var(--line); }
+.logo { height: 48px; width: auto; display: block; }
+.wordmark { font: 800 28px/1 var(--font-d); letter-spacing: -.02em; color: var(--ink); }
+.wordmark b { color: var(--accent); }
+.brand-sep { width: 1px; height: 28px; background: var(--line); }
+.brand-tag { font-size: 14px; color: var(--muted); letter-spacing: .02em; }
+@media (max-width: 560px) { .brand-sep, .brand-tag { display: none; } }
+.eyebrow { display: inline-block; margin: 0 0 12px; padding: 4px 12px; border-radius: 99px; background: var(--accent-soft); color: var(--accent); font-size: 13px; font-weight: 700; letter-spacing: .06em; text-transform: uppercase; }
+h1 { font-size: clamp(30px, 5vw, 46px); font-weight: 800; line-height: 1.08; }
+.grad { background: linear-gradient(95deg, var(--accent), var(--accent-2)); -webkit-background-clip: text; background-clip: text; color: transparent; }
+.top .lead { font-size: 18px; color: var(--muted); margin: 12px 0 0; max-width: 60ch; }
+
+.tabs { top: 0; background: rgba(246,248,253,.88); backdrop-filter: blur(10px); -webkit-backdrop-filter: blur(10px); gap: 6px; padding: 10px 0; border-bottom: 1px solid var(--line); }
+.tabs a { padding: 8px 16px; border-radius: 99px; font-weight: 700; color: var(--muted); transition: background-color .2s, color .2s, box-shadow .2s; }
+.tabs a:hover { background: #fff; color: var(--accent); box-shadow: var(--shadow-s); }
+.tabs a[aria-current="page"] { background: var(--accent); color: #fff; box-shadow: 0 4px 12px rgba(47,85,212,.28); }
+
+.ex { padding-top: 28px; }
+.card, .stage, .ticket, .nplay .stage { box-shadow: var(--shadow-s); }
+.card { border-radius: 16px; padding: 22px 24px; }
+.lab { background: var(--panel); border: 1px solid var(--line); border-radius: 18px; padding: 18px; box-shadow: var(--shadow-m); }
+.codebox { border-radius: 12px; background: var(--code-bg); }
+.code-tabs { background: #fff; }
+.stage { border-radius: 14px; background: #fff; }
+.console { background: #131c36; border-radius: 12px; }
+.var, .mbox { border-radius: 10px; box-shadow: var(--shadow-s); }
+.note { border-radius: 0 10px 10px 0; }
+.keybox { border-radius: 0 10px 10px 0; }
+
+.btn { border-radius: 10px; box-shadow: 0 2px 8px rgba(47,85,212,.25); transition: transform .15s, box-shadow .15s; }
+.btn:hover:not(:disabled) { transform: translateY(-1px); box-shadow: 0 6px 16px rgba(47,85,212,.3); }
+.btn-ghost { box-shadow: none; }
+.ctl { border-radius: 10px; transition: border-color .15s, background-color .15s; }
+.ctl:hover { background: var(--accent-soft); }
+.ctl-play { box-shadow: 0 2px 8px rgba(47,85,212,.3); }
+.ctl-play:hover { background: #2548bb; }
+.chip-btn { background: #fff; }
+.chips li { background: #fff; }
+.ex-num, .ngroup { letter-spacing: .06em; }
+.ncard { border-top-color: var(--line); }
+.answers > li::before { background: var(--accent-soft); border-radius: 8px; padding: 1px 8px; top: 3px; font-size: 14px; }
+.answers > li { padding-left: 52px; }
+.pitfall { border-radius: 12px; background: #fff7f5; }
+.teacher { border-radius: 12px; background: #fff; }
+.calc { border: 1px solid var(--line); }
+
+@media print { .tabs, .ctl, .btn { display: none; } body { background: #fff; } }
+
+@media (max-width: 520px) {
+  body { font-size: 16px; }
+  .wrap { padding: 0 16px 48px; }
+  .vars { grid-template-columns: repeat(auto-fill, minmax(100px, 1fr)); }
+}
+@media (prefers-reduced-motion: reduce) {
+  *, *::before, *::after { animation: none !important; transition: none !important; }
+}
+</style>
+</head>
+<body>
+<div class="wrap">
+  <header class="top">
+    <h1>TD 1 d'algorithmique : <span class="grad">corrigé</span></h1>
+    <p class="lead">Appuyez sur ▶ pour voir chaque algorithme s'exécuter ligne par ligne.</p>
+  </header>
+
+  <nav class="tabs" aria-label="Sommaire">
+    <a href="#notions" data-ex="0">Notions</a>
+    <a href="#ex1" data-ex="1">Ex 1</a>
+    <a href="#ex2" data-ex="2">Ex 2</a>
+    <a href="#ex3" data-ex="3">Ex 3</a>
+    <a href="#ex4" data-ex="4">Ex 4</a>
+    <a href="#ex5" data-ex="5">Ex 5</a>
+    <a href="#ex6" data-ex="6">Ex 6</a>
+    <a href="#ex7" data-ex="7">Ex 7</a>
+  </nav>
+
+  <section class="ex" data-ex="0" aria-label="Notions"><div id="notions-root"></div></section>
+
+  <section class="ex" data-ex="1" hidden>
+    <h2>Exercice 1 : facture avec remise</h2>
+    <div class="intro" data-ex="1"></div>
+    <p class="statement">Clés USB et souris : prix × quantité. 5 % de remise si le total brut atteint 20 000 MRU.</p>
+    <p class="idea"><b>Entrées :</b> 2 prix, 2 quantités. <b>Sorties :</b> brut, remise, net (ou une erreur).</p>
+    <div class="lab" data-ex="1"></div>
+    <h3>Réponses</h3>
+    <ol class="answers">
+      <li>Entrées : prixCle, qteCle, prixSouris, qteSouris. Traitement : vérifier, calculer brut, remise, net. Sorties : brut, remise, net.</li>
+      <li>Voir l'algorithme ci-dessus.</li>
+      <li>Erreur si un prix ≤ 0 ou une quantité &lt; 0.</li>
+      <li><div class="calc">brut = 500 × 20 + 1500 × 8 = 22 000
+remise = 22 000 × 0.05 = 1 100
+net = 22 000 − 1 100 = 20 900 MRU</div></li>
+      <li><div class="calc">500 × 10 + 1500 × 4 = 11 000 &lt; 20 000  →  pas de remise, net = 11 000 MRU</div></li>
+    </ol>
+  </section>
+
+  <section class="ex" data-ex="2" hidden>
+    <h2>Exercice 2 : contrôle d'accès</h2>
+    <div class="intro" data-ex="2"></div>
+    <p class="statement">Connexion si l'identifiant est valide, le mot de passe est valide et le compte n'est pas bloqué.</p>
+    <p class="idea"><b>Idée :</b> trois Booléens reliés par et.</p>
+    <div class="lab" data-ex="2"></div>
+    <h3>Réponses</h3>
+    <ol class="answers">
+      <li><div class="calc">identifiantValide = Vrai et motDePasseValide = Vrai et compteBloque = Faux</div></li>
+      <li>Voir l'algorithme ci-dessus.</li>
+      <li>Les 4 cas sont dans l'animation : « Accès autorisé », puis un message par erreur.</li>
+      <li><div class="calc">si non(identifiantValide) = Faux
+   et non(motDePasseValide) = Faux
+   et non(compteBloque) = Vrai alors
+   écrire("Accès autorisé")
+fin si</div>
+        non(identifiantValide) = Faux veut dire que l'identifiant est valide. Même résultat que Q1 dans les 8 cas.</li>
+    </ol>
+  </section>
+
+  <section class="ex" data-ex="3" hidden>
+    <h2>Exercice 3 : facture d'électricité</h2>
+    <div class="intro" data-ex="3"></div>
+    <p class="statement">0 à 100 kWh : 5 MRU. 100 à 200 kWh : 8 MRU. Au-delà : 12 MRU. Chaque tranche à son prix.</p>
+    <p class="idea"><b>Idée :</b> si … sinon si … sinon, un bloc par tranche.</p>
+    <div class="lab" data-ex="3"></div>
+    <h3>Réponses</h3>
+    <ol class="answers">
+      <li>Voir l'algorithme ci-dessus.</li>
+      <li>≤ 100, ≤ 200, sinon. 100 et 200 restent dans la tranche du bas.</li>
+      <li><div class="calc"> 80 kWh : 80 × 5                     =   400 MRU
+150 kWh : 100 × 5 + 50 × 8            =   900 MRU
+250 kWh : 100 × 5 + 100 × 8 + 50 × 12 = 1 900 MRU</div></li>
+      <li>Progressif : chaque tranche à son prix. Unique : tout au même prix. Pour 250 kWh : 1 900 contre 3 000 MRU.
+        <div id="tariff-chart"></div></li>
+    </ol>
+  </section>
+
+  <section class="ex" data-ex="4" hidden>
+    <h2>Exercice 4 : calculatrice à menu</h2>
+    <div class="intro" data-ex="4"></div>
+    <p class="statement">Menu 1 à 4 pour les opérations, 0 pour quitter. Le menu revient jusqu'au choix 0.</p>
+    <p class="idea"><b>Idée :</b> tant que choix /= 0, et selon choix pour l'opération.</p>
+    <div class="lab" data-ex="4"></div>
+    <h3>Réponses</h3>
+    <ol class="answers">
+      <li>Voir l'algorithme ci-dessus.</li>
+      <li>Le cas autre affiche par exemple « Erreur : le choix 5 n'existe pas. Tapez un nombre entre 0 et 4. », puis le menu revient.</li>
+      <li>Dans le cas 4 : si b = 0, message d'erreur.</li>
+      <li>Trace : 1, 5, 3 → 8 ; 4, 7, 0 → erreur ; 9 → invalide ; 0 → fin. Voir le tableau sous l'animation.</li>
+    </ol>
+  </section>
+
+  <section class="ex" data-ex="5" hidden>
+    <h2>Exercice 5 : bilan des notes</h2>
+    <div class="intro" data-ex="5"></div>
+    <p class="statement">Lire N puis N notes entre 0 et 20. Calculer admis, non-admis, moyenne, meilleure note et taux de réussite.</p>
+    <p class="idea"><b>Idée :</b> une boucle pour avec un compteur, une somme et un maximum.</p>
+    <div class="lab" data-ex="5"></div>
+    <h3>Réponses</h3>
+    <ol class="answers">
+      <li>Voir l'algorithme ci-dessus.</li>
+      <li>Avant la boucle : nbAdmis ← 0, somme ← 0, meilleure ← 0.</li>
+      <li>taux ← nbAdmis × 100 / n</li>
+      <li><div class="calc">somme = 60   moyenne = 12   admis = 3   non admis = 2
+meilleure = 16   taux = 60 %</div></li>
+      <li>N ≤ 0 : message d'erreur (sinon division par zéro).</li>
+    </ol>
+  </section>
+
+  <section class="ex" data-ex="6" hidden>
+    <h2>Exercice 6 : code PIN</h2>
+    <div class="intro" data-ex="6"></div>
+    <p class="statement">Redemander le code tant qu'il n'est pas entre 1000 et 9999.</p>
+    <p class="idea"><b>Idée :</b> deux versions, choisissez-la au-dessus du code.</p>
+    <div class="lab" data-ex="6"></div>
+    <h3>Réponses</h3>
+    <ol class="answers">
+      <li>Version répéter … jusqu'à.</li>
+      <li>Version tant que.</li>
+      <li>répéter teste à la fin : au moins un tour. tant que teste au début : il faut lire une fois avant la boucle.</li>
+      <li>25 → invalide, 12345 → invalide, 4821 → accepté.</li>
+    </ol>
+  </section>
+
+  <section class="ex" data-ex="7" hidden>
+    <h2>Exercice 7 : jeu de devinette</h2>
+    <div class="intro" data-ex="7"></div>
+    <p class="statement">Trouver 42 en 3 essais. Indice « plus grand » ou « plus petit » après chaque erreur.</p>
+    <p class="idea"><b>Idée :</b> tant que essais &lt; 3 et non trouve.</p>
+    <div class="lab" data-ex="7"></div>
+    <h3>Jouer</h3>
+    <div id="guess-game"></div>
+    <h3>Réponses</h3>
+    <ol class="answers">
+      <li>Voir l'algorithme ci-dessus.</li>
+      <li>Si trouvé : « Bravo ! Trouvé en <i>essais</i> essai(s). »</li>
+      <li>Sinon : « Perdu ! Le nombre secret était 42. »</li>
+      <li>Voir les cas « Trouvé au 1er essai », « Trouvé au 3e essai » et « Perdu ».</li>
+      <li>Après 3 essais, 3 &lt; 3 est Faux : la boucle s'arrête.</li>
+    </ol>
+  </section>
+</div>
+<script>
+const CODE = {"ex1.algo": "Nom : factureRemise\nRôle : Calculer le montant brut, la remise et le montant net\nEntrée : prixCle, prixSouris : Réel\n         qteCle, qteSouris : Entier\nSortie : montantBrut, remise, montantNet : Réel\nDéclaration : seuilRemise, tauxRemise : Réel\ndébut                                                       //@start\n   seuilRemise ← 20000\n   tauxRemise ← 0.05\n   écrire(\"Prix unitaire d'une clé USB : \")\n   lire(prixCle)                                            //@r1\n   écrire(\"Quantité de clés USB : \")\n   lire(qteCle)                                             //@r2\n   écrire(\"Prix unitaire d'une souris : \")\n   lire(prixSouris)                                         //@r3\n   écrire(\"Quantité de souris : \")\n   lire(qteSouris)                                          //@r4\n   si prixCle ≤ 0 ou prixSouris ≤ 0 alors                   //@v1\n      écrire(\"Erreur : chaque prix doit être strictement positif.\")      //@e1\n   sinon\n      si qteCle < 0 ou qteSouris < 0 alors                  //@v2\n         écrire(\"Erreur : chaque quantité doit être positive ou nulle.\") //@e2\n      sinon\n         montantBrut ← prixCle * qteCle + prixSouris * qteSouris   //@b\n         si montantBrut ≥ seuilRemise alors                 //@c\n            remise ← montantBrut * tauxRemise               //@rm\n         sinon\n            remise ← 0                                      //@r0\n         fin si\n         montantNet ← montantBrut - remise                  //@n\n         écrire(\"Montant brut : \", montantBrut, \" MRU\")     //@o1\n         écrire(\"Remise : \", remise, \" MRU\")                //@o2\n         écrire(\"Montant net : \", montantNet, \" MRU\")       //@o3\n      fin si\n   fin si\nfin                                                         //@end\n", "ex1.cpp": "#include <iostream>\nusing namespace std;\n\nint main() {\n    const double SEUIL_REMISE = 20000;   // en MRU\n    const double TAUX_REMISE = 0.05;     // 5 %\n    double prixCle, prixSouris;          //@start\n    int qteCle, qteSouris;\n    double montantBrut, remise, montantNet;\n\n    cout << \"Prix unitaire d'une cle USB : \";\n    cin >> prixCle;                                      //@r1\n    cout << \"Quantite de cles USB : \";\n    cin >> qteCle;                                       //@r2\n    cout << \"Prix unitaire d'une souris : \";\n    cin >> prixSouris;                                   //@r3\n    cout << \"Quantite de souris : \";\n    cin >> qteSouris;                                    //@r4\n\n    if (prixCle <= 0 || prixSouris <= 0) {               //@v1\n        cout << \"Erreur : chaque prix doit etre strictement positif.\" << endl;    //@e1\n    } else if (qteCle < 0 || qteSouris < 0) {            //@v2\n        cout << \"Erreur : chaque quantite doit etre positive ou nulle.\" << endl;  //@e2\n    } else {\n        montantBrut = prixCle * qteCle + prixSouris * qteSouris;   //@b\n        if (montantBrut >= SEUIL_REMISE) {               //@c\n            remise = montantBrut * TAUX_REMISE;          //@rm\n        } else {\n            remise = 0;                                  //@r0\n        }\n        montantNet = montantBrut - remise;               //@n\n        cout << \"Montant brut : \" << montantBrut << \" MRU\" << endl;   //@o1\n        cout << \"Remise : \" << remise << \" MRU\" << endl;              //@o2\n        cout << \"Montant net : \" << montantNet << \" MRU\" << endl;     //@o3\n    }\n    return 0;                                            //@end\n}\n", "ex2.algo": "Nom : controleAcces\nRôle : Autoriser ou refuser la connexion\nEntrée : identifiantValide, motDePasseValide, compteBloque : Booléen\nSortie : accesAutorise : Booléen\nDéclaration : -\ndébut                                                       //@start\n   écrire(\"Identifiant valide ? \")\n   lire(identifiantValide)                                  //@r1\n   écrire(\"Mot de passe valide ? \")\n   lire(motDePasseValide)                                   //@r2\n   écrire(\"Compte bloqué ? \")\n   lire(compteBloque)                                       //@r3\n   accesAutorise ← identifiantValide et motDePasseValide et non compteBloque   //@acc\n   si accesAutorise alors                                   //@c0\n      écrire(\"Accès autorisé\")                              //@ok\n   sinon\n      si non identifiantValide alors                        //@c1\n         écrire(\"Erreur : identifiant invalide\")            //@e1\n      sinon\n         si non motDePasseValide alors                      //@c2\n            écrire(\"Erreur : mot de passe invalide\")        //@e2\n         sinon\n            écrire(\"Erreur : compte bloqué, contactez l'administration\")   //@e3\n         fin si\n      fin si\n   fin si\nfin                                                         //@end\n", "ex2.cpp": "#include <iostream>\nusing namespace std;\n\nint main() {\n    bool identifiantValide, motDePasseValide, compteBloque;   //@start\n    bool accesAutorise;\n\n    // Saisie : 1 = vrai, 0 = faux\n    cout << \"Identifiant valide ? (1/0) : \";\n    cin >> identifiantValide;                         //@r1\n    cout << \"Mot de passe valide ? (1/0) : \";\n    cin >> motDePasseValide;                          //@r2\n    cout << \"Compte bloque ? (1/0) : \";\n    cin >> compteBloque;                              //@r3\n\n    accesAutorise = identifiantValide && motDePasseValide && !compteBloque;   //@acc\n\n    if (accesAutorise) {                              //@c0\n        cout << \"Acces autorise\" << endl;             //@ok\n    } else if (!identifiantValide) {                  //@c1\n        cout << \"Erreur : identifiant invalide\" << endl;     //@e1\n    } else if (!motDePasseValide) {                   //@c2\n        cout << \"Erreur : mot de passe invalide\" << endl;    //@e2\n    } else {\n        cout << \"Erreur : compte bloque, contactez l'administration\" << endl;   //@e3\n    }\n    return 0;                                         //@end\n}\n", "ex3.algo": "Nom : factureElectricite\nRôle : Calculer une facture d'électricité à tarif progressif\nEntrée : consommation : Réel\nSortie : montant, taxe : Réel\nDéclaration : tarif1, tarif2, tarif3, tauxTaxe : Réel\ndébut                                                       //@start\n   tarif1 ← 5\n   tarif2 ← 8\n   tarif3 ← 12\n   tauxTaxe ← 0.02\n   écrire(\"Consommation (kWh) : \")\n   lire(consommation)                                       //@r1\n   si consommation < 0 alors                                //@v\n      écrire(\"Erreur : la consommation ne peut pas être négative.\")   //@e\n   sinon\n      si consommation ≤ 100 alors                           //@c1\n         montant ← consommation * tarif1                    //@m1\n      sinon\n         si consommation ≤ 200 alors                        //@c2\n            montant ← 100 * tarif1 + (consommation - 100) * tarif2   //@m2\n         sinon\n            montant ← 100 * tarif1 + 100 * tarif2 + (consommation - 200) * tarif3   //@m3\n         fin si\n      fin si\n      taxe ← montant * tauxTaxe                             //@t\n      écrire(\"Montant hors taxe : \", montant, \" MRU\")       //@o1\n      écrire(\"Taxe (2 %) : \", taxe, \" MRU\")                 //@o2\n      écrire(\"Montant TTC : \", montant + taxe, \" MRU\")      //@o3\n   fin si\nfin                                                         //@end\n", "ex3.cpp": "#include <iostream>\nusing namespace std;\n\nint main() {\n    const double TARIF1 = 5;      // MRU/kWh, de 0 a 100 kWh\n    const double TARIF2 = 8;      // de 100 a 200 kWh\n    const double TARIF3 = 12;     // au-dela de 200 kWh\n    const double TAUX_TAXE = 0.02;\n    double consommation, montant, taxe;      //@start\n\n    cout << \"Consommation (kWh) : \";\n    cin >> consommation;                     //@r1\n\n    if (consommation < 0) {                  //@v\n        cout << \"Erreur : la consommation ne peut pas etre negative.\" << endl;   //@e\n    } else {\n        if (consommation <= 100) {           //@c1\n            montant = consommation * TARIF1;                                  //@m1\n        } else if (consommation <= 200) {    //@c2\n            montant = 100 * TARIF1 + (consommation - 100) * TARIF2;           //@m2\n        } else {\n            montant = 100 * TARIF1 + 100 * TARIF2 + (consommation - 200) * TARIF3;   //@m3\n        }\n        taxe = montant * TAUX_TAXE;          //@t\n        cout << \"Montant hors taxe : \" << montant << \" MRU\" << endl;          //@o1\n        cout << \"Taxe (2 %) : \" << taxe << \" MRU\" << endl;                    //@o2\n        cout << \"Montant TTC : \" << montant + taxe << \" MRU\" << endl;         //@o3\n    }\n    return 0;                                //@end\n}\n", "ex4.algo": "Nom : calculatriceMenu\nRôle : Répéter des opérations choisies dans un menu jusqu'au choix 0\nEntrée : choix : Entier\n         a, b : Réel\nSortie : resultat : Réel\nDéclaration : -\ndébut                                                       //@start\n   choix ← -1                                               //@init\n   tant que choix /= 0 faire                                //@loop\n      écrire(\"1. Addition  2. Soustraction  3. Multiplication  4. Division  0. Quitter\")   //@menu\n      écrire(\"Votre choix : \")\n      lire(choix)                                           //@rc\n      si choix ≥ 1 et choix ≤ 4 alors                      //@qop\n         écrire(\"Premier nombre : \")\n         lire(a)                                            //@ra\n         écrire(\"Deuxième nombre : \")\n         lire(b)                                            //@rb\n      fin si\n      selon choix faire                                     //@sel\n         0 : écrire(\"Au revoir !\")                          //@bye\n         1 : resultat ← a + b                               //@add\n             écrire(\"Résultat : \", resultat)                //@o1\n         2 : resultat ← a - b                               //@sub\n             écrire(\"Résultat : \", resultat)                //@o2\n         3 : resultat ← a * b                               //@mul\n             écrire(\"Résultat : \", resultat)                //@o3\n         4 : si b = 0 alors                                 //@dz\n                écrire(\"Erreur : division par zéro impossible.\")   //@dzerr\n             sinon\n                resultat ← a / b                            //@div\n                écrire(\"Résultat : \", resultat)             //@o4\n             fin si\n         autre : écrire(\"Erreur : le choix \", choix, \" n'existe pas. Tapez un nombre entre 0 et 4.\")   //@inv\n      fin selon\n   fin tant que\nfin                                                         //@end\n", "ex4.cpp": "#include <iostream>\nusing namespace std;\n\nint main() {\n    int choix;                                   //@start\n    double a, b;\n\n    choix = -1;      // different de 0 pour entrer dans la boucle   //@init\n    while (choix != 0) {                         //@loop\n        cout << \"1. Addition  2. Soustraction  3. Multiplication  4. Division  0. Quitter\" << endl;   //@menu\n        cout << \"Votre choix : \";\n        cin >> choix;                            //@rc\n\n        if (choix == 0) {                        //@q0\n            cout << \"Au revoir !\" << endl;       //@bye\n        } else if (choix < 0 || choix > 4) {     //@qinv\n            cout << \"Choix invalide, recommencez.\" << endl;   //@inv\n        } else {\n            cout << \"Premier nombre : \";\n            cin >> a;                            //@ra\n            cout << \"Deuxieme nombre : \";\n            cin >> b;                            //@rb\n            switch (choix) {                     //@sel\n                case 1: cout << \"Resultat : \" << a + b << endl; break;   //@add\n                case 2: cout << \"Resultat : \" << a - b << endl; break;   //@sub\n                case 3: cout << \"Resultat : \" << a * b << endl; break;   //@mul\n                case 4:\n                    if (b == 0) {                //@dz\n                        cout << \"Erreur : division par zero impossible.\" << endl;   //@dzerr\n                    } else {\n                        cout << \"Resultat : \" << a / b << endl;    //@div\n                    }\n                    break;\n            }\n        }\n    }\n    return 0;                                    //@end\n}\n", "ex5.algo": "Nom : bilanGroupe\nRôle : Analyser les notes de n étudiants\nEntrée : n : Entier\n         note : Réel\nSortie : nbAdmis, nbNonAdmis : Entier\n         moyenne, meilleure, taux : Réel\nDéclaration : i : Naturel\n              somme : Réel\ndébut                                                       //@start\n   écrire(\"Nombre d'étudiants : \")\n   lire(n)                                                  //@rn\n   si n ≤ 0 alors                                           //@vn\n      écrire(\"Erreur : le nombre d'étudiants doit être strictement positif.\")   //@en\n   sinon\n      nbAdmis ← 0                                           //@i1\n      somme ← 0                                             //@i2\n      meilleure ← 0                                         //@i3\n      pour i ← 1 à n faire                                  //@for\n         écrire(\"Note de l'étudiant \", i, \" : \")\n         lire(note)                                         //@rnote\n         tant que note < 0 ou note > 20 faire               //@vnote\n            écrire(\"Note invalide (0 à 20). Recommencez : \")\n            lire(note)                                      //@rnote2\n         fin tant que\n         somme ← somme + note                               //@sum\n         si note ≥ 10 alors                                 //@cadm\n            nbAdmis ← nbAdmis + 1                           //@adm\n         fin si\n         si note > meilleure alors                          //@cmax\n            meilleure ← note                                //@max\n         fin si\n      fin pour\n      nbNonAdmis ← n - nbAdmis                              //@na\n      moyenne ← somme / n                                   //@moy\n      taux ← nbAdmis * 100 / n                              //@taux\n      écrire(\"Admis : \", nbAdmis, \", non admis : \", nbNonAdmis)   //@out\n      écrire(\"Moyenne : \", moyenne, \", meilleure note : \", meilleure)\n      écrire(\"Taux de réussite : \", taux, \" %\")\n   fin si\nfin                                                         //@end\n", "ex5.cpp": "#include <iostream>\nusing namespace std;\n\nint main() {\n    int n, nbAdmis, nbNonAdmis;                  //@start\n    double note, somme, meilleure, moyenne, taux;\n\n    cout << \"Nombre d'etudiants : \";\n    cin >> n;                                    //@rn\n\n    if (n <= 0) {                                //@vn\n        cout << \"Erreur : le nombre d'etudiants doit etre strictement positif.\" << endl;   //@en\n    } else {\n        nbAdmis = 0;        // compteur          //@i1\n        somme = 0;          // accumulateur      //@i2\n        meilleure = 0;      // plus petite note possible   //@i3\n        for (int i = 1; i <= n; i++) {           //@for\n            cout << \"Note de l'etudiant \" << i << \" : \";\n            cin >> note;                         //@rnote\n            while (note < 0 || note > 20) {      //@vnote\n                cout << \"Note invalide (0 a 20). Recommencez : \";\n                cin >> note;                     //@rnote2\n            }\n            somme = somme + note;                //@sum\n            if (note >= 10) {                    //@cadm\n                nbAdmis = nbAdmis + 1;           //@adm\n            }\n            if (note > meilleure) {              //@cmax\n                meilleure = note;                //@max\n            }\n        }\n        nbNonAdmis = n - nbAdmis;                //@na\n        moyenne = somme / n;                     //@moy\n        taux = nbAdmis * 100.0 / n;   // 100.0 : division reelle   //@taux\n        cout << \"Admis : \" << nbAdmis << \", non admis : \" << nbNonAdmis << endl;   //@out\n        cout << \"Moyenne : \" << moyenne << \", meilleure note : \" << meilleure << endl;\n        cout << \"Taux de reussite : \" << taux << \" %\" << endl;\n    }\n    return 0;                                    //@end\n}\n", "ex6a.algo": "Nom : saisiePinRepeter\nRôle : Lire un code PIN entre 1000 et 9999\nEntrée : pin : Entier\nSortie : le message de confirmation du code\nDéclaration : valide : Booléen\ndébut                                                       //@start\n   répéter                                                  //@rep\n      écrire(\"Entrez votre code PIN (4 chiffres) : \")\n      lire(pin)                                             //@r\n      valide ← pin ≥ 1000 et pin ≤ 9999                     //@val\n      si non valide alors                                   //@c\n         écrire(\"Code invalide : il faut un nombre entre 1000 et 9999.\")   //@err\n      fin si\n   jusqu'à valide                                           //@until\n   écrire(\"Code PIN \", pin, \" enregistré.\")                 //@ok\nfin                                                         //@end\n", "ex6a.cpp": "#include <iostream>\nusing namespace std;\n\nint main() {\n    int pin;                                     //@start\n\n    do {                                         //@rep\n        cout << \"Entrez votre code PIN (4 chiffres) : \";\n        cin >> pin;                              //@r\n        if (pin < 1000 || pin > 9999) {          //@c\n            cout << \"Code invalide : il faut un nombre entre 1000 et 9999.\" << endl;   //@err\n        }\n    } while (pin < 1000 || pin > 9999);          //@until\n\n    cout << \"Code PIN \" << pin << \" enregistre.\" << endl;   //@ok\n    return 0;                                    //@end\n}\n", "ex6b.algo": "Nom : saisiePinTantQue\nRôle : Lire un code PIN entre 1000 et 9999\nEntrée : pin : Entier\nSortie : le message de confirmation du code\nDéclaration : -\ndébut                                                       //@start\n   écrire(\"Entrez votre code PIN (4 chiffres) : \")\n   lire(pin)                                                //@r\n   tant que pin < 1000 ou pin > 9999 faire                  //@c\n      écrire(\"Code invalide : il faut un nombre entre 1000 et 9999.\")   //@err\n      écrire(\"Entrez votre code PIN (4 chiffres) : \")\n      lire(pin)                                             //@r2\n   fin tant que\n   écrire(\"Code PIN \", pin, \" enregistré.\")                 //@ok\nfin                                                         //@end\n", "ex6b.cpp": "#include <iostream>\nusing namespace std;\n\nint main() {\n    int pin;                                     //@start\n\n    cout << \"Entrez votre code PIN (4 chiffres) : \";\n    cin >> pin;                // lecture AVANT la boucle   //@r\n    while (pin < 1000 || pin > 9999) {           //@c\n        cout << \"Code invalide : il faut un nombre entre 1000 et 9999.\" << endl;   //@err\n        cout << \"Entrez votre code PIN (4 chiffres) : \";\n        cin >> pin;                              //@r2\n    }\n\n    cout << \"Code PIN \" << pin << \" enregistre.\" << endl;   //@ok\n    return 0;                                    //@end\n}\n", "ex7.algo": "Nom : devinette\nRôle : Faire deviner le nombre 42 en un nombre d'essais limité\nEntrée : proposition : Entier\nSortie : trouve : Booléen\n         essais : Entier\nDéclaration : secret, maxEssais : Entier\ndébut                                                       //@start\n   secret ← 42\n   maxEssais ← 3\n   essais ← 0                                               //@i1\n   trouve ← Faux                                            //@i2\n   tant que essais < maxEssais et non trouve faire          //@loop\n      écrire(\"Essai \", essais + 1, \"/\", maxEssais, \" - votre nombre : \")\n      lire(proposition)                                     //@r\n      essais ← essais + 1                                   //@inc\n      si proposition = secret alors                         //@ceq\n         trouve ← Vrai                                      //@found\n      sinon\n         si proposition < secret alors                      //@clt\n            écrire(\"Le nombre secret est plus grand.\")      //@big\n         sinon\n            écrire(\"Le nombre secret est plus petit.\")      //@small\n         fin si\n      fin si\n   fin tant que\n   si trouve alors                                          //@cend\n      écrire(\"Bravo ! Trouvé en \", essais, \" essai(s).\")    //@win\n   sinon\n      écrire(\"Perdu ! Le nombre secret était \", secret, \".\")   //@lose\n   fin si\nfin                                                         //@end\n", "ex7.cpp": "#include <iostream>\nusing namespace std;\n\nint main() {\n    const int SECRET = 42;\n    const int MAX_ESSAIS = 3;\n    int essais, proposition;                     //@start\n    bool trouve;\n\n    essais = 0;                                  //@i1\n    trouve = false;                              //@i2\n    while (essais < MAX_ESSAIS && !trouve) {     //@loop\n        cout << \"Essai \" << essais + 1 << \"/\" << MAX_ESSAIS << \" - votre nombre : \";\n        cin >> proposition;                      //@r\n        essais++;                                //@inc\n        if (proposition == SECRET) {             //@ceq\n            trouve = true;                       //@found\n        } else if (proposition < SECRET) {       //@clt\n            cout << \"Le nombre secret est plus grand.\" << endl;   //@big\n        } else {\n            cout << \"Le nombre secret est plus petit.\" << endl;   //@small\n        }\n    }\n\n    if (trouve) {                                //@cend\n        cout << \"Bravo ! Trouve en \" << essais << \" essai(s).\" << endl;   //@win\n    } else {\n        cout << \"Perdu ! Le nombre secret etait \" << SECRET << \".\" << endl;   //@lose\n    }\n    return 0;                                    //@end\n}\n"};
+/* Simulateurs des exercices : chaque étape = {lbl, note, vars, ch, out, viz}. */
+
+function num(x) {
+  if (typeof x !== 'number') return x;
+  return String(Number(x.toPrecision(6)));
+}
+function B(b) { return b ? 'Vrai' : 'Faux'; }
+function fr(x) { return Number(x.toPrecision(10)).toLocaleString('fr-FR'); }
+
+function Tracer(varDefs) {
+  const vars = {};
+  varDefs.forEach(v => { vars[v[0]] = '?'; });
+  const t = {
+    vars, out: [], steps: [], vz: {}, ch: [],
+    set(name, val) { vars[name] = val; t.ch.push(name); },
+    print(s, cls) { t.out.push({ s: s, cls: cls || 'out' }); },
+    ask(prompt, val) { t.out.push({ s: prompt, inp: String(val), cls: 'out' }); },
+    step(lbl, note) {
+      t.steps.push({
+        lbl, note,
+        vars: Object.assign({}, vars),
+        ch: t.ch.slice(),
+        out: t.out.map(o => Object.assign({}, o)),
+        viz: JSON.parse(JSON.stringify(t.vz))
+      });
+      t.ch = [];
+    },
+    read(lbl, name, val, prompt, note, shown) {
+      t.set(name, val);
+      t.ask(prompt, shown !== undefined ? shown : val);
+      t.step(lbl, note || `On lit ${name} : ${shown !== undefined ? shown : num(val)}.`);
+    }
+  };
+  return t;
+}
+
+const SIMS = {};
+
+/* Exercice 1 */
+SIMS[1] = {
+  vars: [['prixCle', 'Réel'], ['qteCle', 'Entier'], ['prixSouris', 'Réel'], ['qteSouris', 'Entier'],
+         ['montantBrut', 'Réel'], ['remise', 'Réel'], ['montantNet', 'Réel']],
+  scenarios: [
+    { label: '20 clés + 8 souris', input: { pc: 500, qc: 20, ps: 1500, qs: 8 } },
+    { label: 'Moins de 20 000', input: { pc: 500, qc: 10, ps: 1500, qs: 4 } },
+    { label: 'Pile 20 000', input: { pc: 500, qc: 10, ps: 1500, qs: 10 } },
+    { label: 'Prix = 0', input: { pc: 0, qc: 5, ps: 1500, qs: 2 } },
+    { label: 'Quantité < 0', input: { pc: 500, qc: -3, ps: 1500, qs: 2 } }
+  ],
+  run(I) {
+    const t = Tracer(this.vars);
+    t.vz = { rows: [], brut: null, remise: null, net: null, err: null };
+    t.step('start', 'Les variables sont vides (?).');
+    t.read('r1', 'prixCle', I.pc, "Prix unitaire d'une clé USB : ");
+    t.read('r2', 'qteCle', I.qc, 'Quantité de clés USB : ');
+    t.vz.rows.push({ k: 'Clé USB', q: I.qc, p: I.pc });
+    t.read('r3', 'prixSouris', I.ps, "Prix unitaire d'une souris : ");
+    t.read('r4', 'qteSouris', I.qs, 'Quantité de souris : ');
+    t.vz.rows.push({ k: 'Souris', q: I.qs, p: I.ps });
+    const a = I.pc <= 0, b = I.ps <= 0;
+    if (a || b) {
+      t.step('v1', `Un prix est ≤ 0 → Vrai.`);
+      t.print("Erreur : chaque prix doit être strictement positif.", 'err');
+      t.vz.err = 'Prix invalide';
+      t.step('e1', 'Message d\'erreur, pas de calcul.');
+      t.step('end', 'Fin.');
+      return t.steps;
+    }
+    t.step('v1', 'Les prix sont > 0 → test suivant.');
+    const c = I.qc < 0, d = I.qs < 0;
+    if (c || d) {
+      t.step('v2', 'Une quantité est < 0 → Vrai.');
+      t.print("Erreur : chaque quantité doit être positive ou nulle.", 'err');
+      t.vz.err = 'Quantité invalide';
+      t.step('e2', 'Message d\'erreur, pas de calcul.');
+      t.step('end', 'Fin.');
+      return t.steps;
+    }
+    t.step('v2', 'Les quantités sont ≥ 0 → on calcule.');
+    const brut = I.pc * I.qc + I.ps * I.qs;
+    t.set('montantBrut', brut); t.vz.brut = brut;
+    t.step('b', `${num(I.pc)} × ${num(I.qc)} + ${num(I.ps)} × ${num(I.qs)} = ${num(brut)}`);
+    let rem;
+    if (brut >= 20000) {
+      t.step('c', `${num(brut)} ≥ 20000 → Vrai`);
+      rem = brut * 0.05; t.set('remise', rem); t.vz.remise = rem;
+      t.step('rm', `${num(brut)} × 0.05 = ${num(rem)}`);
+    } else {
+      t.step('c', `${num(brut)} ≥ 20000 → Faux`);
+      rem = 0; t.set('remise', 0); t.vz.remise = 0;
+      t.step('r0', 'Pas de remise : remise = 0.');
+    }
+    const net = brut - rem;
+    t.set('montantNet', net); t.vz.net = net;
+    t.step('n', `${num(brut)} − ${num(rem)} = ${num(net)}`);
+    t.print(`Montant brut : ${num(brut)} MRU`); t.step('o1', 'Affichage.');
+    t.print(`Remise : ${num(rem)} MRU`); t.step('o2', 'Affichage.');
+    t.print(`Montant net : ${num(net)} MRU`); t.step('o3', 'Affichage.');
+    t.step('end', 'Fin.');
+    return t.steps;
+  }
+};
+
+/* Exercice 2 */
+SIMS[2] = {
+  vars: [['identifiantValide', 'Booléen'], ['motDePasseValide', 'Booléen'], ['compteBloque', 'Booléen'], ['accesAutorise', 'Booléen']],
+  scenarios: [
+    { label: 'Tout valide', input: { id: true, mdp: true, bl: false } },
+    { label: 'Identifiant invalide', input: { id: false, mdp: true, bl: false } },
+    { label: 'Mot de passe invalide', input: { id: true, mdp: false, bl: false } },
+    { label: 'Compte bloqué', input: { id: true, mdp: true, bl: true } },
+    { label: 'Tout faux', input: { id: false, mdp: false, bl: true } }
+  ],
+  run(I) {
+    const t = Tracer(this.vars);
+    t.vz = { id: null, mdp: null, bl: null, acc: null };
+    t.step('start', 'Un Booléen vaut Vrai ou Faux.');
+    t.vz.id = I.id; t.read('r1', 'identifiantValide', I.id, 'Identifiant valide ? ', `identifiantValide = ${B(I.id)}`, B(I.id));
+    t.vz.mdp = I.mdp; t.read('r2', 'motDePasseValide', I.mdp, 'Mot de passe valide ? ', `motDePasseValide = ${B(I.mdp)}`, B(I.mdp));
+    t.vz.bl = I.bl; t.read('r3', 'compteBloque', I.bl, 'Compte bloqué ? ', `compteBloque = ${B(I.bl)}`, B(I.bl));
+    const acc = I.id && I.mdp && !I.bl;
+    t.set('accesAutorise', acc); t.vz.acc = acc;
+    t.step('acc', `${B(I.id)} et ${B(I.mdp)} et ${B(!I.bl)} → ${B(acc)}`);
+    if (acc) {
+      t.step('c0', 'accesAutorise → Vrai');
+      t.print('Accès autorisé', 'ok'); t.step('ok', 'Connexion acceptée.');
+    } else {
+      t.step('c0', 'accesAutorise → Faux : on cherche la cause.');
+      if (!I.id) {
+        t.step('c1', 'non identifiantValide → Vrai');
+        t.print('Erreur : identifiant invalide', 'err'); t.step('e1', 'Message adapté.');
+      } else {
+        t.step('c1', 'non identifiantValide → Faux');
+        if (!I.mdp) {
+          t.step('c2', 'non motDePasseValide → Vrai');
+          t.print('Erreur : mot de passe invalide', 'err'); t.step('e2', 'Message adapté.');
+        } else {
+          t.step('c2', 'non motDePasseValide → Faux');
+          t.print("Erreur : compte bloqué, contactez l'administration", 'err'); t.step('e3', 'Il reste un cas : compte bloqué.');
+        }
+      }
+    }
+    t.step('end', 'Fin.');
+    return t.steps;
+  }
+};
+
+/* Exercice 3 */
+SIMS[3] = {
+  vars: [['consommation', 'Réel'], ['montant', 'Réel'], ['taxe', 'Réel']],
+  scenarios: [
+    { label: '80 kWh', input: { c: 80 } },
+    { label: '150 kWh', input: { c: 150 } },
+    { label: '250 kWh', input: { c: 250 } },
+    { label: '100 kWh', input: { c: 100 } },
+    { label: '200 kWh', input: { c: 200 } },
+    { label: '−5 kWh', input: { c: -5 } }
+  ],
+  run(I) {
+    const t = Tracer(this.vars);
+    const c = I.c;
+    t.vz = { c: null, test: null, done: false, err: false };
+    t.step('start', 'Début.');
+    t.vz.c = c;
+    t.read('r1', 'consommation', c, 'Consommation (kWh) : ');
+    if (c < 0) {
+      t.step('v', `${num(c)} < 0 → Vrai`);
+      t.vz.err = true;
+      t.print('Erreur : la consommation ne peut pas être négative.', 'err');
+      t.step('e', 'Message d\'erreur.');
+      t.step('end', 'Fin.');
+      return t.steps;
+    }
+    t.step('v', `${num(c)} < 0 → Faux`);
+    let m;
+    t.vz.test = 100;
+    if (c <= 100) {
+      t.step('c1', `${num(c)} ≤ 100 → Vrai`);
+      m = c * 5; t.set('montant', m); t.vz.done = true; t.vz.test = null;
+      t.step('m1', `${num(c)} × 5 = ${num(m)}`);
+    } else {
+      t.step('c1', `${num(c)} ≤ 100 → Faux`);
+      t.vz.test = 200;
+      if (c <= 200) {
+        t.step('c2', `${num(c)} ≤ 200 → Vrai`);
+        m = 100 * 5 + (c - 100) * 8; t.set('montant', m); t.vz.done = true; t.vz.test = null;
+        t.step('m2', `500 + ${num(c - 100)} × 8 = ${num(m)}`);
+      } else {
+        t.step('c2', `${num(c)} ≤ 200 → Faux`);
+        m = 100 * 5 + 100 * 8 + (c - 200) * 12; t.set('montant', m); t.vz.done = true; t.vz.test = null;
+        t.step('m3', `500 + 800 + ${num(c - 200)} × 12 = ${num(m)}`);
+      }
+    }
+    const tx = m * 0.02; t.set('taxe', tx);
+    t.step('t', `${num(m)} × 0.02 = ${num(tx)}`);
+    t.print(`Montant hors taxe : ${num(m)} MRU`); t.step('o1', 'Affichage.');
+    t.print(`Taxe (2 %) : ${num(tx)} MRU`); t.step('o2', 'Affichage.');
+    t.print(`Montant TTC : ${num(m + tx)} MRU`); t.step('o3', 'Affichage.');
+    t.step('end', 'Fin.');
+    return t.steps;
+  }
+};
+
+/* Exercice 4 */
+function parseList(s) {
+  return String(s).split(/[\s,;]+/).filter(x => x !== '').map(Number).filter(x => !isNaN(x));
+}
+SIMS[4] = {
+  vars: [['choix', 'Entier'], ['a', 'Réel'], ['b', 'Réel'], ['resultat', 'Réel']],
+  scenarios: [
+    { label: 'Trace du TD', input: { seq: '1 5 3 4 7 0 9 0' } },
+    { label: 'Multiplication', input: { seq: '3 6 7 0' } },
+    { label: 'Quitter', input: { seq: '0' } }
+  ],
+  run(I) {
+    const t = Tracer(this.vars);
+    const q = parseList(I.seq);
+    t.vz = { rows: [], cur: -1 };
+    const next = () => q.length ? q.shift() : null;
+    const stop = lbl => { t.step(lbl, 'Fin des saisies.'); return t.steps; };
+    t.step('start', 'Début.');
+    t.set('choix', -1);
+    t.step('init', 'choix = −1 pour entrer dans la boucle.');
+    let choix = -1, tour = 0;
+    while (true) {
+      if (choix === 0) {
+        t.vz.rows.push({ tour: '—', cond: 'Faux', choix: '', a: '', b: '', aff: 'sortie' }); t.vz.cur = t.vz.rows.length - 1;
+        t.step('loop', '0 /= 0 → Faux : on sort.');
+        break;
+      }
+      tour++;
+      if (tour > 25) break;
+      t.vz.rows.push({ tour, cond: 'Vrai', choix: '', a: '', b: '', aff: '' }); t.vz.cur = t.vz.rows.length - 1;
+      const row = t.vz.rows[t.vz.cur];
+      t.step('loop', `${choix} /= 0 → Vrai : tour ${tour}.`);
+      t.print('1. Addition  2. Soustraction  3. Multiplication  4. Division  0. Quitter', 'dim');
+      t.step('menu', 'Le menu s\'affiche.');
+      const v = next(); if (v === null) return stop('rc');
+      choix = v; row.choix = v;
+      t.read('rc', 'choix', v, 'Votre choix : ');
+      const isOp = Number.isInteger(v) && v >= 1 && v <= 4;
+      let a = null, b = null;
+      if (isOp) {
+        t.step('qop', `${v} entre 1 et 4 → Vrai : on lit a et b.`);
+        a = next(); if (a === null) return stop('ra');
+        row.a = a; t.read('ra', 'a', a, 'Premier nombre : ');
+        b = next(); if (b === null) return stop('rb');
+        row.b = b; t.read('rb', 'b', b, 'Deuxième nombre : ');
+      } else {
+        t.step('qop', `${v} entre 1 et 4 → Faux : pas de nombres à lire.`);
+      }
+      if (v === 0) {
+        t.step('sel', 'selon : on va au cas 0.');
+        t.print('Au revoir !', 'ok'); row.aff = 'Au revoir !';
+        t.step('bye', 'Au revoir.');
+        continue;
+      }
+      if (!isOp) {
+        t.step('sel', `selon : aucun cas pour ${v} → autre.`);
+        t.print(`Erreur : le choix ${v} n'existe pas. Tapez un nombre entre 0 et 4.`, 'err'); row.aff = `Le choix ${v} n'existe pas`;
+        t.step('inv', 'Le message dit ce qui ne va pas et comment corriger.');
+        continue;
+      }
+      t.step('sel', `selon : on va directement au cas ${v}.`);
+      const ops = { 1: ['add', '+', a + b], 2: ['sub', '−', a - b], 3: ['mul', '×', a * b] };
+      if (ops[v]) {
+        t.set('resultat', ops[v][2]);
+        t.step(ops[v][0], `resultat = ${num(a)} ${ops[v][1]} ${num(b)} = ${num(ops[v][2])}`);
+        t.print(`Résultat : ${num(ops[v][2])}`); row.aff = `Résultat : ${num(ops[v][2])}`;
+        t.step('o' + v, 'Affichage.');
+      } else if (b === 0) {
+        t.step('dz', 'b = 0 → Vrai');
+        t.print('Erreur : division par zéro impossible.', 'err'); row.aff = 'Division par 0';
+        t.step('dzerr', 'On ne divise pas.');
+      } else {
+        t.step('dz', 'b = 0 → Faux');
+        t.set('resultat', a / b);
+        t.step('div', `resultat = ${num(a)} / ${num(b)} = ${num(a / b)}`);
+        t.print(`Résultat : ${num(a / b)}`); row.aff = `Résultat : ${num(a / b)}`;
+        t.step('o4', 'Affichage.');
+      }
+    }
+    t.step('end', 'Fin.');
+    return t.steps;
+  }
+};
+
+/* Exercice 5 */
+SIMS[5] = {
+  vars: [['n', 'Entier'], ['i', 'Entier'], ['note', 'Réel'], ['somme', 'Réel'], ['nbAdmis', 'Entier'],
+         ['meilleure', 'Réel'], ['nbNonAdmis', 'Entier'], ['moyenne', 'Réel'], ['taux', 'Réel']],
+  scenarios: [
+    { label: 'N = 5 (TD)', input: { n: 5, notes: '12 8 15 9 16' } },
+    { label: 'Notes invalides', input: { n: 3, notes: '25 14 -2 6 20' } },
+    { label: 'N = 0', input: { n: 0, notes: '' } }
+  ],
+  run(I) {
+    const t = Tracer(this.vars);
+    const q = parseList(I.notes);
+    const n = Math.trunc(I.n);
+    t.vz = { n: Math.max(0, Math.min(n, 30)), bars: [], rej: [], cur: -1, best: -1 };
+    t.step('start', 'Début.');
+    t.read('rn', 'n', n, "Nombre d'étudiants : ");
+    if (n <= 0) {
+      t.step('vn', `${n} ≤ 0 → Vrai`);
+      t.print("Erreur : le nombre d'étudiants doit être strictement positif.", 'err');
+      t.step('en', 'Pas de moyenne possible.');
+      t.step('end', 'Fin.');
+      return t.steps;
+    }
+    t.step('vn', `${n} ≤ 0 → Faux`);
+    t.set('nbAdmis', 0); t.step('i1', 'Compteur à 0.');
+    t.set('somme', 0); t.step('i2', 'Somme à 0.');
+    t.set('meilleure', 0); t.step('i3', 'Meilleure à 0.');
+    let somme = 0, adm = 0, best = 0;
+    for (let i = 1; i <= n; i++) {
+      t.set('i', i); t.vz.cur = i - 1;
+      t.step('for', `i = ${i}`);
+      let v = q.length ? q.shift() : null;
+      if (v === null) { t.step('rnote', 'Fin des saisies.'); return t.steps; }
+      t.read('rnote', 'note', v, `Note de l'étudiant ${i} : `);
+      while (v < 0 || v > 20) {
+        t.vz.rej.push({ i: i - 1, v });
+        t.step('vnote', `${num(v)} hors de [0, 20] → on redemande.`);
+        v = q.length ? q.shift() : null;
+        if (v === null) { t.step('rnote2', 'Fin des saisies.'); return t.steps; }
+        t.print('Note invalide (0 à 20). Recommencez : ', 'err');
+        t.out[t.out.length - 1].inp = String(v);
+        t.set('note', v);
+        t.step('rnote2', `Nouvelle note : ${num(v)}`);
+      }
+      t.step('vnote', `${num(v)} est valide.`);
+      somme += v; t.set('somme', somme);
+      t.vz.bars.push(v);
+      t.step('sum', `somme = ${num(somme - v)} + ${num(v)} = ${num(somme)}`);
+      if (v >= 10) {
+        t.step('cadm', `${num(v)} ≥ 10 → Vrai`);
+        adm++; t.set('nbAdmis', adm);
+        t.step('adm', `nbAdmis = ${adm}`);
+      } else {
+        t.step('cadm', `${num(v)} ≥ 10 → Faux`);
+      }
+      if (v > best) {
+        t.step('cmax', `${num(v)} > ${num(best)} → Vrai`);
+        best = v; t.set('meilleure', v); t.vz.best = i - 1;
+        t.step('max', `meilleure = ${num(v)}`);
+      } else {
+        t.step('cmax', `${num(v)} > ${num(best)} → Faux`);
+      }
+    }
+    t.vz.cur = -1;
+    t.set('i', n + 1);
+    t.step('for', 'Fin de la boucle POUR.');
+    const na = n - adm; t.set('nbNonAdmis', na); t.step('na', `${n} − ${adm} = ${na}`);
+    const moy = somme / n; t.set('moyenne', moy); t.step('moy', `${num(somme)} / ${n} = ${num(moy)}`);
+    const tx = adm * 100 / n; t.set('taux', tx); t.step('taux', `${adm} × 100 / ${n} = ${num(tx)} %`);
+    t.print(`Admis : ${adm}, non admis : ${na}`);
+    t.print(`Moyenne : ${num(moy)}, meilleure note : ${num(best)}`);
+    t.print(`Taux de réussite : ${num(tx)} %`);
+    t.step('out', 'Affichage du bilan.');
+    t.step('end', 'Fin.');
+    return t.steps;
+  }
+};
+
+/* Exercice 6 */
+SIMS[6] = {
+  variants: [{ id: 'a', label: "répéter … jusqu'à" }, { id: 'b', label: 'tant que' }],
+  vars: [['pin', 'Entier']],
+  varsFor(v) { return v === 'a' ? [['pin', 'Entier'], ['valide', 'Booléen']] : [['pin', 'Entier']]; },
+  scenarios: [
+    { label: '25, 12345, 4821', input: { seq: '25 12345 4821' } },
+    { label: '4821', input: { seq: '4821' } },
+    { label: 'Limites : 999, 1000', input: { seq: '999 1000' } }
+  ],
+  run(I, variant) {
+    const t = Tracer(this.varsFor(variant));
+    const q = parseList(I.seq).map(Math.trunc);
+    t.vz = { node: null, reads: 0, tours: 0, variant };
+    const P = 'Entrez votre code PIN (4 chiffres) : ';
+    const inval = p => p < 1000 || p > 9999;
+    const out = () => { t.step('end', 'Fin des saisies.'); return t.steps; };
+    t.step('start', 'Début.');
+    let p;
+    if (variant === 'a') {
+      while (true) {
+        t.vz.tours++; t.vz.node = 'r';
+        t.step('rep', 'On entre sans test.');
+        p = q.length ? q.shift() : null; if (p === null) return out();
+        t.vz.reads++;
+        t.read('r', 'pin', p, P);
+        t.set('valide', !inval(p));
+        t.step('val', `valide = ${B(!inval(p))}`);
+        t.vz.node = 'c';
+        if (inval(p)) {
+          t.step('c', 'non valide → Vrai');
+          t.vz.node = 'err';
+          t.print('Code invalide : il faut un nombre entre 1000 et 9999.', 'err');
+          t.step('err', 'Message d\'erreur.');
+          t.vz.node = 'until';
+          t.step('until', 'jusqu\'à valide : Faux → on recommence.');
+        } else {
+          t.step('c', 'non valide → Faux');
+          t.vz.node = 'until';
+          t.step('until', 'jusqu\'à valide : Vrai → on sort.');
+          break;
+        }
+      }
+    } else {
+      t.vz.node = 'r'; p = q.length ? q.shift() : null; if (p === null) return out();
+      t.vz.reads++;
+      t.read('r', 'pin', p, P, `Lecture avant la boucle : ${p}.`);
+      while (true) {
+        t.vz.node = 'c';
+        if (!inval(p)) { t.step('c', `Test : ${p} valide → on ne rentre pas (ou plus).`); break; }
+        t.vz.tours++;
+        t.step('c', `Test : ${p} invalide → on entre.`);
+        t.vz.node = 'err';
+        t.print('Code invalide : il faut un nombre entre 1000 et 9999.', 'err');
+        t.step('err', 'Message d\'erreur.');
+        p = q.length ? q.shift() : null; if (p === null) return out();
+        t.vz.reads++;
+        t.read('r2', 'pin', p, P, `On relit : ${p}.`);
+      }
+    }
+    t.vz.node = 'ok';
+    t.print(`Code PIN ${p} enregistré.`, 'ok');
+    t.step('ok', 'Code accepté.');
+    t.step('end', `Fin : ${t.vz.tours} tour(s) de boucle.`);
+    return t.steps;
+  }
+};
+
+/* Exercice 7 */
+SIMS[7] = {
+  vars: [['essais', 'Entier'], ['proposition', 'Entier'], ['trouve', 'Booléen']],
+  scenarios: [
+    { label: 'Trouvé au 1er essai', input: { max: 3, seq: '42' } },
+    { label: 'Trouvé au 3e essai', input: { max: 3, seq: '10 70 42' } },
+    { label: 'Perdu', input: { max: 3, seq: '10 70 50 42' } },
+    { label: '7 essais : trouvé au 7e', input: { max: 7, seq: '50 25 37 43 40 41 42' } },
+    { label: '7 essais : perdu', input: { max: 7, seq: '10 20 30 35 38 40 41 42' } }
+  ],
+  codeTransform(text, I) { return text.replace(/maxEssais (=|←) 3/, `maxEssais $1 ${I.max}`); },
+  run(I) {
+    const t = Tracer(this.vars);
+    const MAX = Number(I.max) || 3, S = 42;
+    const q = parseList(I.seq).map(Math.trunc);
+    t.vz = { lo: 1, hi: 100, props: [], max: MAX, essais: 0, reveal: false, trouve: false, left: [] };
+    t.step('start', `secret = 42, maxEssais = ${MAX}.`);
+    t.set('essais', 0); t.step('i1', 'essais = 0');
+    t.set('trouve', false); t.step('i2', 'trouve = Faux');
+    let e = 0, found = false;
+    while (true) {
+      if (!(e < MAX && !found)) {
+        t.step('loop', found ? 'Trouvé → on sort.' : `${e} < ${MAX} → Faux : plus d'essais.`);
+        break;
+      }
+      t.step('loop', `${e} < ${MAX} et non trouve → on joue.`);
+      const p = q.length ? q.shift() : null;
+      if (p === null) { t.step('r', 'Fin des saisies.'); return t.steps; }
+      t.read('r', 'proposition', p, `Essai ${e + 1}/${MAX} - votre nombre : `);
+      e++; t.set('essais', e); t.vz.essais = e;
+      t.step('inc', `essais = ${e}`);
+      if (p === S) {
+        t.step('ceq', `${p} = 42 → Vrai`);
+        found = true; t.set('trouve', true); t.vz.trouve = true; t.vz.props.push({ v: p, r: 'eq' });
+        t.step('found', 'trouve = Vrai');
+      } else {
+        t.step('ceq', `${p} = 42 → Faux`);
+        if (p < S) {
+          t.step('clt', `${p} < 42 → Vrai`);
+          t.vz.props.push({ v: p, r: 'lt' }); t.vz.lo = Math.max(t.vz.lo, p + 1);
+          t.print('Le nombre secret est plus grand.', 'dim'); t.step('big', 'Indice : plus grand.');
+        } else {
+          t.step('clt', `${p} < 42 → Faux`);
+          t.vz.props.push({ v: p, r: 'gt' }); t.vz.hi = Math.min(t.vz.hi, p - 1);
+          t.print('Le nombre secret est plus petit.', 'dim'); t.step('small', 'Indice : plus petit.');
+        }
+      }
+    }
+    t.vz.reveal = true; t.vz.left = q.slice();
+    if (found) {
+      t.step('cend', 'trouve → Vrai');
+      t.print(`Bravo ! Trouvé en ${e} essai(s).`, 'ok'); t.step('win', `Gagné en ${e} essai(s).`);
+    } else {
+      t.step('cend', 'trouve → Faux');
+      t.print(`Perdu ! Le nombre secret était ${S}.`, 'err'); t.step('lose', 'Perdu : on montre le secret.');
+    }
+    t.step('end', q.length ? `Fin. ${q.join(', ')} n'est jamais lu : pas d'essai en plus.` : 'Fin.');
+    return t.steps;
+  }
+};
+
+
+
+/* Notions du cours : chaque carte a une explication, la syntaxe et une animation pas à pas. */
+(function () {
+  'use strict';
+  const $ = (s, r) => (r || document).querySelector(s);
+  const $$ = (s, r) => Array.from((r || document).querySelectorAll(s));
+  const esc = s => String(s).replace(/[&<>"]/g, c => ({ '&': '&amp;', '<': '&lt;', '>': '&gt;', '"': '&quot;' })[c]);
+  const reduced = window.matchMedia && window.matchMedia('(prefers-reduced-motion: reduce)').matches;
+  const clone = o => JSON.parse(JSON.stringify(o));
+
+  /* ---------- briques de dessin ---------- */
+  function mbox(n, t, v, cls) {
+    return `<div class="mbox ${v === '?' ? 'empty' : ''} ${cls || ''}"><span class="mn">${esc(n)}</span><span class="mv">${esc(v)}</span><span class="mt">${esc(t)}</span></div>`;
+  }
+  function codeStrip(code) {
+    if (!code) return '';
+    return `<div class="cstrip"><code>${esc(code[0])}</code></div>`;
+  }
+  /* mini-traceur de code : lignes, ligne courante, variables, condition, écran */
+  function tracer(f, code, vars, extra) {
+    const lines = code.map((l, k) => `<div class="ml ${k === f.l ? 'cur' : ''}">${esc(l) || ' '}</div>`).join('');
+    const boxes = vars.map(([n, t]) => mbox(n, t, f.v[n] === undefined ? '?' : (typeof f.v[n] === 'boolean' ? (f.v[n] ? 'Vrai' : 'Faux') : f.v[n]), f.ch && f.ch.includes(n) ? 'pop' : '')).join('');
+    const cond = f.cond ? `<div class="mcond ${f.cond[1] ? 'is-t' : 'is-f'}"><span>${esc(f.cond[0])}</span><b>${f.cond[1] ? 'Vrai' : 'Faux'}</b></div>` : '';
+    const out = (f.o || []).map((s, k) => `<div class="${k === f.o.length - 1 && f.newOut ? 'new' : ''}">${esc(s)}</div>`).join('') || '<div class="dim">écran</div>';
+    return `<div class="mt-grid">
+      <pre class="mcode">${lines}</pre>
+      <div class="mside"><div class="mrow">${boxes}</div>${cond}${code.some(l => l.includes('écrire')) ? `<div class="mout">${out}</div>` : ''}</div>
+    </div>${extra ? extra(f) : ''}`;
+  }
+  function Trace(vars) {
+    const v = {}; let o = []; const frames = [];
+    return {
+      v, frames,
+      set(n, x) { v[n] = x; return n; },
+      say(s) { o.push(s); },
+      f(l, c, opt) {
+        opt = opt || {};
+        frames.push({ l, c, v: Object.assign({}, v), ch: opt.ch || [], o: o.slice(), newOut: !!opt.out, cond: opt.cond || null, x: opt.x ? clone(opt.x) : null });
+      }
+    };
+  }
+
+  /* ================= DÉMOS ================= */
+  const D = {};
+
+  /* 1. Variable */
+  D.variable = {
+    frames: [
+      { c: 'La mémoire : des cases vides.', b: [], code: null },
+      { c: 'On déclare age : une case avec un nom et un type.', b: [['age', 'Entier', '?', 'pop']], code: ['Déclaration : age : Entier', ''] },
+      { c: 'Pour l\'instant, age ne contient rien (?).', b: [['age', 'Entier', '?', 'glow']], code: ['Déclaration : age : Entier', ''] },
+      { c: 'age reçoit 19.', b: [['age', 'Entier', '19', 'pop']], code: ['age ← 19', 'age = 19;'] },
+      { c: 'age reçoit 20 : l\'ancienne valeur est perdue.', b: [['age', 'Entier', '20', 'pop']], old: '19', code: ['age ← 20', 'age = 20;'] },
+      { c: 'On peut avoir plusieurs variables.', b: [['age', 'Entier', '20', ''], ['moyenne', 'Réel', '?', 'pop'], ['admis', 'Booléen', '?', 'pop']], code: ['Déclaration : moyenne : Réel ; admis : Booléen', ''] }
+    ],
+    draw(st, f) {
+      const cells = [];
+      for (let k = 0; k < 10; k++) {
+        const b = f.b[k];
+        if (b) cells.push(`<div class="cell named">${mbox(b[0], b[1], b[2], b[3])}${k === 0 && f.old ? `<s class="oldv">${f.old}</s>` : ''}</div>`);
+        else cells.push(`<div class="cell"><span class="addr">case ${String(k + 1).padStart(2, '0')}</span></div>`);
+      }
+      st.innerHTML = `${codeStrip(f.code)}<div class="armoire">${cells.join('')}</div>`;
+    }
+  };
+
+  /* 2. Types */
+  const TYPES = [['Entier', '', ''], ['Réel', '', ''], ['Booléen', '', ''], ['Caractère', '', ''], ['Chaîne de caractères', '', '']];
+  const TVALS = ['42', '3.14', 'Vrai', "'A'", "'cours'"];
+  D.types = {
+    frames: [
+      { c: 'Chaque valeur va dans le bon type.', k: 0 },
+      { c: '42 : Entier.', k: 1 },
+      { c: '3.14 : Réel (avec un point).', k: 2 },
+      { c: 'Vrai : Booléen.', k: 3 },
+      { c: "'A' : Caractère.", k: 4 },
+      { c: "'cours' : Chaîne de caractères.", k: 5 }
+    ],
+    draw(st, f) {
+      const tray = TVALS.map((v, i) => `<span class="tok ${i < f.k ? 'gone' : ''} ${i === f.k ? 'next' : ''}">${esc(v)}</span>`).join('');
+      const boxes = TYPES.map(([t, c, d], i) => {
+        const has = i < f.k;
+        const val = f.trap && i === 0 ? '<s>3.7</s> 3' : (has ? esc(TVALS[i]) : '');
+        return `<div class="tbin ${has && i === f.k - 1 && !f.trap ? 'pop' : ''} ${f.trap && i === 0 ? 'warn shake' : ''}"><b>${t}</b><span class="tv">${val || '&nbsp;'}</span></div>`;
+      }).join('');
+      st.innerHTML = `<div class="tray">${tray}</div><div class="tbins">${boxes}</div>`;
+    }
+  };
+
+  /* 3. Constante */
+  D.constante = {
+    frames: [
+      { c: 'Au début, seuilRemise reçoit 20000.', s: 'pop', code: ['seuilRemise ← 20000', ''] },
+      { c: 'Ensuite on l\'utilise, sans la changer.', s: 'read', code: ['si montantBrut ≥ seuilRemise alors', ''] }
+    ],
+    draw(st, f) {
+      st.innerHTML = `${codeStrip(f.code)}
+        <div class="const-row">
+          <div class="cbox ${f.s === 'pop' ? 'pop' : ''} ${f.s === 'deny' ? 'shake' : ''} ${f.s === 'read' ? 'reading' : ''}">
+            
+            ${mbox('seuilRemise', 'Réel', '20000', '')}
+          </div>
+          <div class="const-msg">
+            ${f.s === 'read' ? '<div class="bubble ok">utilisée dans le test</div>' : ''}
+            ${f.s === 'deny' ? '<div class="bubble err">modification : refusée</div>' : ''}
+          </div>
+        </div>`;
+    }
+  };
+
+  /* 4. Affectation */
+  D.affectation = {
+    frames: [
+      { c: 'x et y sont vides.', x: '?', y: '?', code: null, ev: null },
+      { c: 'x reçoit 5.', x: '5', y: '?', px: 1, code: ['x ← 5', ''], ev: ['5', '5'] },
+      { c: 'On calcule d\'abord la droite : x + 2 = 7.', x: '5', y: '?', rx: 1, code: ['y ← x + 2', 'y = x + 2;'], ev: ['x + 2  →  5 + 2', '7'] },
+      { c: 'Puis on range 7 dans y.', x: '5', y: '7', py: 1, code: ['y ← x + 2', 'y = x + 2;'], ev: ['x + 2  →  5 + 2', '7'], fly: 'y' },
+      { c: 'x + 1 utilise l\'ancienne valeur : 5 + 1 = 6.', x: '5', y: '7', rx: 1, code: ['x ← x + 1', 'x = x + 1;'], ev: ['x + 1  →  5 + 1', '6'] },
+      { c: 'x vaut maintenant 6.', x: '6', oldx: '5', y: '7', px: 1, code: ['x ← x + 1', 'x = x + 1;'], ev: ['x + 1  →  5 + 1', '6'], fly: 'x' }
+    ],
+    draw(st, f) {
+      st.innerHTML = `${codeStrip(f.code)}
+        <div class="aff">
+          <div class="aff-mem">
+            <div class="cell named">${mbox('x', 'Entier', f.x, (f.px ? 'pop ' : '') + (f.rx ? 'reading' : ''))}${f.oldx ? `<s class="oldv">${f.oldx}</s>` : ''}</div>
+            <div class="cell named">${mbox('y', 'Entier', f.y, f.py ? 'pop' : '')}</div>
+          </div>
+          <div class="aff-arrow" aria-hidden="true">←</div>
+          <div class="aff-eval ${f.ev ? '' : 'ghost'}">
+            <span class="small">calcul</span>
+            <div class="ev-expr">${f.ev ? esc(f.ev[0]) : '—'}</div>
+            ${f.ev ? `<div class="ev-res ${f.fly ? 'fly' : 'pop'}">= ${esc(f.ev[1])}</div>` : ''}
+          </div>
+        </div>`;
+    }
+  };
+
+  /* 5. Lire / Écrire */
+  D.lireecrire = {
+    frames: [
+      { c: 'écrire affiche un message.', scr: ['Quel âge as-tu ? '], age: '?', arrow: 'out', code: ['écrire("Quel âge as-tu ? ")', ''] },
+      { c: 'lire attend que l\'utilisateur tape.', scr: ['Quel âge as-tu ? _'], age: '?', wait: 1, code: ['lire(age)', ''] },
+      { c: 'Il tape 19 puis Entrée.', scr: ['Quel âge as-tu ? 19'], age: '?', keys: '19⏎', code: ['lire(age)', ''] },
+      { c: '19 est rangé dans age.', scr: ['Quel âge as-tu ? 19'], age: '19', pop: 1, arrow: 'in', code: ['lire(age)', ''] },
+      { c: 'écrire peut afficher un calcul.', scr: ['Quel âge as-tu ? 19', "L'an prochain : 20"], age: '19', arrow: 'out', code: ['écrire("L\'an prochain : ", age + 1)', ''] }
+    ],
+    draw(st, f) {
+      const keys = ['1', '2', '3', '4', '5', '6', '7', '8', '9', '0', '⏎'].map(k => `<span class="key ${f.keys && f.keys.includes(k) ? 'down' : ''}">${k}</span>`).join('');
+      st.innerHTML = `${codeStrip(f.code)}
+        <div class="io">
+          <div class="io-z"><span class="small">clavier</span><div class="keys">${keys}</div></div>
+          <div class="io-ar ${f.arrow === 'in' ? 'on' : ''}">→<small>lire</small></div>
+          <div class="io-z"><span class="small">mémoire</span>${mbox('age', 'Entier', f.age, f.pop ? 'pop' : '')}</div>
+          <div class="io-ar ${f.arrow === 'out' ? 'on' : ''}">→<small>écrire</small></div>
+          <div class="io-z"><span class="small">écran</span><div class="screen ${f.wait ? 'wait' : ''}">${f.scr.map(s => `<div>${esc(s)}</div>`).join('')}</div></div>
+        </div>`;
+    }
+  };
+
+  /* 6. Opérateurs arithmétiques */
+  D.arith = {
+    frames: [
+      { c: 'Dans quel ordre calculer ?', e: '2 + 3 * (4 - 1)' },
+      { c: 'D\'abord les parenthèses.', e: '2 + 3 * <mark>(4 - 1)</mark>' },
+      { c: 'Puis la multiplication.', e: '2 + <mark>3 * 3</mark>' },
+      { c: 'Puis l\'addition.', e: '<mark>2 + 9</mark>' },
+      { c: 'Résultat : 11.', e: '<mark class="res">11</mark>' },
+      { c: 'Division : 7 / 2 = 3.5', e: '7 / 2 = <mark class="res">3.5</mark>', dots: 'real' },
+      { c: 'div : 3 paquets de 2.', e: '7 div 2 = <mark class="res">3</mark>', dots: 'div' },
+      { c: 'mod : il reste 1.', e: '7 mod 2 = <mark class="res">1</mark>', dots: 'mod' }
+    ],
+    draw(st, f) {
+      let dots = '';
+      if (f.dots) {
+        const d = [];
+        for (let k = 0; k < 7; k++) {
+          const grp = Math.floor(k / 2);
+          const rest = k === 6;
+          d.push(`<i class="${f.dots !== 'real' ? (rest ? (f.dots === 'mod' ? 'rest hl' : 'rest') : `g g${grp} ${f.dots === 'div' ? 'hl' : ''}`) : ''}"></i>`);
+        }
+        dots = `<div class="dots7">${d.join('')}</div>`;
+      }
+      st.innerHTML = `<div class="expr">${f.e}</div>${dots}
+        <table class="optab"><tr><th></th><th>Opérateur</th></tr><tr><td>plus, moins</td><td>+  -</td></tr><tr><td>fois</td><td>*</td></tr><tr><td>division</td><td>/</td></tr><tr><td>quotient entier</td><td>div</td></tr><tr><td>reste</td><td>mod</td></tr></table>`;
+    }
+  };
+
+  /* 7. Comparaison */
+  const CMP = [['=', '==', 'égal'], ['/=', '!=', 'différent'], ['<', '<', 'plus petit'], ['≤', '<=', 'plus petit ou égal'], ['>', '>', 'plus grand'], ['≥', '>=', 'plus grand ou égal']];
+  D.comparaison = {
+    frames: [
+      { c: 'note vaut 15.', e: null, op: -1 },
+      { c: 'On remplace note par 15.', e: ['note ≥ 10', '15 ≥ 10', null], op: 5 },
+      { c: 'Réponse : Vrai.', e: ['note ≥ 10', '15 ≥ 10', true], op: 5 },
+      { c: 'note = 20 → Faux.', e: ['note = 20', '15 = 20', false], op: 0 },
+      { c: 'Attention : 15 > 15 est Faux.', e: ['note > 15', '15 > 15', false], op: 4 }
+    ],
+    draw(st, f) {
+      const ev = f.e ? `<div class="expr">${esc(f.e[0])} <span class="arw">→</span> ${esc(f.e[1])} ${f.e[2] === null ? '' : `<span class="arw">→</span> <span class="bool ${f.e[2] ? 'is-t' : 'is-f'} pop">${f.e[2] ? 'Vrai' : 'Faux'}</span>`}</div>` : '<div class="expr">note = 15</div>';
+      st.innerHTML = `<div class="cmp-top">${mbox('note', 'Réel', '15', '')}${ev}</div>
+        <table class="optab"><tr><th></th><th>Opérateur</th></tr>
+        ${CMP.map((r, i) => `<tr class="${i === f.op ? 'cur' : ''}"><td>${r[2]}</td><td>${esc(r[0])}</td></tr>`).join('')}</table>`;
+    }
+  };
+
+  /* 8. Opérateurs logiques : circuits */
+  D.logique = {
+    frames: [
+      { c: 'Fermé = Vrai, ouvert = Faux. Cliquez sur a et b.', a: false, b: false },
+      { c: 'Tout est ouvert : rien ne s\'allume.', a: false, b: false },
+      { c: 'a seul : ou s\'allume, et non.', a: true, b: false },
+      { c: 'b seul : pareil.', a: false, b: true },
+      { c: 'a et b Vrai : les deux s\'allument.', a: true, b: true },
+      { c: 'non inverse : non Vrai = Faux.', a: true, b: true, non: 1 }
+    ],
+    build(st, P) {
+      const sw = (id, x, y) => `<g class="sw" data-sw="${id}" tabindex="0" role="button" aria-label="Interrupteur ${id}"><circle cx="${x}" cy="${y}" r="4"/><line class="lever" x1="${x}" y1="${y}" x2="${x + 40}" y2="${y}" style="transform-origin:${x}px ${y}px"/><circle cx="${x + 44}" cy="${y}" r="4"/><text x="${x + 22}" y="${y - 14}">${id}</text></g>`;
+      st.innerHTML = `
+        <div class="logic">
+          <div class="lc"><p class="small">a et b</p>
+            <svg viewBox="0 0 300 140" class="circ" id="c-and">
+              <path class="wire" d="M20,90 V40 H60 M108,40 H150 M198,40 H240 V65 M240,115 V125 H20 V100"/>
+              <rect class="batt" x="10" y="90" width="20" height="10"/>
+              ${sw('a', 60, 40)}${sw('b', 150, 40)}
+              <circle class="lamp" cx="240" cy="90" r="22"/><text class="lt" x="240" y="95">et</text>
+            </svg><div class="lres" id="r-and"></div></div>
+          <div class="lc"><p class="small">a ou b</p>
+            <svg viewBox="0 0 300 140" class="circ" id="c-or">
+              <path class="wire" d="M20,95 V34 H70 M118,34 H190 V74 M40,34 V74 H70 M118,74 H190 M190,74 V73 M190,117 V130 H20 V105"/>
+              <rect class="batt" x="10" y="95" width="20" height="10"/>
+              ${sw('a', 70, 34)}${sw('b', 70, 74)}
+              <circle class="lamp" cx="190" cy="95" r="22"/><text class="lt" x="190" y="100">ou</text>
+            </svg><div class="lres" id="r-or"></div></div>
+          <div class="lc">
+            <table class="tt2" id="tt2"><thead><tr><th>a</th><th>b</th><th>a et b</th><th>a ou b</th><th>non a</th></tr></thead><tbody></tbody></table></div>
+        </div>`;
+      $$('.sw', st).forEach(g => {
+        const act = () => {
+          const f = P.frame();
+          const a = g.dataset.sw === 'a' ? !f.a : f.a, b = g.dataset.sw === 'b' ? !f.b : f.b;
+          P.stop(); P.started = true; P.go({ FF: 1, TF: 2, FT: 3, TT: 4 }[(a ? 'T' : 'F') + (b ? 'T' : 'F')]);
+        };
+        g.addEventListener('click', act);
+        g.addEventListener('keydown', e => { if (e.key === 'Enter' || e.key === ' ') { e.preventDefault(); act(); } });
+      });
+    },
+    draw(st, f) {
+      const and = f.a && f.b, or = f.a || f.b;
+      $$('.sw', st).forEach(g => g.classList.toggle('closed', g.dataset.sw === 'a' ? f.a : f.b));
+      $('#c-and', st).classList.toggle('on', and);
+      $('#c-or', st).classList.toggle('on', or);
+      const V = x => `<b class="bool ${x ? 'is-t' : 'is-f'}">${x ? 'Vrai' : 'Faux'}</b>`;
+      $('#r-and', st).innerHTML = `a et b = ${V(and)}`;
+      $('#r-or', st).innerHTML = `a ou b = ${V(or)}${f.non ? ` · non a = ${V(!f.a)}` : ''}`;
+      const rows = [[false, false], [false, true], [true, false], [true, true]];
+      const T = x => `<td class="${x ? 'tv' : 'fv'}">${x ? 'V' : 'F'}</td>`;
+      $('#tt2 tbody', st).innerHTML = rows.map(([a, b]) => `<tr class="${a === f.a && b === f.b ? 'cur' : ''}">${T(a)}${T(b)}${T(a && b)}${T(a || b)}${T(!a)}</tr>`).join('');
+    }
+  };
+
+  /* 9. SI … ALORS … SINON : organigramme avec jeton */
+  const SIPOS = { start: [210, 30], test: [210, 110], yes: [90, 200], no: [330, 200], end: [210, 280] };
+  function makeSi(cfg) {
+    return {
+      frames: cfg.frames,
+      build(st) {
+        st.innerHTML = `<div class="flowwrap">
+        <svg viewBox="0 0 420 310" class="cflow">
+          <defs><marker id="arS" viewBox="0 0 10 10" refX="9" refY="5" markerWidth="7" markerHeight="7" orient="auto"><path d="M0,0 L10,5 L0,10 z"/></marker></defs>
+          <g class="edge"><path d="M210,48 V80" marker-end="url(#arS)"/><path d="M110,110 H90 V180" marker-end="url(#arS)"/><path d="M310,110 H330 V180" marker-end="url(#arS)"/>
+          <path d="M90,220 V280 H188" marker-end="url(#arS)"/><path d="M330,220 V280 H232" marker-end="url(#arS)"/>
+          <text x="80" y="102">Vrai</text><text x="318" y="102">Faux</text></g>
+          <g class="nd" data-n="start"><rect x="125" y="12" width="170" height="36" rx="8"/><text x="210" y="35" class="si-start"></text></g>
+          <g class="nd dia" data-n="test"><path d="M210,76 L310,110 L210,144 L110,110 Z"/><text x="210" y="114">${esc(cfg.test)}</text></g>
+          <g class="nd" data-n="yes"><rect x="10" y="180" width="160" height="40" rx="8"/><text x="90" y="198">alors</text><text x="90" y="213" class="sm">${esc(cfg.yes)}</text></g>
+          <g class="nd" data-n="no"><rect x="250" y="180" width="160" height="40" rx="8"/><text x="330" y="198">sinon</text><text x="330" y="213" class="sm">${esc(cfg.no)}</text></g>
+          <g class="nd" data-n="end"><rect x="160" y="264" width="100" height="32" rx="16"/><text x="210" y="284">fin si</text></g>
+          <g class="token si-tok"><circle r="9"/></g>
+        </svg>
+        <div class="flowside"><div class="mcond si-cond"></div><div class="mout si-out"></div></div></div>`;
+      },
+      draw(st, f) {
+        const p = SIPOS[f.at], off = { start: [-95, 0], test: [-110, 0], yes: [0, -28], no: [0, -28], end: [-62, 0] }[f.at];
+        $('.si-tok', st).style.transform = `translate(${p[0] + off[0]}px, ${p[1] + off[1]}px)`;
+        $('.si-start', st).textContent = cfg.start(f.n);
+        $$('.nd', st).forEach(g => g.classList.toggle('cur', g.dataset.n === f.at));
+        $$('.nd', st).forEach(g => g.classList.toggle('skip', f.r !== undefined && f.at !== 'test' && ((f.r && g.dataset.n === 'no') || (!f.r && g.dataset.n === 'yes'))));
+        const c = $('.si-cond', st);
+        c.className = 'mcond si-cond ' + (f.r === undefined ? 'ghost' : (f.r ? 'is-t' : 'is-f'));
+        c.innerHTML = f.r === undefined ? '<span>condition</span><b>—</b>' : `<span>${esc(cfg.cond(f.n))}</span><b>${f.r ? 'Vrai' : 'Faux'}</b>`;
+        $('.si-out', st).innerHTML = f.out ? `<div class="new">${esc(f.out)}</div>` : '<div class="dim">écran</div>';
+      }
+    };
+  }
+  D.si = makeSi({
+    start: n => `note ← ${n}`, test: 'note ≥ 10 ?', yes: 'écrire("Admis")', no: 'écrire("Ajourné")', cond: n => `${n} ≥ 10`,
+    frames: [
+      { c: 'note = 14.', n: 14, at: 'start' },
+      { c: '14 ≥ 10 → Vrai', n: 14, at: 'test', r: true },
+      { c: 'On passe par alors.', n: 14, at: 'yes', r: true, out: 'Admis' },
+      { c: 'Puis on continue après fin si.', n: 14, at: 'end', r: true, out: 'Admis' },
+      { c: 'note = 7.', n: 7, at: 'start' },
+      { c: '7 ≥ 10 → Faux', n: 7, at: 'test', r: false },
+      { c: 'On passe par sinon.', n: 7, at: 'no', r: false, out: 'Ajourné' },
+      { c: 'Un seul des deux blocs est exécuté.', n: 7, at: 'end', r: false, out: 'Ajourné' }
+    ]
+  });
+
+  /* 10. SINON SI et SELON */
+  const MENT = [['note ≥ 16', 16, 'Très bien'], ['note ≥ 14', 14, 'Bien'], ['note ≥ 12', 12, 'Assez bien'], ['note ≥ 10', 10, 'Passable'], ['sinon', -1, 'Ajourné']];
+  D.sinonsi = {
+    frames: [
+      { c: 'note = 13. On teste de haut en bas.', mode: 'si', k: -1 },
+      { c: '13 ≥ 16 → Faux', mode: 'si', k: 0 },
+      { c: '13 ≥ 14 → Faux', mode: 'si', k: 1 },
+      { c: '13 ≥ 12 → Vrai : Assez bien.', mode: 'si', k: 2 },
+      { c: 'La suite est ignorée.', mode: 'si', k: 3 }
+    ],
+    draw(st, f) {
+      if (f.mode === 'si') {
+        const rows = MENT.map((m, i) => {
+          let s = 'wait', r = '';
+          const last = Math.min(f.k, 2);
+          if (f.k >= 0 && i <= last) {
+            if (i < 2) { s = 'f'; r = 'Faux'; } else { s = 't'; r = 'Vrai'; }
+            if (i === f.k) s += ' cur';
+          }
+          if (f.k === 3 && i > 2) { s = 'skip'; r = 'ignoré'; }
+          const kw = i === 0 ? 'si' : (i === 4 ? '' : 'sinon si');
+          return `<div class="crow ${s}"><code>${kw} ${esc(m[0])}${i < 4 ? ' alors' : ''}</code><span class="cres">${r}</span><span class="cact">écrire("${m[2]}")</span></div>`;
+        }).join('');
+        st.innerHTML = `<div class="cmp-top">${mbox('note', 'Réel', '13', '')}</div><div class="cascade">${rows}</div>`;
+      } else {
+        const cases = [['1', 'Addition'], ['2', 'Soustraction'], ['3', 'Multiplication'], ['4', 'Division'], ['AUTRE', 'Choix invalide']];
+        const ch = f.k === 4 ? '9' : '3';
+        st.innerHTML = `<div class="cmp-top">${mbox('choix', 'Entier', ch, f.k >= 0 ? 'pop' : '')}<div class="expr">SELON choix FAIRE</div></div>
+          <div class="cascade">${cases.map((c, i) => `<div class="crow ${i === f.k ? 't cur' : (f.k >= 0 ? 'skip' : 'wait')}"><code>${c[0] === 'AUTRE' ? 'AUTRE' : c[0]} :</code><span class="cres">${i === f.k ? 'ici' : ''}</span><span class="cact">ÉCRIRE("${c[1]}")</span></div>`).join('')}</div>`;
+      }
+    }
+  };
+
+  /* SELON (switch) */
+  const SEL_CASES = [['1', 'Addition'], ['2', 'Soustraction'], ['3', 'Multiplication'], ['4', 'Division'], ['autre', 'Choix invalide']];
+  const SEL_WHEN = [
+    ['Un menu : choix = 1, 2, 3 ou 4', true, 'une variable, des valeurs précises'],
+    ["Une opération : op = '+', '-', '*' ou '/'", true, 'un caractère'],
+    ['Un jour : jour = 1 à 7 → lundi … dimanche', true, 'des entiers précis'],
+    ['Une mention : note ≥ 16, note ≥ 14 …', false, 'ce sont des intervalles → si … sinon'],
+    ['Un prix : prix = 2.5', false, 'un Réel : trop de valeurs possibles → si'],
+    ['Une connexion : identifiant et mot de passe', false, 'deux variables → si']
+  ];
+  D.selon = {
+    frames: [
+      { c: 'selon regarde la valeur de choix.', mode: 'case', k: -1, v: '3' },
+      { c: 'choix = 3 : on va directement au cas 3.', mode: 'case', k: 2, v: '3' },
+      { c: 'choix = 9 : aucun cas, on va à autre.', mode: 'case', k: 4, v: '9' },
+      { c: 'Quand utiliser selon ?', mode: 'when', k: -1 }
+    ].concat(SEL_WHEN.map((w, k) => ({ c: w[1] ? `Oui : ${w[2]}.` : `Non : ${w[2]}.`, mode: 'when', k })))
+      .concat([{ c: 'selon : une seule variable comparée à des valeurs fixes.', mode: 'when', k: SEL_WHEN.length }]),
+    draw(st, f) {
+      if (f.mode === 'case') {
+        st.innerHTML = `<div class="cmp-top">${mbox('choix', 'Entier', f.v, f.k >= 0 ? 'pop' : '')}<div class="expr">selon choix faire</div></div>
+          <div class="cascade">${SEL_CASES.map((c, i) => `<div class="crow ${i === f.k ? 't cur' : (f.k >= 0 ? 'skip' : 'wait')}"><code>${c[0]} :</code><span class="cres">${i === f.k ? 'ici' : ''}</span><span class="cact">écrire("${c[1]}")</span></div>`).join('')}</div>`;
+      } else {
+        st.innerHTML = `<div class="cascade">${SEL_WHEN.map((w, i) => {
+          const shown = i <= f.k;
+          return `<div class="wrow ${shown ? (w[1] ? 'yes' : 'no') : 'wait'} ${i === f.k ? 'cur' : ''}"><span>${esc(w[0])}</span><b>${shown ? (w[1] ? 'selon' : 'pas selon') : '?'}</b><small>${shown ? esc(w[2]) : ''}</small></div>`;
+        }).join('')}</div>`;
+      }
+    }
+  };
+
+  /* 11. TANT QUE */
+  D.tantque = (function () {
+    const code = ['n ← 3', 'tant que n > 0 faire', '   écrire(n)', '   n ← n - 1', 'fin tant que', 'écrire("Partez !")'];
+    const t = Trace([['n']]);
+    t.set('n', 3); t.f(0, 'n = 3', { ch: ['n'], x: { tour: 0 } });
+    let n = 3, tour = 0;
+    while (true) {
+      if (n > 0) {
+        tour++;
+        t.f(1, `${n} > 0 → Vrai : on entre.`, { cond: [`${n} > 0`, true], x: { tour } });
+        t.say(String(n)); t.f(2, `On affiche ${n}.`, { out: 1, x: { tour } });
+        n--; t.set('n', n); t.f(3, `n = ${n}`, { ch: ['n'], x: { tour } });
+        t.f(4, 'On remonte au test.', { x: { tour, up: 1 } });
+      } else {
+        t.f(1, '0 > 0 → Faux : on sort.', { cond: [`${n} > 0`, false], x: { tour } });
+        break;
+      }
+    }
+    t.say('Partez !'); t.f(5, 'Sans n ← n - 1, la boucle ne s\'arrête jamais.', { out: 1, x: { tour } });
+    return { frames: t.frames, draw(st, f) { st.innerHTML = tracer(f, code, [['n', 'Entier']], fx => `<div class="loopbar">tours : <b>${fx.x.tour}</b></div>`); } };
+  })();
+
+  /* 12. POUR */
+  D.pour = (function () {
+    const code = ['pour i ← 1 à 4 faire', '   écrire(i * 3)', 'fin pour'];
+    const t = Trace([['i']]);
+    for (let i = 1; i <= 4; i++) {
+      t.set('i', i);
+      t.f(0, i === 1 ? 'i commence à 1.' : `i passe à ${i} tout seul.`, { ch: ['i'], x: { i } });
+      t.say(String(i * 3)); t.f(1, `${i} × 3 = ${i * 3}`, { out: 1, x: { i } });
+    }
+    t.set('i', 5); t.f(0, 'i = 5 dépasse 4 : fin.', { ch: ['i'], cond: ['5 ≤ 4', false], x: { i: 5 } });
+    return { frames: t.frames, draw(st, f) { st.innerHTML = tracer(f, code, [['i', 'Entier']], fx => `<div class="rail">${[1, 2, 3, 4].map(k => `<span class="${k === fx.x.i ? 'cur' : (k < fx.x.i ? 'done' : '')}">${k}</span>`).join('')}</div>`); } };
+  })();
+
+  /* 13. RÉPÉTER */
+  D.repeter = (function () {
+    const code = ['répéter', '   lire(n)', "jusqu'à n > 0", 'écrire("Merci")'];
+    const t = Trace([['n']]);
+    let tour = 0;
+    for (const v of [-2, 0, 5]) {
+      tour++;
+      t.f(0, tour === 1 ? 'On entre sans test.' : 'On recommence.', { x: { tour } });
+      t.say('n ? ' + v); t.set('n', v);
+      t.f(1, `On lit ${v}.`, { ch: ['n'], out: 1, x: { tour } });
+      t.f(2, v > 0 ? `${v} > 0 → Vrai : on sort.` : `${v} > 0 → Faux : on recommence.`, { cond: [`${v} > 0`, v > 0], x: { tour } });
+    }
+    t.say('Merci'); t.f(3, 'Le test est à la fin : au moins 1 tour.', { out: 1, x: { tour } });
+    return { frames: t.frames, draw(st, f) { st.innerHTML = tracer(f, code, [['n', 'Entier']], fx => `<div class="loopbar">tours : <b>${fx.x.tour}</b></div>`); } };
+  })();
+
+  /* 14. Compteur et accumulateur */
+  D.compteur = (function () {
+    const code = ['nb ← 0', 'somme ← 0', 'pour i ← 1 à 4 faire', '   lire(note)', '   somme ← somme + note', '   si note ≥ 10 alors', '      nb ← nb + 1', '   fin si', 'fin pour'];
+    const t = Trace([['note'], ['somme'], ['nb']]);
+    const x = { jar: [], tally: 0 };
+    t.set('nb', 0); t.f(0, 'Compteur à 0.', { ch: ['nb'], x });
+    t.set('somme', 0); t.f(1, 'Somme à 0.', { ch: ['somme'], x });
+    let s = 0, a = 0;
+    [12, 7, 15, 10].forEach(n => {
+      t.set('note', n); t.f(3, `note = ${n}`, { ch: ['note'], x });
+      s += n; t.set('somme', s); x.jar.push(n);
+      t.f(4, `somme = ${s - n} + ${n} = ${s}`, { ch: ['somme'], x });
+      if (n >= 10) { a++; t.set('nb', a); x.tally = a; t.f(6, `${n} ≥ 10 : nb = ${a}`, { ch: ['nb'], x }); }
+      else t.f(5, `${n} < 10 : nb ne bouge pas.`, { cond: [`${n} ≥ 10`, false], x });
+    });
+    t.f(8, `Fin : somme = ${s}, nb = ${a}.`, { x });
+    return {
+      frames: t.frames,
+      draw(st, f) {
+        st.innerHTML = tracer(f, code, [['note', 'Réel'], ['somme', 'Réel'], ['nb', 'Entier']], fx => `
+          <div class="cnt-viz">
+            <div><span class="small">somme</span><div class="jar">${fx.x.jar.map(n => `<span style="width:${n / 44 * 100}%">${n}</span>`).join('')}</div></div>
+            <div><span class="small">nb</span><div class="tally">${Array.from({ length: fx.x.tally }, () => '<i></i>').join('')}</div></div>
+          </div>`);
+      }
+    };
+  })();
+
+  /* 15. Maximum */
+  D.maximum = (function () {
+    const L = [12, 8, 15, 9, 16];
+    const fr = [{ c: 'meilleure commence à 0.', p: -1, m: 0, champ: -1 }];
+    let m = 0, ch = -1;
+    L.forEach((v, k) => {
+      const win = v > m;
+      fr.push({ c: win ? `${v} > ${m} : nouvelle meilleure.` : `${v} > ${m} ? Non.`, p: k, m: win ? v : m, champ: win ? k : ch, cmp: [v, m, win] });
+      if (win) { m = v; ch = k; }
+    });
+    fr.push({ c: `La meilleure note est ${m}.`, p: -1, m, champ: ch });
+    return {
+      frames: fr,
+      draw(st, f) {
+        st.innerHTML = `<div class="maxrow">${L.map((v, k) => `<div class="mcard ${k === f.p ? 'cur' : ''} ${k === f.champ ? 'champ' : ''} ${f.p >= 0 && k > f.p ? 'later' : ''}"><b>${v}</b></div>`).join('')}</div>
+          <div class="cmp-top">${mbox('meilleure', 'Réel', String(f.m), f.cmp && f.cmp[2] ? 'pop' : '')}</div>`;
+      }
+    };
+  })();
+
+  /* 16. Validation de saisie */
+  D.validation = (function () {
+    const code = ['lire(note)', 'tant que note < 0 ou note > 20 faire', '   lire(note)', 'fin tant que', 'écrire("OK")'];
+    const t = Trace([['note']]);
+    const ins = [25, -3, 14];
+    t.set('note', 25); t.say('note ? 25'); t.f(0, 'On lit 25.', { ch: ['note'], out: 1, x: { v: 25 } });
+    let k = 0;
+    while (true) {
+      const v = ins[k], bad = v < 0 || v > 20;
+      t.f(1, bad ? `${v} n'est pas entre 0 et 20 : refusé.` : `${v} est bon : on sort.`, { cond: [`${v} hors [0, 20]`, bad], x: { v, bad } });
+      if (!bad) break;
+      k++; t.set('note', ins[k]); t.say('note ? ' + ins[k]); t.f(2, `On redemande : ${ins[k]}.`, { ch: ['note'], out: 1, x: { v: ins[k] } });
+    }
+    t.say('OK'); t.f(4, 'Ici, la note est forcément valide.', { out: 1, x: { v: 14, bad: false } });
+    return {
+      frames: t.frames,
+      draw(st, f) {
+        st.innerHTML = tracer(f, code, [['note', 'Réel']], fx => {
+          const pos = Math.max(-5, Math.min(30, fx.x.v));
+          const X = q => (q + 5) / 35 * 100;
+          return `<div class="gate"><div class="gz" style="left:${X(0)}%;width:${X(20) - X(0)}%"></div>
+            <div class="gm ${fx.x.bad === true ? 'bad' : (fx.x.bad === false ? 'good' : '')}" style="left:${X(pos)}%"><span>${fx.x.v}</span></div>
+            <span class="gt" style="left:${X(0)}%">0</span><span class="gt" style="left:${X(20)}%">20</span></div>`;
+        });
+      }
+    };
+  })();
+
+  /* 17. Trace */
+  D.trace = (function () {
+    const code = ['a ← 3', 'b ← 4', 'a ← a + b', 'b ← a - b', 'a ← a - b'];
+    const steps = [[3, '?'], [3, 4], [7, 4], [7, 3], [4, 3]];
+    const fr = [{ c: 'On exécute à la main, ligne par ligne.', l: -1, rows: 0 }];
+    steps.forEach((s, k) => fr.push({ c: `Ligne ${k + 1} : a = ${s[0]}, b = ${s[1]}`, l: k, rows: k + 1, ch: k === 1 || k === 3 ? 'b' : 'a' }));
+    fr.push({ c: 'Résultat : a et b sont échangés.', l: -1, rows: 5, end: 1 });
+    return {
+      frames: fr,
+      draw(st, f) {
+        const rows = steps.slice(0, f.rows).map((s, k) => `<tr class="${k === f.rows - 1 && !f.end ? 'cur' : ''}"><td>${k + 1}</td><td class="${f.ch === 'a' && k === f.rows - 1 ? 'chg' : ''}">${s[0]}</td><td class="${f.ch === 'b' && k === f.rows - 1 ? 'chg' : ''}">${s[1]}</td></tr>`).join('');
+        st.innerHTML = `<div class="mt-grid"><pre class="mcode">${code.map((l, k) => `<div class="ml ${k === f.l ? 'cur' : ''}">${esc(l)}</div>`).join('')}</pre>
+          <table class="trtab"><thead><tr><th>ligne</th><th>a</th><th>b</th></tr></thead><tbody>${rows}</tbody></table></div>`;
+      }
+    };
+  })();
+
+  /* ===== Animations au-dessus de chaque exercice ===== */
+  D.ex1 = makeSi({
+    start: n => `montantBrut ← ${n}`, test: 'montantBrut ≥ 20000', yes: 'remise ← brut * 0.05', no: 'remise ← 0', cond: n => `${n} ≥ 20000`,
+    frames: [
+      { c: 'montantBrut = 22000.', n: 22000, at: 'start' },
+      { c: '22000 ≥ 20000 → Vrai', n: 22000, at: 'test', r: true },
+      { c: 'On passe par alors : remise = 1100.', n: 22000, at: 'yes', r: true, out: 'remise = 1100' },
+      { c: 'montantBrut = 11000.', n: 11000, at: 'start' },
+      { c: '11000 ≥ 20000 → Faux', n: 11000, at: 'test', r: false },
+      { c: 'On passe par sinon : remise = 0.', n: 11000, at: 'no', r: false, out: 'remise = 0' }
+    ]
+  });
+
+  D.ex2 = {
+    frames: [
+      { c: 'Trois conditions en série : les trois doivent être Vrai.', v: [true, true, false] },
+      { c: 'identifiantValide = Faux : le circuit est coupé.', v: [false, true, false] },
+      { c: 'motDePasseValide = Faux : coupé.', v: [true, false, false] },
+      { c: 'compteBloque = Vrai, donc non compteBloque = Faux : coupé.', v: [true, true, true] }
+    ],
+    build(st) {
+      const sw = (k, x, y) => `<g class="sw" data-k="${k}"><circle cx="${x}" cy="${y}" r="4"/><line class="lever" x1="${x}" y1="${y}" x2="${x + 40}" y2="${y}" style="transform-origin:${x}px ${y}px"/><circle cx="${x + 44}" cy="${y}" r="4"/></g>`;
+      st.innerHTML = `<svg viewBox="0 0 540 152" class="circ c3">
+          <path class="wire" d="M20,104 V76 H50 M94,76 H200 M244,76 H350 M394,76 H480 V82 M480,126 V140 H20 V114"/>
+          <rect class="batt" x="10" y="104" width="20" height="10"/>
+          ${sw(0, 50, 76)}${sw(1, 200, 76)}${sw(2, 350, 76)}
+          <text class="swl" x="72" y="22">identifiantValide</text><text class="swl" x="222" y="22">motDePasseValide</text><text class="swl" x="372" y="22">non compteBloque</text>
+          <text class="swv" x="72" y="40"></text><text class="swv" x="222" y="40"></text><text class="swv" x="372" y="40"></text>
+          <circle class="lamp" cx="480" cy="104" r="22"/><text class="lt" x="480" y="108">accès</text>
+        </svg><div class="lres"></div>`;
+    },
+    draw(st, f) {
+      const vals = [f.v[0], f.v[1], !f.v[2]], on = vals.every(Boolean);
+      $$('.sw', st).forEach(g => g.classList.toggle('closed', vals.at(Number(g.dataset.k))));
+      $$('.swv', st).forEach((t, k) => { t.textContent = k === 2 ? `non ${f.v[2] ? 'Vrai' : 'Faux'} = ${vals[2] ? 'Vrai' : 'Faux'}` : (vals[k] ? 'Vrai' : 'Faux'); });
+      $('.circ', st).classList.toggle('on', on);
+      $('.lres', st).innerHTML = `accès = <b class="bool ${on ? 'is-t' : 'is-f'}">${on ? 'Vrai' : 'Faux'}</b>`;
+    }
+  };
+
+  function cascade(box, rows, frames) {
+    return {
+      frames,
+      draw(st, f) {
+        st.innerHTML = `<div class="cmp-top">${mbox(box[0], box[1], String(f.v), f.k === -1 ? 'pop' : '')}</div><div class="cascade">${rows.map((r, i) => {
+          const s = f.st[i] || 'wait';
+          return `<div class="crow ${s} ${i === f.k ? 'cur' : ''}"><code>${esc(r[0])}</code><span class="cres">${esc(f.res[i] || '')}</span><span class="cact">${esc(r[1])}</span></div>`;
+        }).join('')}</div>`;
+      }
+    };
+  }
+  D.ex3 = cascade(['consommation', 'Réel'],
+    [['si consommation ≤ 100 alors', 'montant ← c * 5'], ['sinon si consommation ≤ 200 alors', '500 + (c - 100) * 8'], ['sinon', '500 + 800 + (c - 200) * 12']],
+    [
+      { c: 'consommation = 150.', v: 150, k: -1, st: [], res: [] },
+      { c: '150 ≤ 100 → Faux : test suivant.', v: 150, k: 0, st: ['f'], res: ['Faux'] },
+      { c: '150 ≤ 200 → Vrai : montant = 900.', v: 150, k: 1, st: ['f', 't'], res: ['Faux', 'Vrai : 900'] },
+      { c: 'Le reste est ignoré.', v: 150, k: 2, st: ['f', 't', 'skip'], res: ['Faux', 'Vrai : 900', 'ignoré'] },
+      { c: 'consommation = 250 : les deux tests sont Faux.', v: 250, k: 1, st: ['f', 'f'], res: ['Faux', 'Faux'] },
+      { c: 'On arrive au dernier sinon : montant = 1900.', v: 250, k: 2, st: ['f', 'f', 't'], res: ['Faux', 'Faux', '1900'] }
+    ]);
+
+  const EX4_CASES = [['0', 'écrire("Au revoir !")'], ['1', 'resultat ← a + b'], ['2', 'resultat ← a - b'], ['3', 'resultat ← a * b'], ['4', 'resultat ← a / b'], ['autre', 'écrire("Erreur : … entre 0 et 4")']];
+  D.ex4 = {
+    frames: [
+      { c: 'choix = 1 : on va directement au cas 1.', v: '1', k: 1 },
+      { c: 'choix = 4 : cas 4.', v: '4', k: 4 },
+      { c: 'choix = 9 : aucun cas → autre.', v: '9', k: 5 },
+      { c: 'choix = 0 : cas 0, puis la boucle s\'arrête.', v: '0', k: 0 }
+    ],
+    draw(st, f) {
+      st.innerHTML = `<div class="cmp-top">${mbox('choix', 'Entier', f.v, 'pop')}<div class="expr">selon choix faire</div></div>
+        <div class="cascade">${EX4_CASES.map((c, i) => `<div class="crow ${i === f.k ? 't cur' : 'skip'}"><code>${c[0]} :</code><span class="cres">${i === f.k ? 'ici' : ''}</span><span class="cact">${esc(c[1])}</span></div>`).join('')}</div>`;
+    }
+  };
+
+  D.ex6 = (function () {
+    const code = ['répéter', '   lire(pin)', "jusqu'à pin ≥ 1000 et pin ≤ 9999", 'écrire("Code enregistré")'];
+    const t = Trace([['pin']]);
+    let tour = 0;
+    for (const v of [25, 12345, 4821]) {
+      tour++;
+      t.f(0, tour === 1 ? 'On entre sans test.' : 'On recommence.', { x: { tour } });
+      t.say('pin ? ' + v); t.set('pin', v);
+      t.f(1, `On lit ${v}.`, { ch: ['pin'], out: 1, x: { tour } });
+      const ok = v >= 1000 && v <= 9999;
+      t.f(2, ok ? `${v} est entre 1000 et 9999 → on sort.` : `${v} n'est pas entre 1000 et 9999 → on recommence.`, { cond: [`${v} valide ?`, ok], x: { tour } });
+    }
+    t.say('Code enregistré'); t.f(3, 'Le test est à la fin : on lit au moins une fois.', { out: 1, x: { tour } });
+    return { frames: t.frames, draw(st, f) { st.innerHTML = tracer(f, code, [['pin', 'Entier']], fx => `<div class="loopbar">tours : <b>${fx.x.tour}</b></div>`); } };
+  })();
+
+  D.ex7 = (function () {
+    const code = ['essais ← 0', 'trouve ← Faux', 'tant que essais < 3 et non trouve faire', '   lire(proposition)', '   essais ← essais + 1', '   si proposition = 42 alors trouve ← Vrai', 'fin tant que'];
+    const t = Trace([['essais'], ['proposition'], ['trouve']]);
+    t.set('essais', 0); t.f(0, 'essais = 0', { ch: ['essais'] });
+    t.set('trouve', false); t.f(1, 'trouve = Faux', { ch: ['trouve'] });
+    let e = 0, found = false;
+    for (const v of [10, 42]) {
+      t.f(2, `${e} < 3 → Vrai et non Faux → Vrai : on continue.`, { cond: [`${e} < 3 et non trouve`, true] });
+      t.set('proposition', v); t.f(3, `On lit ${v}.`, { ch: ['proposition'] });
+      e++; t.set('essais', e); t.f(4, `essais = ${e}`, { ch: ['essais'] });
+      if (v === 42) { found = true; t.set('trouve', true); t.f(5, '42 = 42 → trouve = Vrai', { ch: ['trouve'] }); }
+      else t.f(5, `${v} /= 42 : trouve reste Faux.`, {});
+    }
+    t.f(2, `${e} < 3 → Vrai, mais non Vrai → Faux : on sort.`, { cond: [`${e} < 3 et non trouve`, false] });
+    t.f(6, 'Il suffit qu\'une des deux parties soit Faux pour sortir.', {});
+    return { frames: t.frames, draw(st, f) { st.innerHTML = tracer(f, code, [['essais', 'Entier'], ['proposition', 'Entier'], ['trouve', 'Booléen']]); } };
+  })();
+
+  const INTRO = {
+    1: [['ex1', 'La notion : si … sinon', 'Le programme choisit un des deux chemins : remise ou pas.']],
+    2: [['ex2', 'La notion : et, non', 'L\'accès demande trois conditions Vrai en même temps.']],
+    3: [['ex3', 'La notion : si … sinon si', 'Les tests sont faits dans l\'ordre ; le premier Vrai choisit la tranche.']],
+    4: [['ex4', 'La notion : selon', 'Chaque valeur de choix a son cas ; les autres vont dans autre.']],
+    5: [['compteur', 'La notion : compteur et somme', 'Tout part de 0 avant la boucle ; à chaque note on ajoute.'], ['maximum', 'La notion : maximum', 'On garde la meilleure note vue jusqu\'ici.']],
+    6: [['ex6', 'La notion : répéter … jusqu\'à', 'On lit d\'abord, on teste ensuite.']],
+    7: [['ex7', 'La notion : tant que avec deux conditions', 'La boucle continue tant que essais < 3 et non trouve.']]
+  };
+
+  /* ================= CARTES ================= */
+  const GROUPS = [
+    ['Les bases', [
+      ['variable', 'Variable', 'Une case de la mémoire avec un nom, un type et une valeur.', 'Déclaration : age : Entier'],
+      ['types', 'Types', 'Le type dit ce que la variable peut contenir.', 'Entier, Naturel, Réel, Booléen,\nCaractère, Chaîne de caractères'],
+      ['constante', 'Valeur fixe', 'Une valeur qui ne change pas : on la donne au début.', 'seuilRemise ← 20000'],
+      ['affectation', 'Affectation', 'On calcule à droite, puis on range à gauche.', 'x ← x + 1'],
+      ['lire-ecrire', 'Lire et écrire', 'lire prend une valeur au clavier, écrire affiche à l\'écran.', 'lire(age)\nécrire("Âge : ", age)']
+    ]],
+    ['Les calculs', [
+      ['arith', 'Opérateurs', 'Parenthèses d\'abord, puis * et /, puis + et -.', '7 div 2 = 3\n7 mod 2 = 1'],
+      ['comparaison', 'Comparaisons', 'Une comparaison répond Vrai ou Faux.', '=   /=   <   ≤   >   ≥'],
+      ['logique', 'et, ou, non', 'et : tout doit être Vrai. ou : un seul suffit. non : l\'inverse.', 'a et b   a ou b   non a']
+    ]],
+    ['Les conditions', [
+      ['si', 'si … sinon', 'Le programme choisit un chemin.', 'si note ≥ 10 alors\n   écrire("Admis")\nsinon\n   écrire("Ajourné")\nfin si'],
+      ['sinon-si', 'si … sinon si', 'Plusieurs cas : le premier test Vrai gagne.', 'si c ≤ 100 alors\n   …\nsinon\n   si c ≤ 200 alors\n      …\n   sinon\n      …\n   fin si\nfin si'],
+      ['selon', 'selon', 'Une seule variable comparée à des valeurs précises : un menu, un jour. Pas pour des intervalles.', 'selon choix faire\n   1 : écrire("Addition")\n   2 : écrire("Soustraction")\n   autre : écrire("Invalide")\nfin selon']
+    ]],
+    ['Les boucles', [
+      ['tantque', 'tant que', 'Répète tant que la condition est Vrai. Test au début.', 'tant que n > 0 faire\n   …\nfin tant que'],
+      ['pour', 'pour', 'Répète un nombre de fois connu.', 'pour i ← 1 à n faire\n   …\nfin pour'],
+      ['repeter', 'répéter … jusqu\'à', 'Test à la fin : au moins un tour.', "répéter\n   …\njusqu'à n > 0"]
+    ]],
+    ['Les techniques', [
+      ['compteur', 'Compteur et somme', 'Compteur : + 1. Somme : + la valeur. Les deux partent de 0.', 'nb ← nb + 1\nsomme ← somme + note'],
+      ['maximum', 'Maximum', 'On garde la meilleure valeur vue jusqu\'ici.', 'si note > meilleure alors\n   meilleure ← note\nfin si'],
+      ['validation', 'Vérifier une saisie', 'On redemande tant que la valeur est fausse.', 'tant que note < 0 ou note > 20 faire\n   lire(note)\nfin tant que'],
+      ['trace', 'La trace', 'Exécuter à la main et noter les valeurs.', '']
+    ]]
+  ];
+  const DEMO_ID = { 'lire-ecrire': 'lireecrire', 'sinon-si': 'sinonsi' };
+  const playerHtml = () => `<div class="nplay">
+          <div class="stage"></div>
+          <div class="pbar">
+            <div class="cap" aria-live="polite"></div>
+            <div class="pctl" role="group" aria-label="Animation">
+              <button type="button" class="ctl" data-a="prev" aria-label="Précédent">◀</button>
+              <button type="button" class="ctl ctl-play" data-a="play">▶</button>
+              <button type="button" class="ctl" data-a="next" aria-label="Suivant">▶</button>
+              <span class="pnum"></span>
+            </div>
+          </div>
+        </div>`;
+  const io = ('IntersectionObserver' in window && !reduced) ? new IntersectionObserver(es => es.forEach(e => {
+    const P = e.target._player;
+    if (e.isIntersecting && e.intersectionRatio > 0.5 && P && !P.started) { P.started = true; P.play(); }
+  }), { threshold: [0.5] }) : null;
+  function attach(card, demoId) {
+    card._player = Player(card, D[demoId]);
+    if (io) io.observe(card);
+  }
+
+  function build(root) {
+    root.innerHTML = GROUPS.map(([g, items]) => `<h2 class="ngroup">${g}</h2>` + items.map(([id, title, txt, ps]) => `
+      <article class="ncard" id="n-${id}" data-demo="${DEMO_ID[id] || id}">
+        <div class="ntext">
+          <h3>${title}</h3>
+          <p>${txt}</p>
+          ${ps ? `<div class="syn"><pre>${esc(ps)}</pre></div>` : ''}
+        </div>
+        ${playerHtml()}
+      </article>`).join('')).join('');
+    $$('.ncard', root).forEach(card => attach(card, card.dataset.demo));
+  }
+
+  function mountIntro(ex) {
+    const root = document.querySelector(`.intro[data-ex="${ex}"]`);
+    if (!root || root.dataset.done || !INTRO[ex]) return;
+    root.dataset.done = '1';
+    root.innerHTML = INTRO[ex].map(([id, title, txt]) => `<article class="icard" data-demo="${id}"><div class="ntext"><h3>${title}</h3><p>${txt}</p></div>${playerHtml()}</article>`).join('');
+    $$('.icard', root).forEach(card => attach(card, card.dataset.demo));
+  }
+
+  function Player(card, demo) {
+    const stage = $('.stage', card), cap = $('.cap', card), pnum = $('.pnum', card), pb = $('.ctl-play', card);
+    const N = demo.frames.length;
+    let i = 0, timer = null;
+    const P = {
+      started: false,
+      frame: () => demo.frames[i],
+      go(k) {
+        i = Math.max(0, Math.min(N - 1, k));
+        demo.draw(stage, demo.frames[i], P);
+        cap.textContent = '';
+        cap.insertAdjacentHTML('beforeend', demo.frames[i].c);
+        pnum.textContent = `${i + 1}/${N}`;
+        if (!reduced) { cap.classList.remove('flash'); void cap.offsetWidth; cap.classList.add('flash'); }
+      },
+      stop() { clearInterval(timer); timer = null; pb.textContent = '▶'; pb.setAttribute('aria-label', 'Lecture'); },
+      play() {
+        P.started = true;
+        if (i >= N - 1) P.go(0);
+        pb.textContent = '❚❚'; pb.setAttribute('aria-label', 'Pause');
+        timer = setInterval(() => { if (i >= N - 1) { P.stop(); return; } P.go(i + 1); }, demo.speed || 2200);
+      }
+    };
+    if (demo.build) demo.build(stage, P);
+    card.addEventListener('click', e => {
+      const b = e.target.closest('button[data-a]');
+      if (!b) return;
+      const a = b.dataset.a;
+      if (a === 'play') { if (timer) P.stop(); else P.play(); }
+      else { P.stop(); P.started = true; P.go(a === 'prev' ? i - 1 : i + 1); }
+    });
+    P.stop();
+    P.go(0);
+    return P;
+  }
+
+  window.NOTIONS = { build, mountIntro };
+})();
+
+/* global SIMS, CODE, num */
+(function () {
+  'use strict';
+  const $ = (s, r) => (r || document).querySelector(s);
+  const $$ = (s, r) => Array.from((r || document).querySelectorAll(s));
+  const esc = s => String(s).replace(/[&<>"]/g, c => ({ '&': '&amp;', '<': '&lt;', '>': '&gt;', '"': '&quot;' })[c]);
+  const fr = x => Number(Number(x).toPrecision(10)).toLocaleString('fr-FR');
+  const store = {
+    get(k, d) { try { const v = localStorage.getItem(k); return v === null ? d : v; } catch (e) { return d; } },
+    set(k, v) { try { localStorage.setItem(k, v); } catch (e) { /* rien */ } }
+  };
+  const reduced = window.matchMedia && window.matchMedia('(prefers-reduced-motion: reduce)').matches;
+
+  /* ---------- coloration syntaxique ---------- */
+  const KW_P = new Set(['début', 'fin', 'si', 'alors', 'sinon', 'tant', 'que', 'faire', 'pour', 'à', 'répéter', "jusqu'à", 'selon', 'autre', 'lire', 'écrire', 'et', 'ou', 'non', 'Vrai', 'Faux']);
+  const TY_P = new Set(['Réel', 'Entier', 'Booléen', 'Naturel']);
+  const KW_C = new Set(['if', 'else', 'while', 'for', 'do', 'switch', 'case', 'break', 'return', 'using', 'namespace', 'const', 'true', 'false']);
+  const TY_C = new Set(['int', 'double', 'bool']);
+  const IO_C = new Set(['cout', 'cin', 'endl', 'std', 'main']);
+  function hl(line, lang) {
+    if (lang === 'cpp' && /^\s*#/.test(line)) return `<span class="t-pre">${esc(line)}</span>`;
+    const hm = lang === 'pseudo' && line.match(/^(\s*)(Nom|Rôle|Entrée|Sortie|Déclaration)(\s*:)(.*)$/);
+    if (hm) return `${hm[1]}<span class="t-hd">${hm[2]}${hm[3]}</span>${hm[2] === 'Nom' || hm[2] === 'Rôle' ? `<span class="t-hv">${esc(hm[4])}</span>` : hl(hm[4], lang)}`;
+    const re = /(\/\/.*$)|("(?:[^"\\]|\\.)*")|(\b\d+(?:\.\d+)?\b)|([A-Za-zÀ-ÖØ-öø-ÿ_][\wÀ-ÖØ-öø-ÿ]*(?:'[A-Za-zÀ-ÖØ-öø-ÿ]+)?)|([←≤≥≠]|&&|\|\||!=|==|<<|>>|\+\+)|(\s+|.)/g;
+    let m, o = '';
+    while ((m = re.exec(line)) !== null) {
+      if (m[1]) o += `<span class="t-com">${esc(m[1])}</span>`;
+      else if (m[2]) o += `<span class="t-str">${esc(m[2])}</span>`;
+      else if (m[3]) o += `<span class="t-num">${m[3]}</span>`;
+      else if (m[4]) {
+        const w = m[4];
+        if (lang === 'pseudo') {
+          if (KW_P.has(w)) o += `<span class="t-kw">${esc(w)}</span>`;
+          else if (TY_P.has(w)) o += `<span class="t-ty">${esc(w)}</span>`;
+          else o += esc(w);
+        } else {
+          if (KW_C.has(w)) o += `<span class="t-kw">${esc(w)}</span>`;
+          else if (TY_C.has(w)) o += `<span class="t-ty">${esc(w)}</span>`;
+          else if (IO_C.has(w)) o += `<span class="t-io">${esc(w)}</span>`;
+          else o += esc(w);
+        }
+      } else if (m[5]) o += `<span class="t-op">${esc(m[5])}</span>`;
+      else o += esc(m[6]);
+    }
+    return o;
+  }
+  function parseCode(text) {
+    return text.replace(/\n$/, '').split('\n').map(raw => {
+      const mm = raw.match(/\s*\/\/@(\w+)\s*$/);
+      return { text: mm ? raw.slice(0, mm.index) : raw, lbl: mm ? mm[1] : null };
+    });
+  }
+
+  /* ---------- visualisations ---------- */
+  const VIZ = {};
+
+  VIZ[1] = (el, v) => {
+    const rows = v.rows.map(r => {
+      const sub = v.brut !== null ? fr(r.q * r.p) : '…';
+      return `<div class="tk-row"><span>${esc(r.k)}</span><span class="tk-q">${fr(r.q)} × ${fr(r.p)}</span><span class="tk-v">${sub}</span></div>`;
+    }).join('');
+    const seuil = 20000;
+    const max = Math.max(30000, (v.brut || 0) * 1.12);
+    const w = v.brut !== null ? Math.max(0, Math.min(100, v.brut / max * 100)) : 0;
+    const ok = v.brut !== null && v.brut >= seuil;
+    el.innerHTML = `
+      <div class="viz-two">
+        <div class="ticket" aria-label="Ticket de caisse">
+          <div class="tk-head">Ticket</div>
+          ${rows || '<div class="tk-empty">…</div>'}
+          ${v.err ? `<div class="tk-err">${esc(v.err)} : facture refusée</div>` : ''}
+          <div class="tk-sep"></div>
+          <div class="tk-row ${v.brut !== null ? '' : 'ghost'}"><span>Montant brut</span><span></span><span class="tk-v">${v.brut !== null ? fr(v.brut) : '?'}</span></div>
+          <div class="tk-row ${v.remise !== null ? '' : 'ghost'}"><span>Remise 5 %</span><span></span><span class="tk-v">${v.remise !== null ? (v.remise ? '−' + fr(v.remise) : '0') : '?'}</span></div>
+          <div class="tk-row tk-total ${v.net !== null ? '' : 'ghost'}"><span>Net à payer</span><span></span><span class="tk-v">${v.net !== null ? fr(v.net) + ' MRU' : '?'}</span></div>
+        </div>
+        <div class="gauge-wrap">
+          <div class="gauge">
+            <div class="gauge-fill ${ok ? 'is-ok' : ''}" style="width:${w}%"></div>
+            <div class="gauge-mark" style="left:${seuil / max * 100}%"><span>seuil 20 000</span></div>
+          </div>
+          <p class="gauge-txt">${v.brut === null ? 'montantBrut = ?' : `${fr(v.brut)} ${ok ? '≥' : '<'} 20 000 → ${ok ? '<b class="c-ok">remise accordée</b>' : '<b>pas de remise</b>'}`}</p>
+        </div>
+      </div>`;
+  };
+
+  VIZ[2] = (el, v, ctx) => {
+    const val = x => x === null ? 'u' : (x ? 't' : 'f');
+    const lab = x => x === null ? '?' : (x ? 'Vrai' : 'Faux');
+    const nb = v.bl === null ? null : !v.bl;
+    const rowsHtml = [];
+    for (let k = 0; k < 8; k++) {
+      const a = !!(k & 4), b = !!(k & 2), c = !!(k & 1);
+      const r = a && b && !c;
+      const cur = v.id === a && v.mdp === b && v.bl === c;
+      const V = x => `<td class="${x ? 'tv' : 'fv'}">${x ? 'V' : 'F'}</td>`;
+      rowsHtml.push(`<tr class="${cur ? 'cur' : ''}">${V(a)}${V(b)}${V(c)}${V(!c)}${V(r)}</tr>`);
+    }
+    el.innerHTML = `
+      <div class="viz-two">
+        <svg class="circuit" viewBox="0 0 540 220" role="img" aria-label="Circuit logique ET avec un NON">
+          <g class="w w-${val(v.id)}"><line x1="150" y1="60" x2="330" y2="60"/></g>
+          <g class="w w-${val(v.mdp)}"><line x1="150" y1="110" x2="330" y2="110"/></g>
+          <g class="w w-${val(v.bl)}"><line x1="150" y1="160" x2="214" y2="160"/></g>
+          <g class="w w-${val(nb)}"><line x1="254" y1="160" x2="330" y2="160"/></g>
+          <g class="w w-${val(v.acc)}"><line x1="436" y1="110" x2="482" y2="110"/></g>
+          <g class="pill p-${val(v.id)}"><rect x="6" y="44" width="144" height="32" rx="6"/><text x="78" y="57">identifiantValide</text><text class="pv" x="78" y="71">${lab(v.id)}</text></g>
+          <g class="pill p-${val(v.mdp)}"><rect x="6" y="94" width="144" height="32" rx="6"/><text x="78" y="107">motDePasseValide</text><text class="pv" x="78" y="121">${lab(v.mdp)}</text></g>
+          <g class="pill p-${val(v.bl)}"><rect x="6" y="144" width="144" height="32" rx="6"/><text x="78" y="157">compteBloque</text><text class="pv" x="78" y="171">${lab(v.bl)}</text></g>
+          <g class="gate"><path d="M214,146 L246,160 L214,174 Z"/><circle cx="250" cy="160" r="4"/><text x="232" y="196">non</text></g>
+          <g class="gate"><path d="M330,40 H376 A70,70 0 0 1 376,180 H330 Z"/><text x="382" y="115">et</text></g>
+          <g class="lamp l-${val(v.acc)}"><circle cx="506" cy="110" r="22"/><text x="506" y="150">accès</text><text class="pv" x="506" y="114">${v.acc === null ? '?' : (v.acc ? 'oui' : 'non')}</text></g>
+        </svg>
+        <div class="tt-wrap">
+          <p class="viz-cap">Table de vérité</p>
+          <table class="tt">
+            <thead><tr><th>id</th><th>mdp</th><th>bloqué</th><th>NON bloqué</th><th>accès</th></tr></thead>
+            <tbody>${rowsHtml.join('')}</tbody>
+          </table>
+        </div>
+      </div>`;
+  };
+
+  VIZ[3] = (el, v) => {
+    const c = v.c;
+    const maxK = Math.max(300, c !== null ? Math.ceil((c + 30) / 50) * 50 : 300);
+    const pct = k => (k / maxK * 100);
+    const p1 = c === null ? 0 : Math.max(0, Math.min(c, 100));
+    const p2 = c === null ? 0 : Math.max(0, Math.min(c - 100, 100));
+    const p3 = c === null ? 0 : Math.max(0, c - 200);
+    const show = v.done;
+    const seg = (from, len, cls, d) => `<div class="tr-fill ${cls}" style="left:${pct(from)}%;width:${show ? pct(len) : 0}%;transition-delay:${show && !reduced ? d : 0}s"></div>`;
+    const tick = k => `<div class="tr-tick ${v.test === k ? 'is-test' : ''}" style="left:${pct(k)}%"><span>${k}</span></div>`;
+    const line = (n, p, t, used) => `<div class="tr-li ${show && used > 0 ? '' : 'ghost'}"><i class="sw sw${n}"></i>${p} kWh à ${t} MRU<b>${show ? `${fr(used)} × ${t} = ${fr(used * t)} MRU` : '—'}</b></div>`;
+    el.innerHTML = `
+      <div class="tranches ${v.err ? 'is-err' : ''}">
+        <div class="tr-zone z1" style="left:0;width:${pct(100)}%"><span>5 MRU</span></div>
+        <div class="tr-zone z2" style="left:${pct(100)}%;width:${pct(100)}%"><span>8 MRU</span></div>
+        <div class="tr-zone z3" style="left:${pct(200)}%;width:${100 - pct(200)}%"><span>12 MRU</span></div>
+        ${seg(0, p1, 'f1', 0)}${seg(100, p2, 'f2', 0.5)}${seg(200, p3, 'f3', 1)}
+        ${c !== null && c >= 0 ? `<div class="tr-cons" style="left:${pct(c)}%"><span>${fr(c)} kWh</span></div>` : ''}
+        ${tick(0)}${tick(100)}${tick(200)}
+      </div>
+      <div class="tr-legend">
+        ${line(1, '0 – 100', 5, p1)}${line(2, '100 – 200', 8, p2)}${line(3, '+ de 200', 12, p3)}
+        <div class="tr-li tr-sum ${show ? '' : 'ghost'}">Total<b>${show ? fr(p1 * 5 + p2 * 8 + p3 * 12) + ' MRU' : (v.err ? 'invalide' : '—')}</b></div>
+      </div>`;
+  };
+
+  VIZ[4] = (el, v) => {
+    const body = v.rows.map((r, i) => `<tr class="${i === v.cur ? 'cur' : ''} ${r.cond === 'FAUX' ? 'exit' : ''}"><td>${r.tour}</td><td>${r.cond}</td><td>${r.choix}</td><td>${r.a}</td><td>${r.b}</td><td>${esc(r.aff)}</td></tr>`).join('');
+    el.innerHTML = `
+      <p class="viz-cap">Tableau de trace</p>
+      <div class="scroll-x"><table class="trace">
+        <thead><tr><th>Tour</th><th>choix /= 0 ?</th><th>choix</th><th>a</th><th>b</th><th>Affichage</th></tr></thead>
+        <tbody>${body || '<tr><td colspan="6" class="ghost">—</td></tr>'}</tbody>
+      </table></div>`;
+  };
+
+  VIZ[5] = (el, v) => {
+    const n = v.n;
+    const slots = [];
+    for (let i = 0; i < n; i++) {
+      const val = v.bars[i];
+      const has = val !== undefined;
+      const rej = v.rej.filter(r => r.i === i).map(r => `<s>${num(r.v)}</s>`).join(' ');
+      slots.push(`<div class="slot ${i === v.cur ? 'cur' : ''}">
+        <div class="rej">${rej}</div>
+        <div class="col"><div class="bar ${has ? (val >= 10 ? 'pass' : 'fail') : ''} ${i === v.best ? 'best' : ''}" style="height:${has ? val / 20 * 100 : 0}%">${has ? `<span>${num(val)}</span>` : ''}</div></div>
+        <div class="sl-lab">${i === v.best ? '<b>max</b>' : `n° ${i + 1}`}</div>
+      </div>`);
+    }
+    el.innerHTML = n > 0 ? `
+      <div class="bars">
+        <div class="axis"><span>20</span><span>10</span><span>0</span></div>
+        <div class="plot"><div class="pass-line"><span>10</span></div>${slots.join('')}</div>
+      </div>` : '';
+  };
+
+  VIZ[6] = (el, v) => {
+    const N = id => v.node === id ? 'cur' : '';
+    let svg;
+    if (v.variant === 'a') {
+      svg = `<svg class="flow" viewBox="0 0 460 380" role="img" aria-label="Organigramme de la boucle RÉPÉTER">
+        <defs><marker id="ar6" viewBox="0 0 10 10" refX="9" refY="5" markerWidth="7" markerHeight="7" orient="auto-start-reverse"><path d="M0,0 L10,5 L0,10 z"/></marker></defs>
+        <g class="node ${N('r')}"><rect x="130" y="20" width="200" height="44" rx="8"/><text x="230" y="47">lire(pin)</text></g>
+        <g class="node dia ${N('c')}"><path d="M230,96 L320,130 L230,164 L140,130 Z"/><text x="230" y="134">non valide ?</text></g>
+        <g class="node ${N('err')}"><rect x="340" y="108" width="112" height="44" rx="8"/><text x="396" y="128">message</text><text x="396" y="144">d'erreur</text></g>
+        <g class="node dia ${N('until')}"><path d="M230,200 L330,238 L230,276 L130,238 Z"/><text x="230" y="242">jusqu'à valide</text></g>
+        <g class="node ${N('ok')}"><rect x="130" y="314" width="200" height="44" rx="8"/><text x="230" y="341">« Code enregistré »</text></g>
+        <g class="edge"><path d="M230,64 V94" marker-end="url(#ar6)"/><path d="M230,164 V198" marker-end="url(#ar6)"/><text x="240" y="186">non</text>
+        <path d="M320,130 H338" marker-end="url(#ar6)"/><text x="322" y="122">oui</text>
+        <path d="M396,152 V238 H332" marker-end="url(#ar6)"/>
+        <path d="M130,238 H40 V42 H128" marker-end="url(#ar6)"/><text x="48" y="228">non : on recommence</text>
+        <path d="M230,276 V312" marker-end="url(#ar6)"/><text x="240" y="300">oui</text></g>
+      </svg>`;
+    } else {
+      svg = `<svg class="flow" viewBox="0 0 460 380" role="img" aria-label="Organigramme de la boucle TANT QUE">
+        <defs><marker id="ar6b" viewBox="0 0 10 10" refX="9" refY="5" markerWidth="7" markerHeight="7" orient="auto-start-reverse"><path d="M0,0 L10,5 L0,10 z"/></marker></defs>
+        <g class="node ${N('r')}"><rect x="110" y="20" width="200" height="44" rx="8"/><text x="210" y="40">lire(pin)</text><text class="sub" x="210" y="56">avant la boucle</text></g>
+        <g class="node dia ${N('c')}"><path d="M210,110 L310,150 L210,190 L110,150 Z"/><text x="210" y="146">tant que</text><text x="210" y="162">invalide ?</text></g>
+        <g class="node ${N('err')}"><rect x="330" y="118" width="122" height="64" rx="8"/><text x="391" y="140">message</text><text x="391" y="156">puis</text><text x="391" y="172">lire(pin)</text></g>
+        <g class="node ${N('ok')}"><rect x="110" y="300" width="200" height="44" rx="8"/><text x="210" y="327">« Code enregistré »</text></g>
+        <g class="edge"><path d="M210,64 V108" marker-end="url(#ar6b)"/>
+        <path d="M310,150 H328" marker-end="url(#ar6b)"/><text x="312" y="142">oui</text>
+        <path d="M391,182 V232 H40 V150 H108" marker-end="url(#ar6b)"/><text x="50" y="224">on reteste</text>
+        <path d="M210,190 V298" marker-end="url(#ar6b)"/><text x="220" y="250">non</text></g>
+      </svg>`;
+    }
+    el.innerHTML = `
+      <div class="viz-two">
+        ${svg}
+        <div class="counters">
+          <div class="ctr"><b>${v.reads}</b><span>lecture(s) de pin</span></div>
+          <div class="ctr"><b>${v.tours}</b><span>tour(s) de boucle</span></div>
+
+        </div>
+      </div>`;
+  };
+
+  VIZ[7] = (el, v) => {
+    const X = k => 20 + (k - 1) / 99 * 500;
+    const marks = v.props.map((p, i) => `<g class="pm pm-${p.r}"><line x1="${X(p.v)}" y1="40" x2="${X(p.v)}" y2="74"/><circle cx="${X(Math.max(1, Math.min(100, p.v)))}" cy="40" r="11"/><text x="${X(Math.max(1, Math.min(100, p.v)))}" y="44">${i + 1}</text><text class="pv" x="${X(Math.max(1, Math.min(100, p.v)))}" y="96">${p.v}</text></g>`).join('');
+    const dots = Array.from({ length: v.max }, (_, i) => `<i class="${i < v.essais ? 'used' : ''}"></i>`).join('');
+    const lo = Math.max(1, Math.min(100, v.lo)), hi = Math.max(1, Math.min(100, v.hi));
+    el.innerHTML = `
+      <div class="guess-top">
+        <div class="dots" aria-label="Essais utilisés">${dots}<span>${v.essais}/${v.max} essais</span></div>
+        <div class="secret ${v.reveal ? 'shown' : ''}">secret : <b>${v.reveal || v.trouve ? '42' : '?'}</b></div>
+      </div>
+      <svg class="nline" viewBox="0 0 540 110" role="img" aria-label="Droite des nombres de 1 à 100">
+        ${hi >= lo ? `<rect class="zone" x="${X(lo)}" y="58" width="${Math.max(2, X(hi) - X(lo))}" height="16" rx="3"/>` : ''}
+        <line class="axis" x1="20" y1="66" x2="520" y2="66"/>
+        ${[1, 25, 50, 75, 100].map(k => `<g class="tk"><line x1="${X(k)}" y1="60" x2="${X(k)}" y2="72"/><text x="${X(k)}" y="108">${k}</text></g>`).join('')}
+        ${v.reveal || v.trouve ? `<g class="sec"><line x1="${X(42)}" y1="52" x2="${X(42)}" y2="80"/></g>` : ''}
+        ${marks}
+      </svg>
+      ${v.left.length ? `<p class="viz-cap">Jamais lu : <b>${v.left.join(', ')}</b></p>` : ''}`;
+  };
+
+  /* ---------- laboratoire de trace ---------- */
+  let lang = 'pseudo';
+  const labs = {};
+
+  function codeKey(ex, variant, l) { return `ex${ex}${variant || ''}.${l === 'cpp' ? 'cpp' : 'algo'}`; }
+
+  function Lab(root, ex) {
+    const sim = SIMS[ex];
+    const S = { ex, sim, steps: [], i: 0, timer: null, input: Object.assign({}, sim.scenarios[0].input), variant: sim.variants ? sim.variants[0].id : '', scen: 0 };
+    root.innerHTML = `
+      <div class="scen" role="group" aria-label="Cas de test">
+        ${sim.scenarios.map((s, i) => `<button type="button" class="chip-btn" data-scen="${i}">${esc(s.label)}</button>`).join('')}
+      </div>
+      <div class="lab-grid">
+        <div class="codebox">
+          <div class="code-tabs">
+            <span class="code-title">Algorithme</span>
+            ${sim.variants ? `<div class="seg seg-v" role="tablist" aria-label="Version">${sim.variants.map(v => `<button type="button" role="tab" data-var="${v.id}">${esc(v.label)}</button>`).join('')}</div>` : ''}
+            <button type="button" class="copy">Copier</button>
+          </div>
+          <pre class="code" tabindex="0"></pre>
+        </div>
+        <div class="side">
+          <div class="controls" role="group" aria-label="Animation">
+            <button type="button" class="ctl" data-act="prev" aria-label="Étape précédente">◀</button>
+            <button type="button" class="ctl ctl-play" data-act="play">▶ Lecture</button>
+            <button type="button" class="ctl" data-act="next" aria-label="Étape suivante">▶</button>
+            <button type="button" class="ctl" data-act="reset" aria-label="Recommencer">↺</button>
+            <span class="stepno"></span>
+          </div>
+          <div class="note" aria-live="polite"></div>
+          <div class="vars"></div>
+          <div class="console"><div class="con-body"></div></div>
+        </div>
+      </div>
+      <div class="viz"></div>`;
+
+    const codeEl = $('.code', root), noteEl = $('.note', root), varsEl = $('.vars', root), conEl = $('.con-body', root), vizEl = $('.viz', root);
+    const stepno = $('.stepno', root), playBtn = $('.ctl-play', root);
+    let lines = [];
+    let lastOutLen = 0;
+
+    function codeText() {
+      let txt = CODE[codeKey(ex, S.variant, lang)] || '';
+      if (sim.codeTransform) txt = sim.codeTransform(txt, S.input);
+      return txt;
+    }
+    function renderCode() {
+      lines = parseCode(codeText());
+      codeEl.innerHTML = lines.map((l, k) => `<div class="ln" data-k="${k}"${l.lbl ? ` data-lbl="${l.lbl}"` : ''}><span class="no">${k + 1}</span><span class="tx">${hl(l.text, lang) || ' '}</span></div>`).join('');
+      $$('[data-lang]', root).forEach(b => b.setAttribute('aria-selected', b.dataset.lang === lang));
+      $$('[data-var]', root).forEach(b => b.setAttribute('aria-selected', b.dataset.var === S.variant));
+      renderVars(true);
+    }
+    function fmtVal(v) {
+      if (v === '?') return '?';
+      if (typeof v === 'boolean') return v ? 'Vrai' : 'Faux';
+      return num(v);
+    }
+    function renderVars(noAnim) {
+      const st = S.steps[S.i];
+      if (!st) return;
+      varsEl.innerHTML = (sim.varsFor ? sim.varsFor(S.variant) : sim.vars).map(([n, ty]) => {
+        const tyL = ty;
+        const v = st.vars[n];
+        const ch = !noAnim && st.ch.includes(n);
+        return `<div class="var ${v === '?' ? 'empty' : ''} ${ch ? 'pop' : ''}"><span class="vn">${n}</span><span class="vv">${esc(fmtVal(v))}</span><span class="vt">${tyL}</span></div>`;
+      }).join('');
+    }
+    function render(anim) {
+      const st = S.steps[S.i];
+      if (!st) return;
+      // code
+      $$('.ln', codeEl).forEach(l => l.classList.remove('cur', 'seen'));
+      const seen = new Set(S.steps.slice(0, S.i).map(s => s.lbl));
+      seen.forEach(lb => $$(`.ln[data-lbl="${lb}"]`, codeEl).forEach(l => l.classList.add('seen')));
+      const cur = $(`.ln[data-lbl="${st.lbl}"]`, codeEl);
+      if (cur) {
+        cur.classList.add('cur');
+        const top = cur.offsetTop - codeEl.clientHeight / 2 + cur.clientHeight / 2;
+        codeEl.scrollTo({ top: Math.max(0, top), behavior: reduced || !anim ? 'auto' : 'smooth' });
+      }
+      noteEl.innerHTML = `<p>${st.note}</p>`;
+      if (anim && !reduced) { noteEl.classList.remove('flash'); void noteEl.offsetWidth; noteEl.classList.add('flash'); }
+      renderVars(!anim);
+      // console
+      conEl.innerHTML = st.out.map((o, k) => `<div class="cl ${o.cls} ${anim && k >= lastOutLen ? 'new' : ''}">${esc(o.s)}${o.inp !== undefined ? `<span class="inp">${esc(o.inp)}</span>` : ''}</div>`).join('') || '<div class="cl dim">écran</div>';
+      conEl.scrollTop = conEl.scrollHeight;
+      lastOutLen = st.out.length;
+      VIZ[ex](vizEl, st.viz, { lang, i: S.i });
+      stepno.textContent = `${S.i + 1} / ${S.steps.length}`;
+    }
+    function go(i, anim) {
+      S.i = Math.max(0, Math.min(S.steps.length - 1, i));
+      if (!anim) lastOutLen = S.steps[S.i].out.length;
+      render(anim);
+    }
+    function stop() { clearInterval(S.timer); S.timer = null; playBtn.textContent = '▶ Lecture'; root.classList.remove('playing'); }
+    function play() {
+      if (S.i >= S.steps.length - 1) go(0, false);
+      playBtn.textContent = '❚❚ Pause'; root.classList.add('playing');
+      S.timer = setInterval(() => {
+        if (S.i >= S.steps.length - 1) { stop(); return; }
+        go(S.i + 1, true);
+      }, 1700);
+    }
+    function run() {
+      stop();
+      S.steps = sim.run(S.input, S.variant);
+      lastOutLen = 0;
+      renderCode();
+      go(0, false);
+      $$('[data-scen]', root).forEach(b => b.setAttribute('aria-pressed', String(+b.dataset.scen === S.scen)));
+    }
+    root.addEventListener('click', e => {
+      const b = e.target.closest('button');
+      if (!b || !root.contains(b)) return;
+      if (b.dataset.scen !== undefined) { S.scen = +b.dataset.scen; S.input = Object.assign({}, sim.scenarios[S.scen].input); run(); play(); }
+      else if (b.dataset.lang) { setLang(b.dataset.lang); }
+      else if (b.dataset.var) { S.variant = b.dataset.var; run(); }
+      else if (b.dataset.act === 'reset') { stop(); go(0, false); }
+      else if (b.dataset.act === 'prev') { stop(); go(S.i - 1, false); }
+      else if (b.dataset.act === 'next') { stop(); go(S.i + 1, true); }
+      else if (b.dataset.act === 'play') { if (S.timer) stop(); else play(); }
+      else if (b.classList.contains('copy')) {
+        const txt = parseCode(codeText()).map(l => l.text.replace(/\s+$/, '')).join('\n') + '\n';
+        const done = () => { b.textContent = 'Copié'; setTimeout(() => { b.textContent = 'Copier'; }, 1400); };
+        const fallback = () => { const ta = document.createElement('textarea'); ta.value = txt; document.body.appendChild(ta); ta.select(); try { document.execCommand('copy'); done(); } catch (er) { b.textContent = 'Copie impossible'; } ta.remove(); };
+        try { navigator.clipboard.writeText(txt).then(done, fallback); } catch (er) { fallback(); }
+      }
+    });
+    run();
+    return {
+      S, renderLang() { renderCode(); render(false); },
+      key(k) { if (k === 'ArrowRight') { stop(); go(S.i + 1, true); } else if (k === 'ArrowLeft') { stop(); go(S.i - 1, false); } else if (k === ' ') { if (S.timer) stop(); else play(); } },
+      stop
+    };
+  }
+
+  function setLang(l) {
+    lang = l; store.set('td1-lang', l);
+    Object.values(labs).forEach(L => L.renderLang());
+  }
+
+  /* ---------- widgets annexes ---------- */
+  function tariffChart(root) {
+    const W = 580, H = 260, L = 52, R = 36, T = 14, Bm = 36, KX = 300, KY = 4000;
+    const x = k => L + k / KX * (W - L - R), y = m => T + (1 - m / KY) * (H - T - Bm);
+    const prog = c => c <= 100 ? c * 5 : c <= 200 ? 500 + (c - 100) * 8 : 1300 + (c - 200) * 12;
+    const uni = c => c * (c <= 100 ? 5 : c <= 200 ? 8 : 12);
+    const pts = f => { const a = []; for (let c = 0; c <= KX; c += 2) a.push(`${x(c).toFixed(1)},${y(f(c)).toFixed(1)}`); return a.join(' '); };
+    const uSeg = (a, b, t) => `<line class="ln-u" x1="${x(a)}" y1="${y(a * t)}" x2="${x(b)}" y2="${y(b * t)}"/>`;
+    root.innerHTML = `
+      <div class="tc-head">
+        <label for="tc-range">Consommation : <b class="tc-c">250</b> kWh</label>
+        <input id="tc-range" type="range" min="0" max="300" value="250">
+      </div>
+      <svg viewBox="0 0 ${W} ${H}" class="tchart" role="img" aria-label="Montant selon la consommation, tarif progressif et tarif unique">
+        ${[0, 1000, 2000, 3000, 4000].map(m => `<g class="grid"><line x1="${L}" x2="${W - R}" y1="${y(m)}" y2="${y(m)}"/><text x="${L - 6}" y="${y(m) + 4}">${fr(m)}</text></g>`).join('')}
+        ${[0, 100, 200, 300].map(k => `<g class="grid gx"><text x="${x(k)}" y="${H - 14}">${k} kWh</text></g>`).join('')}
+        ${uSeg(0, 100, 5)}${uSeg(100.01, 200, 8)}${uSeg(200.01, 300, 12)}
+        <line class="jump" x1="${x(100)}" y1="${y(500)}" x2="${x(100)}" y2="${y(808)}"/>
+        <line class="jump" x1="${x(200)}" y1="${y(1600)}" x2="${x(200)}" y2="${y(2412)}"/>
+        <polyline class="ln-p" points="${pts(prog)}"/>
+        <line class="cursor" y1="${T}" y2="${H - Bm}"/>
+        <circle class="dot-u" r="5"/><circle class="dot-p" r="5"/>
+      </svg>
+      <div class="tc-legend"><span><i class="k-p"></i>Tarif progressif : <b class="tc-p"></b></span><span><i class="k-u"></i>Tarif unique : <b class="tc-u"></b></span><span>Écart : <b class="tc-d"></b></span></div>`;
+    const r = $('#tc-range', root);
+    const upd = () => {
+      const c = +r.value;
+      $('.tc-c', root).textContent = c;
+      $('.tc-p', root).textContent = fr(prog(c)) + ' MRU';
+      $('.tc-u', root).textContent = fr(uni(c)) + ' MRU';
+      $('.tc-d', root).textContent = fr(uni(c) - prog(c)) + ' MRU';
+      const cu = $('.cursor', root); cu.setAttribute('x1', x(c)); cu.setAttribute('x2', x(c));
+      const dp = $('.dot-p', root); dp.setAttribute('cx', x(c)); dp.setAttribute('cy', y(prog(c)));
+      const du = $('.dot-u', root); du.setAttribute('cx', x(c)); du.setAttribute('cy', y(uni(c)));
+    };
+    r.addEventListener('input', upd); upd();
+  }
+
+  function guessGame(root) {
+    root.innerHTML = `
+      <div class="gg-row">
+        <label class="fld" for="gg-max"><span>Nombre d'essais</span><select id="gg-max"><option>3</option><option>7</option></select></label>
+        <label class="fld fld-b" for="gg-42"><input type="checkbox" id="gg-42"> secret = 42 comme dans le TD</label>
+        <button type="button" class="btn btn-ghost" id="gg-new">Nouvelle partie</button>
+      </div>
+      <form class="gg-row" id="gg-form">
+        <label class="fld" for="gg-in"><span>Votre nombre (1 à 100)</span><input id="gg-in" type="number" min="1" max="100" required></label>
+        <button type="submit" class="btn" id="gg-go">Proposer</button>
+        <div class="dots" id="gg-dots"></div>
+      </form>
+      <div class="gg-log" id="gg-log" aria-live="polite"></div>`;
+    let secret, max, used, over;
+    const log = $('#gg-log', root);
+    const dots = () => { $('#gg-dots', root).innerHTML = Array.from({ length: max }, (_, i) => `<i class="${i < used ? 'used' : ''}"></i>`).join('') + `<span>${used}/${max}</span>`; };
+    const reset = () => {
+      max = +$('#gg-max', root).value; used = 0; over = false;
+      secret = $('#gg-42', root).checked ? 42 : 1 + Math.floor(Math.random() * 100);
+      log.innerHTML = `<p class="dim">Nouvelle partie : devinez un nombre entre 1 et 100 en ${max} essais.</p>`;
+      $('#gg-go', root).disabled = false; dots();
+    };
+    $('#gg-form', root).addEventListener('submit', e => {
+      e.preventDefault();
+      if (over) return;
+      const inp = $('#gg-in', root); const p = Math.trunc(+inp.value);
+      if (!inp.value) return;
+      used++;
+      let msg, cls = '';
+      if (p === secret) { msg = `Bravo ! Trouvé en ${used} essai(s).`; cls = 'ok'; over = true; }
+      else msg = `Essai ${used} : ${p}. Le nombre secret est plus ${p < secret ? 'grand' : 'petit'}.`;
+      if (!over && used >= max) { msg += ` Perdu ! Le nombre secret était ${secret}.`; cls = 'err'; over = true; }
+      log.insertAdjacentHTML('beforeend', `<p class="${cls}">${msg}</p>`);
+      if (over) { $('#gg-go', root).disabled = true;  }
+      inp.value = ''; inp.focus(); dots();
+    });
+    $('#gg-new', root).addEventListener('click', reset);
+    $('#gg-max', root).addEventListener('change', reset);
+    $('#gg-42', root).addEventListener('change', reset);
+    reset();
+  }
+
+  /* ---------- navigation ---------- */
+  function show(ex) {
+    $$('.ex').forEach(s => { s.hidden = s.dataset.ex !== String(ex); });
+    $$('.tabs a').forEach(a => a.setAttribute('aria-current', a.dataset.ex === String(ex) ? 'page' : 'false'));
+    Object.values(labs).forEach(L => L.stop());
+    if (!labs[ex]) {
+      const root = $(`.lab[data-ex="${ex}"]`);
+      if (root) labs[ex] = Lab(root, ex);
+      if (window.NOTIONS && window.NOTIONS.mountIntro) window.NOTIONS.mountIntro(ex);
+      if (ex === 3) tariffChart($('#tariff-chart'));
+      if (ex === 7) guessGame($('#guess-game'));
+    }
+  }
+  let notionsBuilt = false;
+  function route() {
+    const h = location.hash || '';
+    const m = h.match(/^#ex([1-7])$/);
+    if (m) { show(+m[1]); return false; }
+    show(0);
+    if (!notionsBuilt && window.NOTIONS) { window.NOTIONS.build($('#notions-root')); notionsBuilt = true; }
+    if (/^#n-[a-z-]+$/.test(h)) {
+      const c = document.getElementById(h.slice(1));
+      if (c) { setTimeout(() => c.scrollIntoView({ block: 'start', behavior: reduced ? 'auto' : 'smooth' }), 30); return true; }
+    }
+    return false;
+  }
+  window.addEventListener('hashchange', () => { if (!route()) { const h = $('.tabs'); if (h) h.scrollIntoView({ block: 'start', behavior: reduced ? 'auto' : 'smooth' }); } });
+  document.addEventListener('keydown', e => {
+    if (e.target.closest('input, textarea, select, summary') || e.altKey || e.ctrlKey || e.metaKey) return;
+    if (!['ArrowLeft', 'ArrowRight', ' '].includes(e.key)) return;
+    const vis = $$('.ex').find(s => !s.hidden);
+    if (!vis) return;
+    const L = labs[+vis.dataset.ex];
+    if (!L) return;
+    if (e.key === ' ' && e.target.closest('button, a')) return;
+    e.preventDefault(); L.key(e.key);
+  });
+  route();
+})();
+
+</script>
+</body>
+</html>
