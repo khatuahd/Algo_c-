@@ -707,6 +707,75 @@ h1 { font-size: clamp(30px, 5vw, 46px); font-weight: 800; line-height: 1.08; }
 .syn::before { content: "Syntaxe"; font-size: 12px; font-weight: 800; letter-spacing: .08em; text-transform: uppercase; color: var(--muted); }
 .syn pre { font-size: 14px; padding: 12px 14px; border-radius: 10px; border: 1px solid var(--line); }
 
+/* ================= Notions : mise en page ================= */
+.nintro { background: linear-gradient(135deg, #eaf0ff, #e6f7f7); border: 1px solid var(--line); border-radius: 20px; padding: 26px 28px; margin: 26px 0 6px; }
+.nintro h2 { margin: 0 0 8px; }
+.nintro > p { max-width: 70ch; color: var(--muted); font-size: 17px; margin-bottom: 18px; }
+.nintro > p b { color: var(--ink); }
+.som { display: grid; grid-template-columns: repeat(auto-fit, minmax(190px, 1fr)); gap: 14px 18px; }
+.som-g { display: grid; gap: 2px; align-content: start; }
+.som-g b { display: flex; align-items: center; gap: 8px; font: 800 15px var(--font-d); margin-bottom: 4px; }
+.som-g a { font-size: 15px; text-decoration: none; color: var(--ink); padding: 3px 8px; border-radius: 8px; margin-left: 30px; }
+.som-g a:hover { background: #fff; color: var(--accent); }
+.gnum { display: inline-grid; place-items: center; width: 24px; height: 24px; border-radius: 50%; background: var(--accent); color: #fff; font: 800 13px var(--font-d); flex: none; }
+.ngroup { display: flex; align-items: center; gap: 12px; font-size: 26px; font-weight: 800; margin: 42px 0 12px; color: var(--ink); }
+.ngroup .gnum { width: 34px; height: 34px; font-size: 16px; }
+.ncard { background: var(--panel); border: 1px solid var(--line); border-radius: 22px; padding: 26px; margin: 16px 0; box-shadow: var(--shadow-s); gap: 28px; }
+.ncard:target { box-shadow: 0 0 0 3px var(--accent-soft), var(--shadow-m); }
+.ncard .nplay { box-shadow: none; background: #fafbff; }
+.retenir { margin-top: 16px; background: #fff8dc; border-left: 4px solid #e6a52d; border-radius: 0 12px 12px 0; padding: 10px 14px; }
+.retenir b { font: 800 12px var(--font-d); letter-spacing: .08em; text-transform: uppercase; color: #8a5d00; }
+.retenir p { margin: 4px 0 0; font-size: 16px; }
+
+/* ================= Affectation ================= */
+.aff2 { display: grid; gap: 12px; }
+.aff2-kind { justify-self: start; font: 800 12px var(--font-d); letter-spacing: .08em; text-transform: uppercase; color: var(--accent); background: var(--accent-soft); padding: 4px 12px; border-radius: 99px; }
+.aff2-kind.is-special { color: #8a5d00; background: #fff1c2; }
+.aff2-code code { font: 700 20px var(--font-m); background: #fff; border: 1px solid var(--line); padding: 8px 14px; border-radius: 10px; display: inline-block; }
+.aff2-flow { display: grid; grid-template-columns: minmax(0, 1.5fr) auto minmax(0, 1fr); gap: 10px; align-items: center; }
+@media (max-width: 520px) { .aff2-flow { grid-template-columns: 1fr; } .aff2-arrow { transform: rotate(90deg); justify-self: center; } }
+.aff2-side { display: grid; gap: 4px; }
+.aff2-val { font: 700 17px var(--font-m); border: 2px dashed var(--accent); border-radius: 12px; padding: 10px 12px; background: #fff; min-height: 46px; overflow-wrap: anywhere; }
+.aff2-val.is-to { border-style: solid; background: var(--accent-soft); color: var(--accent); }
+.aff2-val.ghost { border-color: var(--line); color: var(--muted); font-weight: 400; }
+.aff2-arrow { font: 800 38px var(--font-d); color: var(--margin); line-height: 1; }
+.aff2-mem { background: var(--code-bg); border-radius: 12px; padding: 10px 12px; }
+.aff2-cells { display: grid; grid-template-columns: repeat(3, minmax(0, 1fr)); gap: 8px; margin-top: 6px; }
+.aff2-cells .cell { min-height: 0; }
+
+/* ================= Lire / écrire ================= */
+.io2 { display: grid; grid-template-columns: minmax(0, 1fr); gap: 10px; }
+.io2-lab { font: 700 11px var(--font-b); letter-spacing: .08em; text-transform: uppercase; color: var(--muted); }
+.io2-screen { display: grid; justify-items: center; gap: 0; }
+.monitor { width: 100%; background: linear-gradient(180deg, #2a3350, #1b2238); border-radius: 16px; padding: 12px 12px 18px; box-shadow: 0 6px 18px rgba(22,33,63,.25); position: relative; }
+.monitor::after { content: ""; position: absolute; bottom: 6px; left: 50%; width: 6px; height: 6px; border-radius: 50%; background: #5f6f9c; transform: translateX(-50%); }
+.monitor-glass { background: #0e1a14; background-image: repeating-linear-gradient(0deg, rgba(255,255,255,.035) 0 1px, transparent 1px 3px); color: #7dffb0; font: 15px/1.6 var(--font-m); border-radius: 8px; min-height: 112px; padding: 12px 14px; box-shadow: inset 0 0 30px rgba(0,0,0,.6); overflow: hidden; }
+.mline { white-space: pre-wrap; }
+.minp { color: #ffe27a; font-weight: 700; }
+.mcursor { display: inline-block; width: 9px; height: 17px; background: #7dffb0; vertical-align: text-bottom; margin-left: 2px; animation: blink 1s steps(2) infinite; }
+.monitor-stand { width: 26%; height: 14px; background: linear-gradient(180deg, #3a4568, #29314d); clip-path: polygon(15% 0, 85% 0, 100% 100%, 0 100%); }
+.monitor-stand::after { content: ""; }
+.io2-screen .io2-lab { margin-top: 4px; }
+.io2-mid { display: grid; grid-template-columns: 1fr auto 1fr; gap: 10px; align-items: center; justify-items: center; }
+.io2-mem { display: grid; gap: 4px; justify-items: center; }
+.io2-ar { display: grid; justify-items: center; font-size: 22px; font-weight: 800; color: var(--line); line-height: 1; transition: color .3s; }
+.io2-ar b { font: 700 12px var(--font-m); }
+.io2-ar.on { color: var(--margin); animation: nudgeUp 1s ease-in-out infinite; }
+.io2-ar.on b { color: var(--margin); }
+@keyframes nudgeUp { 50% { transform: translateY(-4px); } }
+.io2-kb { display: grid; gap: 4px; }
+.kb { background: linear-gradient(180deg, #dfe5f3, #cdd5ea); border-radius: 14px; padding: 10px; display: grid; gap: 6px; box-shadow: inset 0 -3px 0 rgba(0,0,0,.08); }
+.kb.live { box-shadow: 0 0 0 3px var(--hl), inset 0 -3px 0 rgba(0,0,0,.08); }
+.krow { display: grid; grid-template-columns: repeat(10, minmax(0, 1fr)); gap: 5px; }
+.krow2 { grid-template-columns: 1fr 1.4fr; }
+.kcap { font: 700 16px var(--font-m); height: 40px; border: 1px solid #b6c0dc; border-bottom-width: 4px; border-radius: 8px; background: #fff; color: var(--ink); cursor: pointer; padding: 0; transition: transform .08s, border-bottom-width .08s, background-color .15s; }
+.kcap:hover:not(:disabled) { background: var(--accent-soft); }
+.kcap:active:not(:disabled) { transform: translateY(3px); border-bottom-width: 1px; background: var(--hl); }
+.kcap:disabled { cursor: default; opacity: .55; }
+.kenter { background: var(--accent); color: #fff; border-color: #2548bb; }
+.kenter:hover:not(:disabled) { background: #2548bb; }
+.stage.shake { animation: shake .4s; }
+
 @media print { .tabs, .ctl, .btn { display: none; } body { background: #fff; } }
 
 @media (max-width: 520px) {
@@ -1467,54 +1536,99 @@ SIMS[7] = {
     }
   };
 
-  /* 4. Affectation */
+  /* 4. Affectation : ranger une valeur dans une variable */
   D.affectation = {
     frames: [
-      { c: 'x et y sont vides.', x: '?', y: '?', code: null, ev: null },
-      { c: 'x reçoit 5.', x: '5', y: '?', px: 1, code: ['x ← 5', ''], ev: ['5', '5'] },
-      { c: 'On calcule d\'abord la droite : x + 2 = 7.', x: '5', y: '?', rx: 1, code: ['y ← x + 2', 'y = x + 2;'], ev: ['x + 2  →  5 + 2', '7'] },
-      { c: 'Puis on range 7 dans y.', x: '5', y: '7', py: 1, code: ['y ← x + 2', 'y = x + 2;'], ev: ['x + 2  →  5 + 2', '7'], fly: 'y' },
-      { c: 'x + 1 utilise l\'ancienne valeur : 5 + 1 = 6.', x: '5', y: '7', rx: 1, code: ['x ← x + 1', 'x = x + 1;'], ev: ['x + 1  →  5 + 1', '6'] },
-      { c: 'x vaut maintenant 6.', x: '6', oldx: '5', y: '7', px: 1, code: ['x ← x + 1', 'x = x + 1;'], ev: ['x + 1  →  5 + 1', '6'], fly: 'x' }
+      { c: 'Affecter, c\'est <b>ranger une valeur dans une variable</b>. La flèche ← va de la valeur vers la case.', kind: 'Principe', code: ['variable ← valeur', ''], note: 'note', v: { note: '?', copie: '?', total: '?' }, from: null },
+      { c: 'Cas 1 · Une valeur écrite directement : 12 va dans <b>note</b>.', kind: 'Valeur directe', code: ['note ← 12', ''], v: { note: '12', copie: '?', total: '?' }, ch: 'note', src: '12', to: 'note' },
+      { c: 'Cas 2 · Copier une autre variable : <b>copie</b> reçoit la valeur de <b>note</b>. note garde sa valeur.', kind: 'Copie', code: ['copie ← note', ''], v: { note: '12', copie: '12', total: '?' }, ch: 'copie', src: 'note  →  12', to: 'copie', read: 'note' },
+      { c: 'Cas 3 · Le résultat d\'un calcul : on calcule d\'abord la droite (12 + 3), puis on range 15 dans <b>total</b>.', kind: 'Calcul', code: ['total ← note + 3', ''], v: { note: '12', copie: '12', total: '15' }, ch: 'total', src: 'note + 3  →  12 + 3  →  15', to: 'total', read: 'note' },
+      { c: 'Affecter à nouveau <b>écrase</b> l\'ancienne valeur. copie et total ne changent pas : ils gardent leur valeur.', kind: 'Écrasement', code: ['note ← 20', ''], v: { note: '20', copie: '12', total: '15' }, ch: 'note', old: ['note', '12'], src: '20', to: 'note' },
+      { c: 'Cas particulier · On peut utiliser la variable elle-même : on lit l\'ancienne valeur (20), on calcule 21, puis on le range dans <b>note</b>.', kind: 'Modifier une variable', code: ['note ← note + 1', ''], v: { note: '21', copie: '12', total: '15' }, ch: 'note', old: ['note', '20'], src: 'note + 1  →  20 + 1  →  21', to: 'note', read: 'note', special: 1 }
     ],
     draw(st, f) {
-      st.innerHTML = `${codeStrip(f.code)}
-        <div class="aff">
-          <div class="aff-mem">
-            <div class="cell named">${mbox('x', 'Entier', f.x, (f.px ? 'pop ' : '') + (f.rx ? 'reading' : ''))}${f.oldx ? `<s class="oldv">${f.oldx}</s>` : ''}</div>
-            <div class="cell named">${mbox('y', 'Entier', f.y, f.py ? 'pop' : '')}</div>
+      const box = n => mbox(n, n === 'note' ? 'Entier' : 'Entier', f.v[n], (f.ch === n ? 'pop ' : '') + (f.read === n ? 'reading' : ''));
+      const cells = ['note', 'copie', 'total'].map(n => `<div class="cell named">${box(n)}${f.old && f.old[0] === n ? `<s class="oldv">${f.old[1]}</s>` : ''}</div>`).join('');
+      st.innerHTML = `<div class="aff2">
+        <div class="aff2-kind ${f.special ? 'is-special' : ''}">${esc(f.kind)}</div>
+        <div class="aff2-code">${f.code[0].split('←').length === 2 ? `<code>${esc(f.code[0])}</code>` : esc(f.code[0])}</div>
+        <div class="aff2-flow">
+          <div class="aff2-side">
+            <span class="small">① valeur (côté droit)</span>
+            <div class="aff2-val ${f.src ? 'pop' : 'ghost'}">${f.src ? esc(f.src) : '—'}</div>
           </div>
-          <div class="aff-arrow" aria-hidden="true">←</div>
-          <div class="aff-eval ${f.ev ? '' : 'ghost'}">
-            <span class="small">calcul</span>
-            <div class="ev-expr">${f.ev ? esc(f.ev[0]) : '—'}</div>
-            ${f.ev ? `<div class="ev-res ${f.fly ? 'fly' : 'pop'}">= ${esc(f.ev[1])}</div>` : ''}
+          <div class="aff2-arrow" aria-hidden="true">${f.src ? '←' : '·'}</div>
+          <div class="aff2-side">
+            <span class="small">② case (côté gauche)</span>
+            <div class="aff2-val ${f.to ? 'is-to' : 'ghost'}">${f.to ? esc(f.to) : 'variable'}</div>
           </div>
-        </div>`;
+        </div>
+        <div class="aff2-mem"><span class="small">Mémoire</span><div class="aff2-cells">${cells}</div></div>
+      </div>`;
     }
   };
 
-  /* 5. Lire / Écrire */
-  D.lireecrire = {
-    frames: [
-      { c: 'écrire affiche un message.', scr: ['Quel âge as-tu ? '], age: '?', arrow: 'out', code: ['écrire("Quel âge as-tu ? ")', ''] },
-      { c: 'lire attend que l\'utilisateur tape.', scr: ['Quel âge as-tu ? _'], age: '?', wait: 1, code: ['lire(age)', ''] },
-      { c: 'Il tape 19 puis Entrée.', scr: ['Quel âge as-tu ? 19'], age: '?', keys: '19⏎', code: ['lire(age)', ''] },
-      { c: '19 est rangé dans age.', scr: ['Quel âge as-tu ? 19'], age: '19', pop: 1, arrow: 'in', code: ['lire(age)', ''] },
-      { c: 'écrire peut afficher un calcul.', scr: ['Quel âge as-tu ? 19', "L'an prochain : 20"], age: '19', arrow: 'out', code: ['écrire("L\'an prochain : ", age + 1)', ''] }
-    ],
-    draw(st, f) {
-      const keys = ['1', '2', '3', '4', '5', '6', '7', '8', '9', '0', '⏎'].map(k => `<span class="key ${f.keys && f.keys.includes(k) ? 'down' : ''}">${k}</span>`).join('');
-      st.innerHTML = `${codeStrip(f.code)}
-        <div class="io">
-          <div class="io-z"><span class="small">clavier</span><div class="keys">${keys}</div></div>
-          <div class="io-ar ${f.arrow === 'in' ? 'on' : ''}">→<small>lire</small></div>
-          <div class="io-z"><span class="small">mémoire</span>${mbox('age', 'Entier', f.age, f.pop ? 'pop' : '')}</div>
-          <div class="io-ar ${f.arrow === 'out' ? 'on' : ''}">→<small>écrire</small></div>
-          <div class="io-z"><span class="small">écran</span><div class="screen ${f.wait ? 'wait' : ''}">${f.scr.map(s => `<div>${esc(s)}</div>`).join('')}</div></div>
-        </div>`;
-    }
-  };
+  /* 5. Lire / Écrire : clavier cliquable et écran */
+  (function () {
+    let typed = '', val = '', Pl = null;
+    const KEYS = ['1', '2', '3', '4', '5', '6', '7', '8', '9', '0'];
+    D.lireecrire = {
+      guided: true,
+      frames: [
+        { c: '<b>écrire</b> affiche un message sur l\'écran. Rien n\'est encore rangé en mémoire.', code: ['écrire("Quel âge as-tu ? ")', ''], arrow: 'out' },
+        { c: '<b>lire</b> attend l\'utilisateur. À vous : cliquez sur les touches pour taper votre âge, puis sur <b>Entrée</b>.', code: ['lire(age)', ''], wait: 1 },
+        { c: '', code: ['lire(age)', ''], arrow: 'in' },
+        { c: '', code: ['écrire("L\'an prochain : ", age + 1)', ''], arrow: 'out' }
+      ],
+      build(st, P) {
+        Pl = P;
+        st.addEventListener('click', e => {
+          const b = e.target.closest('button[data-key]');
+          if (!b || !P.started || P.index() !== 1) return;
+          const k = b.dataset.key;
+          if (k === 'back') typed = typed.slice(0, -1);
+          else if (k === 'enter') { if (!typed) { st.classList.remove('shake'); void st.offsetWidth; st.classList.add('shake'); return; } val = typed; P.go(2); return; }
+          else if (typed.length < 3) typed += k;
+          P.show(1);
+        });
+      },
+      draw(st, f, P) {
+        const idx = P ? P.index() : 0;
+        if (idx === 0) { typed = ''; val = ''; }
+        if (idx >= 2 && !val) val = typed || '19';
+        const age = idx >= 2 ? val : '?';
+        let lines = [];
+        if (idx === 0) lines = [['Quel âge as-tu ? ', '']];
+        else if (idx === 1) lines = [['Quel âge as-tu ? ', typed]];
+        else if (idx === 2) lines = [['Quel âge as-tu ? ', val]];
+        else lines = [['Quel âge as-tu ? ', val], ["L'an prochain : " + (Number(val) + 1), null]];
+        if (idx === 2) f.c = `Entrée : la valeur <b>${esc(val)}</b> est rangée dans la variable <b>age</b>. L'écran ne change pas : lire ne montre rien.`;
+        if (idx === 3) f.c = `<b>écrire</b> peut afficher un calcul : age + 1 = ${esc(Number(val) + 1)}. age garde sa valeur (${esc(val)}).`;
+        const screen = lines.map(([m, inp], k) => `<div class="mline">${esc(m)}${inp === null ? '' : `<span class="minp">${esc(inp)}</span>`}${idx === 1 && k === 0 ? '<span class="mcursor"></span>' : ''}</div>`).join('');
+        const keys = KEYS.map(k => `<button type="button" class="kcap" data-key="${k}" ${idx === 1 ? '' : 'disabled'}>${k}</button>`).join('');
+        st.innerHTML = `${codeStrip(f.code)}
+          <div class="io2">
+            <div class="io2-screen">
+              <div class="monitor"><div class="monitor-glass ${idx === 1 ? 'wait' : ''}">${screen}</div></div>
+              <div class="monitor-stand"></div>
+              <span class="io2-lab">Écran</span>
+            </div>
+            <div class="io2-mid">
+              <div class="io2-ar ${f.arrow === 'out' ? 'on' : ''}"><b>écrire</b><span>↑</span></div>
+              <div class="io2-mem"><span class="small">Mémoire</span>${mbox('age', 'Entier', age, idx === 2 ? 'pop' : '')}</div>
+              <div class="io2-ar ${f.arrow === 'in' || f.wait ? 'on' : ''}"><b>lire</b><span>↑</span></div>
+            </div>
+            <div class="io2-kb">
+              <div class="kb ${idx === 1 ? 'live' : ''}">
+                <div class="krow">${keys}</div>
+                <div class="krow krow2"><button type="button" class="kcap kwide" data-key="back" ${idx === 1 ? '' : 'disabled'} aria-label="Effacer">⌫ Effacer</button><button type="button" class="kcap kwide kenter" data-key="enter" ${idx === 1 ? '' : 'disabled'}>Entrée ⏎</button></div>
+              </div>
+              <span class="io2-lab">Clavier ${idx === 1 ? '· cliquez sur les touches' : ''}</span>
+            </div>
+          </div>`;
+      }
+    };
+  })();
 
   /* 6. Opérateurs arithmétiques */
   D.arith = {
@@ -1996,32 +2110,32 @@ SIMS[7] = {
   /* ================= CARTES ================= */
   const GROUPS = [
     ['Les bases', [
-      ['variable', 'Variable', 'Une case de la mémoire avec un nom, un type et une valeur.', 'Déclaration : age : Entier'],
-      ['types', 'Types', 'Le type dit ce que la variable peut contenir.', 'Entier, Naturel, Réel, Booléen,\nCaractère, Chaîne de caractères'],
-      ['constante', 'Valeur fixe', 'Une valeur qui ne change pas : on la donne au début.', 'seuilRemise ← 20000'],
-      ['affectation', 'Affectation', 'On calcule à droite, puis on range à gauche.', 'x ← x + 1'],
-      ['lire-ecrire', 'Lire et écrire', 'lire prend une valeur au clavier, écrire affiche à l\'écran.', 'lire(age)\nécrire("Âge : ", age)']
+      ['variable', 'Variable', 'Une case de la mémoire avec un nom, un type et une valeur.', 'Déclaration : age : Entier', 'Avant de s\'en servir, on déclare la variable : un nom et un type. Tant qu\'on ne lui a rien donné, elle est vide (?).'],
+      ['types', 'Types', 'Le type dit ce que la variable peut contenir.', 'Entier, Naturel, Réel, Booléen,\nCaractère, Chaîne de caractères', 'On choisit le type selon ce qu\'on range : Entier pour 42, Réel pour 3.14, Booléen pour Vrai/Faux, Chaîne pour du texte.'],
+      ['constante', 'Valeur fixe -> variable statique', 'Une valeur qui ne change pas : on la donne au début.', 'seuilRemise ← 20000', 'Donner un nom à une valeur fixe (seuilRemise) est plus lisible que d\'écrire 20000 partout, et on ne la modifie qu\'à un seul endroit.'],
+      ['affectation', 'Affectation', 'Affecter, c\'est ranger une valeur dans une variable : une valeur directe, la copie d\'une autre variable, ou le résultat d\'un calcul.', 'variable ← valeur\nvariable ← autreVariable\nvariable ← expression', 'Toujours dans cet ordre : on calcule la droite, puis on range dans la case de gauche. La flèche ← n\'est pas le « = » des maths.'],
+      ['lire-ecrire', 'Lire et écrire', 'lire prend une valeur tapée au clavier et la range dans une variable. écrire affiche un message ou une valeur à l\'écran.', 'lire(age)\nécrire("Âge : ", age)', 'lire range ce que tape l\'utilisateur dans une variable ; écrire affiche à l\'écran. On écrit un message avant chaque lire.']
     ]],
     ['Les calculs', [
-      ['arith', 'Opérateurs', 'Parenthèses d\'abord, puis * et /, puis + et -.', '7 div 2 = 3\n7 mod 2 = 1'],
-      ['comparaison', 'Comparaisons', 'Une comparaison répond Vrai ou Faux.', '=   /=   <   ≤   >   ≥'],
-      ['logique', 'et, ou, non', 'et : tout doit être Vrai. ou : un seul suffit. non : l\'inverse.', 'a et b   a ou b   non a']
+      ['arith', 'Opérateurs', 'Parenthèses d\'abord, puis * et /, puis + et -.', '7 div 2 = 3\n7 mod 2 = 1', 'Les parenthèses passent en premier. div donne le quotient entier, mod donne le reste.'],
+      ['comparaison', 'Comparaisons', 'Une comparaison répond Vrai ou Faux.', '=   /=   <   ≤   >   ≥', '= compare, ← range : ne pas les confondre. Une comparaison répond toujours Vrai ou Faux.'],
+      ['logique', 'et, ou, non', 'et : tout doit être Vrai. ou : un seul suffit. non : l\'inverse.', 'a et b   a ou b   non a', 'et : les deux doivent être Vrai. ou : au moins un Vrai suffit. non : inverse la valeur.']
     ]],
     ['Les conditions', [
-      ['si', 'si … sinon', 'Le programme choisit un chemin.', 'si note ≥ 10 alors\n   écrire("Admis")\nsinon\n   écrire("Ajourné")\nfin si'],
-      ['sinon-si', 'si … sinon si', 'Plusieurs cas : le premier test Vrai gagne.', 'si c ≤ 100 alors\n   …\nsinon\n   si c ≤ 200 alors\n      …\n   sinon\n      …\n   fin si\nfin si'],
-      ['selon', 'selon', 'Une seule variable comparée à des valeurs précises : un menu, un jour. Pas pour des intervalles.', 'selon choix faire\n   1 : écrire("Addition")\n   2 : écrire("Soustraction")\n   autre : écrire("Invalide")\nfin selon']
+      ['si', 'si … sinon', 'Le programme choisit un chemin.', 'si note ≥ 10 alors\n   écrire("Admis")\nsinon\n   écrire("Ajourné")\nfin si', 'Un seul des deux blocs est exécuté, jamais les deux.'],
+      ['sinon-si', 'si … sinon si', 'Plusieurs cas : le premier test Vrai gagne.', 'si c ≤ 100 alors\n   …\nsinon\n   si c ≤ 200 alors\n      …\n   sinon\n      …\n   fin si\nfin si', 'L\'ordre des tests compte : le premier test Vrai gagne et les suivants sont ignorés.'],
+      ['selon', 'selon', 'Une seule variable comparée à des valeurs précises : un menu, un jour. Pas pour des intervalles.', 'selon choix faire\n   1 : écrire("Addition")\n   2 : écrire("Soustraction")\n   autre : écrire("Invalide")\nfin selon', 'selon sert quand une seule variable est comparée à des valeurs précises. Pour des intervalles (note ≥ 16), utiliser si … sinon si.']
     ]],
     ['Les boucles', [
-      ['tantque', 'tant que', 'Répète tant que la condition est Vrai. Test au début.', 'tant que n > 0 faire\n   …\nfin tant que'],
-      ['pour', 'pour', 'Répète un nombre de fois connu.', 'pour i ← 1 à n faire\n   …\nfin pour'],
-      ['repeter', 'répéter … jusqu\'à', 'Test à la fin : au moins un tour.', "répéter\n   …\njusqu'à n > 0"]
+      ['tantque', 'tant que', 'Répète tant que la condition est Vrai. Test au début.', 'tant que n > 0 faire\n   …\nfin tant que', 'Le test est avant : la boucle peut ne jamais s\'exécuter. Il faut modifier la variable du test dans la boucle, sinon elle ne s\'arrête jamais.'],
+      ['pour', 'pour', 'Répète un nombre de fois connu.', 'pour i ← 1 à n faire\n   …\nfin pour', 'On l\'utilise quand on connaît le nombre de tours. La variable i est gérée automatiquement.'],
+      ['repeter', 'répéter … jusqu\'à', 'Test à la fin : au moins un tour.', "répéter\n   …\njusqu'à n > 0", 'Le test est après : la boucle s\'exécute au moins une fois. Pratique pour redemander une saisie.']
     ]],
     ['Les techniques', [
-      ['compteur', 'Compteur et somme', 'Compteur : + 1. Somme : + la valeur. Les deux partent de 0.', 'nb ← nb + 1\nsomme ← somme + note'],
-      ['maximum', 'Maximum', 'On garde la meilleure valeur vue jusqu\'ici.', 'si note > meilleure alors\n   meilleure ← note\nfin si'],
-      ['validation', 'Vérifier une saisie', 'On redemande tant que la valeur est fausse.', 'tant que note < 0 ou note > 20 faire\n   lire(note)\nfin tant que'],
-      ['trace', 'La trace', 'Exécuter à la main et noter les valeurs.', '']
+      ['compteur', 'Compteur et somme', 'Compteur : + 1. Somme : + la valeur. Les deux partent de 0.', 'nb ← nb + 1\nsomme ← somme + note', 'Toujours initialiser à 0 avant la boucle, sinon le résultat est faux.'],
+      ['maximum', 'Maximum', 'On garde la meilleure valeur vue jusqu\'ici.', 'si note > meilleure alors\n   meilleure ← note\nfin si', 'On part d\'une valeur sûre et on ne remplace que si la nouvelle valeur est plus grande.'],
+      ['validation', 'Vérifier une saisie', 'On redemande tant que la valeur est fausse.', 'tant que note < 0 ou note > 20 faire\n   lire(note)\nfin tant que', 'Après la boucle, on est certain que la valeur est valide.'],
+      ['trace', 'La trace', 'Exécuter à la main et noter les valeurs.', '', 'Un tableau : une ligne par instruction, une colonne par variable. On ne saute aucune ligne.']
     ]]
   ];
   const DEMO_ID = { 'lire-ecrire': 'lireecrire', 'sinon-si': 'sinonsi' };
@@ -2047,12 +2161,18 @@ SIMS[7] = {
   }
 
   function build(root) {
-    root.innerHTML = GROUPS.map(([g, items]) => `<h2 class="ngroup">${g}</h2>` + items.map(([id, title, txt, ps]) => `
+    const som = GROUPS.map(([g, items], gi) => `<div class="som-g"><b><span class="gnum">${gi + 1}</span>${g}</b>${items.map(([id, title]) => `<a href="#n-${id}">${title}</a>`).join('')}</div>`).join('');
+    root.innerHTML = `<div class="nintro">
+        <h2>Notions du cours</h2>
+        <p>Chaque notion se découvre en trois temps : <b>l'explication</b>, <b>la syntaxe à retenir</b>, puis <b>un exemple que vous faites avancer vous-même</b>, étape par étape.</p>
+        <nav class="som" aria-label="Sommaire des notions">${som}</nav>
+      </div>` + GROUPS.map(([g, items], gi) => `<h2 class="ngroup"><span class="gnum">${gi + 1}</span>${g}</h2>` + items.map(([id, title, txt, ps, ret]) => `
       <article class="ncard" id="n-${id}" data-demo="${DEMO_ID[id] || id}">
         <div class="ntext">
           <h3>${title}</h3>
           <p>${txt}</p>
           ${ps ? `<div class="syn"><pre>${esc(ps)}</pre></div>` : ''}
+          ${ret ? `<div class="retenir"><b>À retenir</b><p>${ret}</p></div>` : ''}
         </div>
         ${playerHtml()}
       </article>`).join('')).join('');
@@ -2078,6 +2198,7 @@ SIMS[7] = {
     const P = {
       started: false,
       frame: () => demo.frames[i],
+      index: () => i,
       ui() {
         const on = P.started;
         root.classList.toggle('is-idle', !on);
@@ -2102,7 +2223,7 @@ SIMS[7] = {
       stop() {},
       play() { P.go(0); }
     };
-    if (demo.build) { demo.build(stage, P); P.started = true; }
+    if (demo.build) { demo.build(stage, P); if (!demo.guided) P.started = true; }
     card.addEventListener('click', e => {
       const b = e.target.closest('button[data-a]');
       if (!b || !card.contains(b)) return;
