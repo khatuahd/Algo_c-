@@ -415,6 +415,11 @@ button { font: inherit; color: inherit; cursor: pointer; }
         <div class="link"><span class="arr">→</span><div>Dans les boucles, on <b>compte</b>, on <b>additionne</b>, on garde le <b>maximum</b> et on <b>vérifie les saisies</b>. Et pour vérifier un algorithme à la main : la <b>trace</b>.</div></div>
         <h2><span class="gn">10</span>Les techniques et la trace</h2>
         <div class="ohost" data-group="Les techniques"></div>
+      </div>
+      <div class="ogroup" id="g-style">
+        <div class="link"><span class="arr">→</span><div>Tu connais chaque instruction. Reste à les <b>assembler proprement</b> : c'est ce qui distingue un algorithme bien écrit d'un algorithme qui « marche » seulement.</div></div>
+        <h2><span class="gn">11</span>Bien écrire un algorithme</h2>
+        <div class="ohost" data-group="Bien écrire un algorithme"></div>
         <div class="link"><span class="arr">→</span><div>Tu as toutes les pièces. Passe à l'<a href="#ex1"><b>Exercice 1</b></a>, ou entraîne-toi dans le bac à sable ci-dessous.</div></div>
       </div>
     </div>
@@ -1540,6 +1545,173 @@ SIMS[7] = {
     };
   })();
 
+  /* ===== Bien écrire un algorithme ===== */
+  const hdLine = l => {
+    const m = l.match(/^(\s*)(Nom|Rôle|Entrée|Sortie|Déclaration)(\s*:)(.*)$/);
+    return m ? esc(m[1]) + '<span class="t-hd">' + m[2] + m[3] + '</span>' + esc(m[4]) : (esc(l) || ' ');
+  };
+
+  /* L'en-tête */
+  D.entete = (function () {
+    const code = ['Nom : aireRectangle', "Rôle : Calculer l'aire d'un rectangle", 'Entrée : longueur, largeur : Réel', 'Sortie : aire : Réel', 'Déclaration : -', 'début', '   aire ← longueur * largeur', 'fin'];
+    const frames = [
+      { n: 0, lo: -1, hi: -1, c: `Avant la moindre instruction, on écrit l'<b>en-tête</b> : la carte d'identité de l'algorithme. Quelqu'un qui ne lit que l'en-tête doit comprendre ce qu'il fait.` },
+      { n: 1, lo: 0, hi: 0, q: `Comment l'appeler ?`, a: `Un nom court, sans espace ni accent, qui dit ce que l'algorithme fait.<br><b>Bon :</b> aireRectangle &nbsp; <b>À éviter :</b> algo1, truc`, c: `<b>Nom</b> : <code>aireRectangle</code> se comprend tout seul. <code>algo1</code> ne dit rien.` },
+      { n: 2, lo: 1, hi: 1, q: `À quoi ça sert ?`, a: `Une phrase qui commence par un verbe à l'infinitif : Calculer…, Afficher…, Vérifier…`, c: `<b>Rôle</b> : une phrase courte avec un verbe d'action.` },
+      { n: 3, lo: 2, hi: 2, q: `Que faut-il lui donner ?`, a: `Les données d'entrée, chacune avec son type. Ici : longueur et largeur, deux Réels.`, c: `<b>Entrée</b> : tout ce que l'algorithme reçoit pour travailler.` },
+      { n: 4, lo: 3, hi: 3, q: `Que produit-il ?`, a: `Les résultats, chacun avec son type. Ici : l'aire, un Réel.`, c: `<b>Sortie</b> : tout ce que l'algorithme calcule ou produit.` },
+      { n: 5, lo: 4, hi: 4, q: `De quelles variables a-t-il besoin pour travailler ?`, a: `Les variables locales (compteur, somme, drapeau…). Ici aucune : on écrit un tiret.`, c: `<b>Déclaration</b> : les variables locales, invisibles pour l'extérieur. Rien à déclarer ? On met <code>-</code>.` },
+      { n: 8, lo: 5, hi: 7, q: `Où est le travail ?`, a: `Entre <b>début</b> et <b>fin</b>, une instruction par ligne, décalée de 3 espaces.`, c: `Le <b>corps</b> : les instructions s'exécutent de haut en bas, une par ligne, décalées sous début.` },
+      { n: 8, lo: -1, hi: -1, c: `Test final : en ne lisant que les 5 premières lignes, comprend-on ce que fait l'algorithme ? Si oui, l'en-tête est bon.` }
+    ];
+    return {
+      frames,
+      draw(st, f) {
+        const lines = code.slice(0, f.n).map((l, k) => `<div class="ml ${k >= f.lo && k <= f.hi ? 'cur' : ''}">${hdLine(l)}</div>`).join('') || '<div class="ml">&nbsp;</div>';
+        st.innerHTML = `<div class="mt-grid"><pre class="mcode">${lines}</pre><div class="sg-side">${f.q ? `<div class="sg-q">${f.q}</div>` : ''}${f.a ? `<div class="sg-a">${f.a}</div>` : ''}</div></div>`;
+      }
+    };
+  })();
+
+  /* La méthode : 5 questions */
+  D.methode = (function () {
+    const QA = [
+      ['Quelles sont les entrées ?', 'Un nombre.'],
+      ['Quelles sont les sorties ?', "L'écriture de sa valeur absolue."],
+      ['Comment obtient-on le résultat ?', "On change le signe du nombre s'il est négatif."],
+      ['Y a-t-il des répétitions ?', 'Non : pas de boucle.'],
+      ['Y a-t-il des décisions ?', 'Oui, une : le nombre est-il négatif ? Si oui on inverse le signe, sinon on ne fait rien.']
+    ];
+    const CODE = [['écrire("Entrer un nombre")', 'in'], ['lire(nombre)', 'in'], ['si nombre < 0 alors', 'tr'], ['   valeurAbsolue ← -1 * nombre', 'tr'], ['sinon', 'tr'], ['   valeurAbsolue ← nombre', 'tr'], ['fin si', 'tr'], ['écrire("La valeur absolue est ", valeurAbsolue)', 'out']];
+    const frames = [
+      { k: 0, c: `Énoncé : <i>lire un nombre et écrire sa valeur absolue</i>. Avant de coder, on répond toujours aux mêmes 5 questions.` },
+      { k: 1, c: `<b>Q1 · Les entrées</b> : ce qu'on doit demander à l'utilisateur. Ici un seul nombre.` },
+      { k: 2, c: `<b>Q2 · Les sorties</b> : ce qu'on doit afficher à la fin.` },
+      { k: 3, c: `<b>Q3 · Le comment</b> : l'idée de la solution, dite en français. Si on sait l'expliquer, on sait l'écrire.` },
+      { k: 4, c: `<b>Q4 · Les répétitions</b> : faut-il une boucle ? Ici non, donc ni pour ni tant que.` },
+      { k: 5, c: `<b>Q5 · Les décisions</b> : combien de tests, et pour décider quoi ? Ici un seul test : <code>nombre &lt; 0</code>.` },
+      { k: 5, code: 1, c: `Chaque réponse devient des lignes : <b style="color:#2563d9">entrées</b> → lire, <b style="color:#c86f12">décision</b> → si, <b style="color:#1d8a52">sortie</b> → écrire.` }
+    ];
+    return {
+      frames,
+      draw(st, f) {
+        const rows = QA.map((qa, i) => i < f.k
+          ? `<div class="sg-row${i === f.k - 1 && !f.code ? ' new' : ''}"><span class="sg-qn">Q${i + 1}</span><div><b>${qa[0]}</b><div>${qa[1]}</div></div></div>`
+          : `<div class="sg-row wait"><span class="sg-qn">Q${i + 1}</span><div><b>${qa[0]}</b></div></div>`).join('');
+        const code = f.code ? `<div class="sg-code">${CODE.map(([l, z]) => `<div class="sg-ln z-${z}"><span>${esc(l)}</span></div>`).join('')}</div>` : '';
+        st.innerHTML = `<div class="sg-rows">${rows}</div>${code}`;
+      }
+    };
+  })();
+
+  /* Les 4 blocs */
+  D.blocs = (function () {
+    const L = [['écrire("Prix unitaire : ")', 'in'], ['lire(prix)', 'in'], ['écrire("Quantité : ")', 'in'], ['lire(qte)', 'in'], ['si prix ≤ 0 ou qte < 0 alors', 'chk'], ['   écrire("Erreur : données invalides.")', 'chk'], ['sinon', 'chk'], ['   total ← prix * qte', 'tr'], ['   écrire("Total : ", total)', 'out'], ['fin si', 'chk']];
+    const Z = { in: '1 · Collecte', chk: '2 · Vérification', tr: '3 · Traitement', out: '4 · Résultat' };
+    const frames = [
+      { z: null, c: `Presque tous les algorithmes ont la même forme : <b>4 blocs, toujours dans le même ordre</b>. Voici un exemple : le total d'un achat.` },
+      { z: 'in', c: `<b>1 · Collecte</b> : on demande les données avec écrire puis lire. Un message avant chaque lire, pour que l'utilisateur sache quoi taper.` },
+      { z: 'chk', c: `<b>2 · Vérification</b> : on contrôle les données <i>avant</i> de calculer. Un prix négatif donnerait un total absurde.` },
+      { z: 'tr', c: `<b>3 · Traitement</b> : le calcul, uniquement si les données sont valides (donc dans le sinon).` },
+      { z: 'out', c: `<b>4 · Résultat</b> : on affiche la réponse avec une phrase claire : « Total : … », pas un nombre tout seul.` },
+      { z: 'all', c: `Ordre à retenir : <b>lire → vérifier → calculer → afficher</b>. On ne calcule jamais avant d'avoir vérifié.` }
+    ];
+    return {
+      frames,
+      draw(st, f) {
+        const lines = L.map(([l, z]) => {
+          const on = f.z === 'all' || f.z === z;
+          return `<div class="sg-ln ${on ? 'z-' + z : (f.z ? 'dim' : '')}"><span>${esc(l)}</span></div>`;
+        }).join('');
+        const chips = Object.keys(Z).map(k => `<span class="sg-chip z-${k} ${f.z === 'all' || f.z === k ? 'on' : ''}">${Z[k]}</span>`).join('');
+        st.innerHTML = `<div class="sg-legend">${chips}</div><div class="sg-code">${lines}</div>`;
+      }
+    };
+  })();
+
+  /* Le raffinement graduel */
+  D.raffinement = (function () {
+    const top = [['Écrire "Entrer trois nombres"', 0], ['Lire les trois nombres', 0], ["Vérifier si l'un des nombres est le produit des deux autres", 1], ['Écrire le résultat', 0]];
+    const detail = ['SI le premier est le produit du deuxième et du troisième ALORS', '   résultat ← le premier nombre', 'SINON SI le deuxième est le produit du premier et du troisième ALORS', '   résultat ← le deuxième nombre', 'SINON SI le troisième est le produit du premier et du deuxième ALORS', '   résultat ← le troisième nombre', 'SINON', '   résultat ← aucun des trois nombres'];
+    const frames = [
+      { lv: 0, c: `Énoncé : lire trois entiers et dire si l'un est le produit des deux autres. Plutôt que tout écrire d'un coup, on avance par <b>raffinement graduel</b>.` },
+      { lv: 1, c: `<b>Niveau 1</b> : on écrit d'abord les opérations « évidentes », sans se soucier du détail.` },
+      { lv: 2, c: `Lire et écrire sont des opérations <b>élémentaires</b>. Mais « Vérifier si l'un… » n'en est pas une : elle est <b>à raffiner</b>.` },
+      { lv: 3, c: `<b>Niveau 2</b> : on détaille seulement cette opération, avec des SI … SINON SI (un test par combinaison possible).` },
+      { lv: 4, c: `Résultat : un algorithme complet, construit par étapes. Si une opération est encore trop grosse, on la raffine à son tour.` }
+    ];
+    return {
+      frames,
+      draw(st, f) {
+        if (f.lv === 0) { st.innerHTML = `<div class="sg-code"><div class="sg-ln sg-title"><span>« Le produit de trois nombres » : par où commencer ?</span></div></div>`; return; }
+        const rows = top.map(([t, comp]) => {
+          let tag = '';
+          if (f.lv === 2) tag = comp ? '<span class="sg-tag todo">à raffiner</span>' : '<span class="sg-tag ok">élémentaire</span>';
+          const cls = comp && f.lv === 2 ? 'sg-todo' : (comp && f.lv >= 3 ? 'sg-title' : '');
+          let h = `<div class="sg-ln ${cls}"><span>${comp && f.lv >= 3 ? '// ' : ''}${esc(t)}</span>${tag}</div>`;
+          if (comp && f.lv >= 3) h += detail.map(d => `<div class="sg-ln sg-det ${f.lv === 3 ? 'sg-new' : ''}"><span>${esc(d)}</span></div>`).join('');
+          return h;
+        }).join('');
+        st.innerHTML = `<div class="sg-code">${rows}</div>`;
+      }
+    };
+  })();
+
+  /* Lisibilité */
+  D.lisibilite = (function () {
+    const V = [
+      ['si x ≥ 20000 alors', 'y ← x * 0.05', 'sinon', 'y ← 0', 'fin si'],
+      ['si montantBrut ≥ 20000 alors', 'remise ← montantBrut * 0.05', 'sinon', 'remise ← 0', 'fin si'],
+      ['si montantBrut ≥ 20000 alors', '   remise ← montantBrut * 0.05', 'sinon', '   remise ← 0', 'fin si'],
+      ['seuilRemise ← 20000', 'tauxRemise ← 0.05', 'si montantBrut ≥ seuilRemise alors', '   remise ← montantBrut * tauxRemise', 'sinon', '   remise ← 0', 'fin si'],
+      ['seuilRemise ← 20000   // en MRU', 'tauxRemise ← 0.05     // 5 %', '// remise accordée à partir du seuil', 'si montantBrut ≥ seuilRemise alors', '   remise ← montantBrut * tauxRemise', 'sinon', '   remise ← 0', 'fin si']
+    ];
+    const frames = [
+      { v: 0, c: `Cet algorithme est <b>correct</b>… mais illisible : que sont <code>x</code> et <code>y</code> ? Que signifie 20000 ? Améliorons-le en 4 gestes.` },
+      { v: 1, c: `<b>1 · Des noms explicites</b> : <code>montantBrut</code> et <code>remise</code> disent ce que les cases contiennent. Plus besoin de deviner.` },
+      { v: 2, c: `<b>2 · L'indentation</b> : on décale de 3 espaces ce qui dépend d'un si, d'un sinon ou d'une boucle. On voit la structure d'un coup d'œil.` },
+      { v: 3, c: `<b>3 · Des constantes</b> : 20000 et 0.05 ont maintenant un nom. Pour changer le seuil, on modifie une seule ligne.` },
+      { v: 4, c: `<b>4 · Un commentaire utile</b> : une ligne <code>//</code> qui explique le <i>pourquoi</i> ou l'unité, pas ce que la ligne fait déjà de façon évidente.` }
+    ];
+    return {
+      frames,
+      draw(st, f) {
+        const prev = new Set(f.v > 0 ? V[f.v - 1] : []);
+        const left = V[0].map(l => `<div class="sg-ln"><span>${esc(l)}</span></div>`).join('');
+        const right = V[f.v].map(l => `<div class="sg-ln ${f.v > 0 && !prev.has(l) ? 'chg' : ''}"><span>${esc(l)}</span></div>`).join('');
+        st.innerHTML = f.v === 0
+          ? `<div class="sg-col bad"><h5>À éviter</h5><div class="sg-code">${left}</div></div>`
+          : `<div class="sg-cols"><div class="sg-col bad"><h5>Au départ</h5><div class="sg-code">${left}</div></div><div class="sg-col good"><h5>Amélioré (${f.v}/4)</h5><div class="sg-code">${right}</div></div></div>`;
+      }
+    };
+  })();
+
+  /* La checklist */
+  D.checklist = (function () {
+    const IT = [
+      ['En-tête complet', 'Nom, Rôle, Entrée, Sortie, Déclaration : rien ne manque, chaque variable a un type.', 'Nom : factureRemise'],
+      ['Noms explicites', 'Chaque nom dit ce que la case contient.', 'montantBrut, nbAdmis, tauxRemise'],
+      ['Constantes pour les valeurs fixes', 'Pas de nombre « magique » au milieu des calculs.', 'seuilRemise ← 20000'],
+      ['Initialiser avant la boucle', 'Compteurs et sommes à 0, maximum à une valeur sûre.', 'nbAdmis ← 0   somme ← 0'],
+      ['Vérifier les données', 'Prix > 0, note entre 0 et 20, n > 0, diviseur ≠ 0.', 'si n ≤ 0 alors écrire("Erreur…")'],
+      ['Une instruction par ligne, bien indentée', 'Chaque si, sinon et boucle décale son contenu de 3 espaces.', 'si … alors\n   instruction\nfin si'],
+      ['Tester à la main', 'Un cas normal, un cas limite (20 000 pile, 0, 10), un cas invalide, puis la trace.', '20000 → remise ? 19999 → ?']
+    ];
+    const frames = [{ k: 0, c: `Avant de dire « c'est fini », on relit l'algorithme avec 7 questions. Cliquez sur « Étape suivante » pour les cocher une à une.` }]
+      .concat(IT.map((it, i) => ({ k: i + 1, c: `<b>${i + 1}. ${it[0]}</b> : ${it[1]}` })))
+      .concat([{ k: 8, c: `Tout est coché : l'algorithme est <b>structuré et bien écrit</b>. Prêt pour les exercices !` }]);
+    return {
+      frames,
+      draw(st, f) {
+        const rows = IT.map((it, i) => {
+          const st2 = f.k === 8 || i < f.k - 1 ? 'done' : (i === f.k - 1 ? 'cur done' : 'wait');
+          return `<li class="${st2}"><span class="bx">${st2.includes('done') ? '✓' : ''}</span><div>${esc(it[0])}${i === f.k - 1 ? `<div class="sg-ex">${esc(it[2])}</div>` : ''}</div></li>`;
+        }).join('');
+        st.innerHTML = `<ul class="sg-ck">${rows}</ul>`;
+      }
+    };
+  })();
+
   /* ===== Animations au-dessus de chaque exercice ===== */
   D.ex1 = makeSi({
     start: n => `montantBrut ← ${n}`, test: 'montantBrut ≥ 20000', yes: 'remise ← brut * 0.05', no: 'remise ← 0', cond: n => `${n} ≥ 20000`,
@@ -1689,6 +1861,14 @@ SIMS[7] = {
       ['maximum', 'Maximum', 'On garde la meilleure valeur vue jusqu\'ici.', 'si note > meilleure alors\n   meilleure ← note\nfin si', 'On part d\'une valeur sûre et on ne remplace que si la nouvelle valeur est plus grande.'],
       ['validation', 'Vérifier une saisie', 'On redemande tant que la valeur est fausse.', 'tant que mois < 1 ou mois > 12 faire\n   lire(mois)\nfin tant que', 'Après la boucle, on est certain que la valeur est valide.'],
       ['trace', 'La trace', 'Exécuter à la main et noter les valeurs.', '', 'Un tableau : une ligne par instruction, une colonne par variable. On ne saute aucune ligne.']
+    ]],
+    ['Bien écrire un algorithme', [
+      ['entete', "L'en-tête", "Avant le code, la carte d'identité de l'algorithme : son nom, son rôle, ses entrées, ses sorties et ses variables locales.", "Nom : aireRectangle\nRôle : Calculer l'aire d'un rectangle\nEntrée : longueur, largeur : Réel\nSortie : aire : Réel\nDéclaration : -\ndébut\n   …\nfin", "Un bon en-tête se lit seul : on comprend ce que fait l'algorithme sans regarder le corps. Les instructions sont entre début et fin, décalées de 3 espaces."],
+      ['methode', 'La méthode : 5 questions', "Avant d'écrire, on se pose toujours les mêmes questions sur le problème. Les réponses donnent le plan de l'algorithme.", "Entrées ?   Sorties ?\nComment obtient-on le résultat ?\nRépétitions ?   Décisions ?", "Entrées → lire. Décisions → si. Répétitions → pour ou tant que. Sorties → écrire. Écrire du code sans avoir répondu à ces questions, c'est avancer à l'aveugle."],
+      ['blocs', 'Les 4 blocs : lire, vérifier, calculer, afficher', "Un algorithme bien structuré suit presque toujours le même ordre : collecte des données, vérification, traitement, présentation du résultat.", "lire(…)                // 1. collecte\nsi donnée invalide     // 2. vérification\n   écrire(erreur)\nsinon\n   résultat ← …        // 3. traitement\n   écrire(résultat)    // 4. résultat\nfin si", "On ne calcule jamais avant d'avoir vérifié les données, et on affiche le résultat à la fin, avec une phrase claire."],
+      ['raffinement', 'Le raffinement graduel', "On écrit d'abord les grandes opérations « évidentes », puis on détaille seulement celles qui ne sont pas élémentaires.", "Niveau 1 : lire, vérifier, écrire\nNiveau 2 : détailler « vérifier »\n            avec des si … sinon si", "Opérations élémentaires : lire, écrire, affecter, calculer, si, boucles. Tout ce qui n'en fait pas partie se raffine. On évite ainsi de se perdre dans le détail trop tôt."],
+      ['lisibilite', 'Lisibilité : noms, indentation, constantes', "Un algorithme est lu par d'autres personnes (et par toi dans un mois) : il doit être clair du premier coup d'œil.", "montantBrut, nbAdmis        // noms explicites\n   décalage de 3 espaces    // indentation\nseuilRemise ← 20000         // constante nommée\n// remise dès le seuil      // commentaire utile", "Un nom qui dit ce que la case contient, un décalage dans chaque si et chaque boucle, un nom pour chaque valeur fixe, et un commentaire seulement quand il apprend quelque chose."],
+      ['checklist', 'La checklist avant de rendre', "Sept vérifications à faire sur chaque algorithme avant de le considérer comme terminé.", "", "Relis ton algorithme avec cette liste. Si une case n'est pas cochée, corrige avant de passer à la suite."]
     ]]
   ];
   const DEMO_ID = { 'lire-ecrire': 'lireecrire', 'sinon-si': 'sinonsi' };
@@ -2362,9 +2542,9 @@ function renderCells(el, mem, fx = {}, total = 12) {
 /* ================= Notions : l'histoire ================= */
 const CH = [
   ['algo', 'Algorithme'], ['var', 'Variable'], ['type', 'Type'], ['aff', 'Affectation'], ['const', 'Constante'],
-  ['io', 'Lire / Écrire'], ['expr', 'Expressions'], ['logic', 'ET / OU / NON', 1], ['si', 'Conditions SI', 1], ['loop', 'Boucles', 1], ['trace', 'Techniques et trace', 1]
+  ['io', 'Lire / Écrire'], ['expr', 'Expressions'], ['logic', 'ET / OU / NON', 1], ['si', 'Conditions SI', 1], ['loop', 'Boucles', 1], ['trace', 'Techniques et trace', 1], ['style', 'Bien écrire un algorithme', 1]
 ];
-const OLD_GROUP = { logic: 'g-logic', si: 'g-si', loop: 'g-loop', trace: 'g-tech' };
+const OLD_GROUP = { logic: 'g-logic', si: 'g-si', loop: 'g-loop', trace: 'g-tech', style: 'g-style' };
 const STEPS = [];
 let M = [], SCR = [];
 const decl = (name, type, val = null, konst = false) => M.push({ name, type, val, konst });
@@ -2944,7 +3124,7 @@ function codeBox(list) {
   });
   return '<div class="codebox" id="' + id + '"><div class="cbar"><div class="seg" role="tablist">' + list.map((c, i) => '<button role="tab" data-k="' + c[1] + '" aria-selected="' + (i === 0) + '">' + c[0] + '</button>').join('') + '</div><button class="copy">Copier</button></div><div class="lines">' + body(list[0][1]) + '</div></div>';
 }
-const FULL = n => n <= 2;
+const FULL = n => n <= 4;
 const INTRO_EX = n => n !== 2;
 function renderEx(n) {
   const e = EX[n - 1], v = $('#v-ex'), full = FULL(n);
@@ -3179,9 +3359,55 @@ FIG.f7 = el => {
 
 /* ---------- ancienne version (isolée dans un shadow DOM) ---------- */
 const EXTRA_CSS = "\n/* portes logiques */\n.logic.logic3 { grid-template-columns: repeat(2, minmax(0, 1fr)); gap: 12px 18px; align-items: start; }\n.logic.logic3 .lc:last-child { grid-column: auto; align-self: center; }\n@media (max-width: 760px) { .logic.logic3 { grid-template-columns: 1fr; } }\n.circ.on .wire { stroke: var(--muted); }\n.circ .wire.hot { stroke: var(--ok); }\n.circ .gate { fill: var(--panel); stroke: var(--ink); stroke-width: 2.5; stroke-linejoin: round; transition: fill .3s; }\n.circ.on .gate { fill: var(--ok-soft); }\n.circ .gl { font: 700 14px var(--font-d); text-anchor: middle; fill: var(--ink); }\n.circ .ov { font-size: 12px; }\n.inp { cursor: pointer; }\n.inp rect { fill: var(--err-soft); stroke: var(--err); stroke-width: 2; rx: 7; transition: fill .3s, stroke .3s; }\n.inp.is-t rect { fill: var(--ok-soft); stroke: var(--ok); }\n.inp .il { font: 700 15px var(--font-m); text-anchor: middle; fill: var(--ink); }\n.inp .iv { font: 700 12px var(--font-m); text-anchor: middle; fill: var(--err); }\n.inp.is-t .iv { fill: var(--ok); }\n.inp:focus-visible { outline: none; } .inp:focus-visible rect { stroke: var(--accent); stroke-width: 3; }\n.lc.focus { box-shadow: 0 0 0 3px var(--accent); border-radius: 8px; }\n/* carte « La notion » dans un exercice */\n.intro { margin: 0; }\n";
+const STYLE_CSS = `
+/* Bien écrire un algorithme */
+.sg-side { display: grid; gap: 8px; align-content: start; }
+.sg-q { font: 700 16px var(--font-d); color: var(--accent); background: var(--accent-soft); border-radius: 10px; padding: 8px 12px; animation: popIn .4s ease-out; }
+.sg-a { border-left: 4px solid var(--hl); background: var(--code-bg); border-radius: 0 10px 10px 0; padding: 8px 12px; font-size: 15px; animation: popIn .4s ease-out; }
+.sg-rows { display: grid; gap: 6px; }
+.sg-row { display: grid; grid-template-columns: auto 1fr; gap: 10px; border: 1.5px solid var(--line); border-radius: 10px; padding: 7px 12px; background: var(--panel); font-size: 15px; transition: opacity .3s; }
+.sg-row.wait { opacity: .45; }
+.sg-row.new { border-color: var(--accent); box-shadow: 0 0 0 3px var(--accent-soft); animation: popIn .4s ease-out; }
+.sg-qn { font: 700 13px var(--font-m); color: var(--accent); padding-top: 2px; }
+.sg-code { font: 13px/1.65 var(--font-m); background: var(--code-bg); border: 1px solid var(--line); border-radius: 8px; padding: 6px 0; overflow-x: auto; }
+.sg-ln { display: flex; justify-content: space-between; gap: 10px; padding: 0 10px; white-space: pre; border-left: 4px solid transparent; transition: background .25s, opacity .25s; }
+.sg-ln.z-in { background: #dbe8ff; border-left-color: #2563d9; }
+.sg-ln.z-chk { background: var(--err-soft); border-left-color: var(--err); }
+.sg-ln.z-tr { background: #ffe9cc; border-left-color: #c86f12; }
+.sg-ln.z-out { background: var(--ok-soft); border-left-color: var(--ok); }
+.sg-ln.dim { opacity: .35; }
+.sg-ln.chg { background: var(--hl); border-left-color: var(--margin); animation: lineIn .35s ease-out; }
+.sg-legend { display: flex; flex-wrap: wrap; gap: 6px; }
+.sg-chip { font: 700 13px var(--font-b); border-radius: 99px; padding: 3px 12px; border: 1.5px solid var(--line); background: var(--panel); opacity: .5; transition: opacity .3s; }
+.sg-chip.on { opacity: 1; }
+.sg-chip.z-in { color: #2563d9; border-color: #2563d9; }
+.sg-chip.z-chk { color: var(--err); border-color: var(--err); }
+.sg-chip.z-tr { color: #c86f12; border-color: #c86f12; }
+.sg-chip.z-out { color: var(--ok); border-color: var(--ok); }
+.sg-tag { font: 700 11px var(--font-b); border-radius: 99px; padding: 1px 9px; flex: none; align-self: center; }
+.sg-tag.todo { background: var(--hl); color: var(--ink); }
+.sg-tag.ok { background: var(--ok-soft); color: var(--ok); }
+.sg-ln.sg-todo { background: var(--hl); border-left-color: var(--margin); }
+.sg-ln.sg-title { color: var(--muted); font-style: italic; }
+.sg-ln.sg-det { background: var(--accent-soft); border-left-color: var(--accent); }
+.sg-ln.sg-new { animation: lineIn .35s ease-out; }
+.sg-cols { display: grid; grid-template-columns: minmax(0, 1fr) minmax(0, 1fr); gap: 10px; }
+@media (max-width: 620px) { .sg-cols { grid-template-columns: 1fr; } }
+.sg-col h5 { margin: 0 0 4px; font: 700 12px var(--font-b); text-transform: uppercase; letter-spacing: .06em; }
+.sg-col.bad h5 { color: var(--err); }
+.sg-col.good h5 { color: var(--ok); }
+.sg-ck { display: grid; gap: 5px; margin: 0; padding: 0; list-style: none; }
+.sg-ck li { display: grid; grid-template-columns: 26px 1fr; gap: 10px; align-items: start; border: 1.5px solid var(--line); border-radius: 10px; padding: 6px 10px; font-size: 15px; background: var(--panel); transition: opacity .3s, border-color .3s; }
+.sg-ck .bx { width: 22px; height: 22px; border-radius: 6px; border: 2px solid var(--line); display: grid; place-items: center; font: 800 14px var(--font-d); color: #fff; margin-top: 1px; }
+.sg-ck li.done { border-color: var(--ok); }
+.sg-ck li.done .bx { background: var(--ok); border-color: var(--ok); }
+.sg-ck li.cur { box-shadow: 0 0 0 3px var(--hl); }
+.sg-ck li.wait { opacity: .5; }
+.sg-ex { margin-top: 5px; font: 13px var(--font-m); white-space: pre; background: var(--code-bg); border-radius: 8px; padding: 5px 10px; animation: popIn .4s ease-out; }
+`;
 function mountOld(host, cls) {
   const sh = host.attachShadow({ mode: 'open' });
-  sh.innerHTML = '<style>' + OLD_CSS + EXTRA_CSS + '</style><div class="' + cls + '"></div>';
+  sh.innerHTML = '<style>' + OLD_CSS + EXTRA_CSS + STYLE_CSS + '</style><div class="' + cls + '"></div>';
   return sh.querySelector('div');
 }
 document.querySelectorAll('.ohost').forEach(h => { const r = mountOld(h, 'oroot'); if (h.dataset.ids) window.NOTIONS.buildIds(r, h.dataset.ids.split(',')); else window.NOTIONS.buildGroups(r, h.dataset.group); });
